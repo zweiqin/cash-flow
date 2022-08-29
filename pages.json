@@ -1,0 +1,36 @@
+{
+	"easycom": {
+		"^tn-(.*)": "@/tuniao-ui/components/tn-$1/tn-$1.vue"
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "管理员"
+			}
+		},
+		{
+			"path": "pages/users/index",
+			"style": {
+				"navigationBarTitleText": "用户"
+			}
+		},
+		{
+			"path": "pages/drag/index",
+			"style": {
+				"navigationBarTitleText": "确认玩家",
+				"enablePullDownRefresh": false,
+				"app-plus": {
+					"titleNView": false
+				} //去掉
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {}
+}
