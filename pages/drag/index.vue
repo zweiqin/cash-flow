@@ -70,7 +70,7 @@ export default {
 .around-list {
 	margin-left: 35vw;
 	margin-right: 5vw;
-	padding-top: 10vw;
+	padding-top: 20vw;
 }
 
 /* 流星*/

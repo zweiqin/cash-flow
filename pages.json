@@ -25,7 +25,16 @@
 				} //去掉
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/game/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
