@@ -1,3 +1,5 @@
+//origin为个人，origin1为gitlab
+
 import App from './App'
 import store from './store'
 
