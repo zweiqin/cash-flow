@@ -69,7 +69,8 @@ module.exports = {
 		// var2: 'readonly', // "readonly" 不允许重写变量，等价于旧值：布尔值 false 和字符串值 "readable"
 		// Promise: 'off', // "off" 禁用全局变量
 		uni: 'writable',
-		UniApp: 'writable'
+		UniApp: 'writable',
+		getApp: 'readable'
 	},
 	// extends 属性值可以是：指定配置的字符串(配置文件的路径、可共享配置的名称、eslint:recommended 或 eslint:all)；字符串数组：每个配置继承它前面的配置。extends 属性值可以省略包名的前缀 eslint-config-。
 	// extends 属性值可以由以下组成：①plugin:②包名 (省略了前缀，比如，react)③/④配置名称 (比如 recommended)。"plugin:react/recommended"

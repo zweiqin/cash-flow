@@ -146,7 +146,7 @@ export default {
 		display: block;
 		color:black;
 		margin-right: 6rpx;
-		font-size: 30rpx;
+		font-size: 1.4vw;
 		font-weight: bold;
 	}
 	.maohao{

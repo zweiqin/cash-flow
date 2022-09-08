@@ -8,27 +8,27 @@
 					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-flex-1 tn-bg-white tn-text-center">
 						<view class="tn-border-solid-bottom tn-bold-border"> <Timer @timing="changeTimer"></Timer> </view>
 						<!-- <tn-count-to :start-val="90" :end-val="0" :duration="90000" :use-easing="false"></tn-count-to> -->
-						<view> <CountTo :start-val="90" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view>
+						<view class=""> <CountTo :font-size="40" :start-val="90" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view>
 					</view>
 					<view class="tn-flex-9">
-						<view class="tn-flex tn-flex-col-center tn-flex-row-center tn-flex-wrap  tn-text-center">
-							<view class="tn-margin-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src"></tn-avatar> </view> <view>1号</view>
+						<view class="tn-flex tn-flex-row-center tn-flex-wrap  tn-text-center">
+							<view class="tn-padding-xs" @click="showPopup()">
+								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>1号</view>
 							</view>
-							<view class="tn-margin-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src"></tn-avatar> </view> <view>2号</view>
+							<view class="tn-padding-xs" @click="showPopup()">
+								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>2号</view>
 							</view>
-							<view class="tn-margin-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src"></tn-avatar> </view> <view>3号</view>
+							<view class="tn-padding-xs" @click="showPopup()">
+								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>3号</view>
 							</view>
-							<view class="tn-margin-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src"></tn-avatar> </view> <view>4号</view>
+							<view class="tn-padding-xs" @click="showPopup()">
+								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>4号</view>
 							</view>
-							<view class="tn-margin-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src"></tn-avatar> </view> <view>5号</view>
+							<view class="tn-padding-xs" @click="showPopup()">
+								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>5号</view>
 							</view>
-							<view class="tn-margin-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src"></tn-avatar> </view> <view>6号</view>
+							<view class="tn-padding-xs" @click="showPopup()">
+								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>6号</view>
 							</view>
 						</view>
 					</view>
@@ -65,34 +65,9 @@
 							</view>
 							<!-- 中e -->
 						</view>
-						<view class="tn-flex-1 innermost-3">
+						<view class="tn-flex-1 tn-padding-xs innermost-3">
 							<!-- 右s -->
-							<view class="tn-padding-xs tn-margin-xs tn-radius bg-flex-shadow middle-r1">
-								<!-- 按钮s -->
-								<view> <tn-button :shadow="true" width="100%" height="4vh" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">下一位</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="100%" height="4vh" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">贷款</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="100%" height="4vh" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">还款</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="100%" height="4vh" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">送钱</text>
-								</tn-button> </view>
-								<view>
-									<tn-button :shadow="true" width="100%" height="4vh" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-										<text style="white-space:nowrap;">被辞退：打官司</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="100%" height="4vh" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-										<text style="white-space:nowrap;">失业后：找工作</text>
-									</tn-button>
-								</view>
-								<!-- 按钮e -->
-							</view>
+							<userButton></userButton>
 							<!-- 右e -->
 						</view>
 					</view>
@@ -138,10 +113,11 @@ import UpperLeft from './user-child/upper-left.vue'
 import LowerLeft from './user-child/lower-left.vue'
 import UpperMiddle from './user-child/upper-middle.vue'
 import LowerMiddle from './user-child/lower-middle.vue'
+import userButton from './user-child/user-button.vue'
 import Bottom from './user-child/bottom.vue'
 // import cutApart from '@/utils/cut-apart/cut-apart.js'
 export default {
-	components: { Timer, CountTo, UpperLeft, LowerLeft, UpperMiddle, LowerMiddle, Bottom },
+	components: { Timer, CountTo, UpperLeft, LowerLeft, UpperMiddle, LowerMiddle, Bottom, userButton },
 	data() {
 		return {
 			show_popup: false
@@ -168,6 +144,7 @@ export default {
 	width: 100vw;
 	height: 100vh;
 	font-size: 1.4vw;
+	// font-size: 2.08vh;
 	// font-size: 28rpx;
 	font-family: SimHei, sans-serif, monospace;
 	background-image: linear-gradient(to top, #4c3fae 20%, #6e26ba 80%);
@@ -213,10 +190,10 @@ export default {
 						}
 					}
 					.innermost-3 {
-						display: flex;
-						flex-direction: column;
+						// display: flex;
+						// flex-direction: column;
 						.middle-r1 {
-							flex: 1;
+							// flex: 1;
 						}
 					}
 

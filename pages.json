@@ -6,13 +6,13 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "管理员"
+				"navigationBarTitleText": "用户"
 			}
 		},
 		{
-			"path": "pages/users/index",
+			"path": "pages/login-admin/index",
 			"style": {
-				"navigationBarTitleText": "用户"
+				"navigationBarTitleText": "管理员"
 			}
 		},
 		{
@@ -27,6 +27,16 @@
 		},
 		{
 			"path": "pages/game/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"app-plus": {
+					"titleNView": false
+				} //去掉
+			}
+		},
+		{
+			"path": "pages/manipulate/index",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false,
