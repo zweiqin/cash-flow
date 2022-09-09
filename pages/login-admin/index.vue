@@ -101,6 +101,11 @@
 
 		<!-- 验证码倒计时 -->
 		<!-- <tn-verification-code ref="code" uniqueKey="login-demo-2" :seconds="60" @change="codeChange"> </tn-verification-code> -->
+
+		<view>
+			<tn-toast ref="toast" @closed="toDrag()"></tn-toast>
+		</view>
+
 	</view>
 </template>
 
@@ -168,7 +173,8 @@ export default {
 			// 模式选中滑块
 			modeSliderStyle: {
 				left: 0
-			}
+			},
+			toast_icon: ''
 			// 是否显示密码
 			// showPassword: false,
 			// 倒计时提示文字
@@ -191,6 +197,13 @@ export default {
 	},
 	onUnload() {
 		clearTimeout(this.timer)
+	},
+	onShow() {
+		getApp().globalData.admin = this
+	},
+	onHide() {
+		console.log('隐藏admin组件')
+		getApp().globalData.admin = null
 	},
 
 	watch: {
@@ -247,13 +260,39 @@ export default {
 
 		createGame() {
 			// console.log(getApp().globalData.wsHandle)
-			getApp().globalData.init({
-				method: 'createGame',
-				data: '2209089999' // 房间秘钥
-			}, this)
+			if (this.currentModeIndex === 0) {
+				getApp().globalData.init({
+					method: 'createGame',
+					data: '2209089999' // 房间秘钥
+				})
+			} else if (this.currentModeIndex === 1) {
+				getApp().globalData.init({
+					method: 'rejoinGame',
+					data: '2209089999' // 房间秘钥
+				})
+			}
 			// console.log(getApp().globalData.wsHandle)
 			// getApp().globalData.wsHandle.send({})
+		},
+		globalNotice(title, content, icon) {
+			this.$refs.toast.show({
+				title,
+				content,
+				icon,
+				image: '',
+				duration: 1500
+			})
+			this.toast_icon = icon
+		},
+		toDrag() {
+			// console.log('xxx')
+			if (this.toast_icon === 'success') {
+				uni.navigateTo({
+					url: '/pages/drag/index'
+				})
+			}
 		}
+
 	}
 }
 </script>

@@ -44,12 +44,12 @@
 					<block>
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
 							<view class="login__info__item__input__left-icon"> <view class="tn-icon-home-capsule"></view> </view>
-							<view class="login__info__item__input__content"> <input maxlength="20" placeholder-class="input-placeholder" placeholder="请输入房间号码" /> </view>
+							<view class="login__info__item__input__content"> <input v-model="game_key" maxlength="20" placeholder-class="input-placeholder" placeholder="请输入房间号码" /> </view>
 						</view>
 
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
 							<view class="login__info__item__input__left-icon"> <view class="tn-icon-my"></view> </view>
-							<view class="login__info__item__input__content"> <input placeholder-class="input-placeholder" placeholder="请输入用户名" /> </view>
+							<view class="login__info__item__input__content"> <input v-model="user_name" placeholder-class="input-placeholder" placeholder="请输入用户名" /> </view>
 							<!-- <view class="login__info__item__input__content"> <input :password="!showPassword" placeholder-class="input-placeholder" placeholder="请输入用户名" /> </view>
 							<view class="login__info__item__input__right-icon" @click="showPassword = !showPassword">
 								<view :class="[showPassword ? 'tn-icon-eye' : 'tn-icon-eye-hide']"></view>
@@ -66,8 +66,9 @@
 
 		<view class="game-enter" style="padding: 12rpx 200rpx;z-index: 999;position: relative;">
 			<tn-button
-				:plain="true" :block-repeat-click="true" shape="round" background-color="#FFFFFF"
-				font-color="#FFFFFF" width="50%" height="100rpx" margin="0 25%"
+				:plain="true"
+				:block-repeat-click="true" shape="round" background-color="#FFFFFF" font-color="#FFFFFF"
+				width="50%" height="100rpx" margin="0 25%" @click="joinGame()"
 			>进入游戏</tn-button>
 		</view>
 
@@ -79,6 +80,11 @@
 
 		<!-- 回到首页悬浮按钮-->
 		<!-- <nav-index-button></nav-index-button> -->
+
+		<view>
+			<tn-toast ref="toast" @closed="toDrag()"></tn-toast>
+		</view>
+
 	</view>
 </template>
 
@@ -93,9 +99,45 @@ export default {
 		return {
 			// 是否显示密码
 			// showPassword: false
+			user_name: '',
+			game_key: '',
+			toast_icon: ''
 		}
 	},
-	methods: {}
+	onShow() {
+		getApp().globalData.users = this
+	},
+	onHide() {
+		console.log('隐藏users组件')
+		getApp().globalData.users = null
+	},
+	methods: {
+		joinGame() {
+			getApp().globalData.init({
+				method: 'joinGame',
+				data: { username: this.user_name, game_key: this.game_key } // 房间秘钥
+			})
+		},
+		syncUserList(title, content, icon) {
+			this.$refs.toast.show({
+				title,
+				content,
+				icon,
+				image: '',
+				duration: 1500
+			})
+			this.toast_icon = icon
+		},
+		toDrag() {
+			// console.log('xxx')
+			if (this.toast_icon === 'success') {
+				uni.navigateTo({
+					url: '/pages/drag/index'
+				})
+			}
+		}
+
+	}
 }
 </script>
 

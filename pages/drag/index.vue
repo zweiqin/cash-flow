@@ -15,7 +15,24 @@
 				</view>
 			</view>
 		</view>
-		<view class="around-list"> <AppChange :list-data="appListData" @listChange="listChange"></AppChange></view></view>
+
+		<view class="tn-flex tn-flex-direction-column tn-padding-xl container">
+			<view class="around-list"> <AppChange :list-data="appListData" @listChange="listChange"></AppChange></view>
+
+			<view class="tn-flex tn-flex-row-right button-area">
+				<view v-if="isAdmin===false" class="">
+					<!-- <view class="tn-padding-left-sm"> -->
+					<tn-button :shadow="true" width="100%" height="100rpx" background-color="tn-main-gradient-indigo" margin="10rpx 0" @click="quitGame()">退出房间</tn-button>
+				</view>
+				<view v-if="isAdmin===true" class="">
+					<!-- <view class="tn-padding-left-sm"> -->
+					<tn-button :shadow="true" size="lg" width="100%" height="100rpx" background-color="tn-main-gradient-indigo" margin="10rpx 0" @click="stopGame()">关闭房间</tn-button>
+				</view>
+			</view>
+		</view>
+
+		<view> <tn-toast ref="toast"></tn-toast> </view>
+	</view>
 </template>
 
 <script>
@@ -25,52 +42,104 @@ export default {
 	data() {
 		return {
 			appListData: [
-				{
-					// appId: 1,
-					appIcon: 'tn-icon-trusty',
-					appName: '用户1'
-				},
-				{
-					// appId: 2,
-					appIcon: 'tn-icon-con-cancer',
-					appName: '用户2'
-				},
-				{
-					// appId: 3,
-					appIcon: 'tn-icon-zodiac-niu',
-					appName: '用户3'
-				},
-				{
-					// appId: 4,
-					appIcon: 'tn-icon-zodiac-hu',
-					appName: '用户4'
-				},
-				{
-					// appId: 5,
-					appIcon: 'cuIcon-pic',
-					appName: '用户5'
-				},
-				{
-					// appId: 6,
-					appIcon: 'cuIcon-cart',
-					appName: '用户6'
-				}
-			]
+				// {
+				// 	// appId: 1,
+				// 	appIcon: 'tn-icon-trusty',
+				// 	appName: 'Banker'
+				// },
+				// {
+				// 	// appId: 2,
+				// 	appIcon: 'tn-icon-con-cancer',
+				// 	appName: '用户2'
+				// },
+				// {
+				// 	// appId: 3,
+				// 	appIcon: 'tn-icon-zodiac-niu',
+				// 	appName: '用户3'
+				// },
+				// {
+				// 	// appId: 4,
+				// 	appIcon: 'tn-icon-zodiac-hu',
+				// 	appName: '用户4'
+				// },
+				// {
+				// 	// appId: 5,
+				// 	appIcon: 'cuIcon-pic',
+				// 	appName: '用户5'
+				// },
+				// {
+				// 	// appId: 6,
+				// 	appIcon: 'cuIcon-cart',
+				// 	appName: '用户6'
+				// }
+			],
+			isAdmin: getApp().globalData.isAdmin
 		}
 	},
 	methods: {
 		listChange(option) {
-			console.log('listChange', option)
+			// console.log('listChange', option)
+			const temp_arr = [ 'banker' ]
+			option.forEach((item) => {
+				temp_arr.push(item.appName)
+			})
+			getApp().globalData.wsHandle.send(JSON.stringify({
+				method: 'dragUser',
+				data: {
+					user_list: temp_arr,
+					game_key: getApp().globalData.gameKey
+				}
+			}))
+		},
+		onShow() {
+			getApp().globalData.drag = this
+			this.appListData = getApp().globalData.appListData
+		},
+		onHide() {
+			console.log('隐藏drag组件')
+			getApp().globalData.drag = null
+		},
+		globalNotice(title, content, icon, data) {
+			this.$refs.toast.show({
+				title,
+				content,
+				icon,
+				image: '',
+				duration: 1500
+			})
+			// this.toast_icon = icon
+		},
+		syncUserList() {
+			this.appListData = getApp().globalData.appListData
+			// console.log(this.appListData)
+		},
+		quitGame() {
+			getApp().globalData.wsHandle.send(JSON.stringify({
+				method: 'quitGame',
+				data: {
+					username: getApp().globalData.userName,
+					game_key: getApp().globalData.gameKey
+				}
+			}))
+		},
+		stopGame() {
+			getApp().globalData.wsHandle.send(JSON.stringify({
+				method: 'stopGame',
+				data: getApp().globalData.gameKey
+			}))
 		}
 	}
 }
 </script>
 
 <style lang="scss" scoped>
-.around-list {
-	margin-left: 35vw;
-	margin-right: 5vw;
-	padding-top: 20vw;
+.container {
+	// padding: 40vmin;
+	.around-list {
+		// margin-left: 35vw;
+		// margin-right: 5vw;
+		// padding-top: 10vw;
+	}
 }
 
 /* 流星*/

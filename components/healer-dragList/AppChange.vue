@@ -17,7 +17,7 @@
 					@tap="AppLi_click(index)"
 				>
 					<text :class="['appIcon', appItem.appIcon]"></text> <text class="appName">{{ appItem.appName }}</text>
-					<text class="appicon cuIcon-roundclosefill tn-icon-close" :class="deleteAppID === index ? '' : 'hide'" @tap="deleteAppItem(index)"></text>
+					<!-- <text class="appicon cuIcon-roundclosefill tn-icon-close" :class="deleteAppID === index ? '' : 'hide'" @tap="deleteAppItem(index)"></text> -->
 				</view>
 			</view>
 		</view>
@@ -45,25 +45,33 @@ export default {
 	},
 	computed: {},
 	watch: {
-		listData_c(val) {
-			this.$emit('listChange', val)
+		listData(val) {
+			this.listData_c = val
+			// console.log(this.listData_c)
 		}
+		// listData_c(val) {
+		// 	// console.log(this.listData_c)
+		// 	this.$emit('listChange', val)
+		// }
 	},
 	mounted() {},
 	methods: {
 		AppLi_click(index) {
-			if (!this.isClickFirst) {
-				// 第一次点击
-				this.deleteAppID = index
-				this.touchIndex = index
-				this.touchItem = this.listData_c[index]
-				this.isClickFirst = !this.isClickFirst
-			} else {
-				// 第二次点击
-				[this.listData_c[index], this.listData[this.touchIndex]] = [this.listData[this.touchIndex], this.listData_c[index]]
-				this.touchIndex = ''
-				this.deleteAppID = ''
-				this.isClickFirst = !this.isClickFirst
+			if (getApp().globalData.isAdmin === true) {
+				if (!this.isClickFirst) {
+					// 第一次点击
+					this.deleteAppID = index
+					this.touchIndex = index
+					this.touchItem = this.listData_c[index]
+					this.isClickFirst = !this.isClickFirst
+				} else {
+					// 第二次点击
+					[this.listData_c[index], this.listData[this.touchIndex]] = [this.listData[this.touchIndex], this.listData_c[index]]
+					this.touchIndex = ''
+					this.deleteAppID = ''
+					this.isClickFirst = !this.isClickFirst
+					this.$emit('listChange', this.listData_c)
+				}
 			}
 			// console.log(event)
 		},

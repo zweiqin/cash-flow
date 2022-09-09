@@ -44,7 +44,8 @@
 					font-color="tn-color-white"
 					margin="2rpx 2rpx"
 				>
-					<text>存款：</text><text>{{ cutApart(10200000000) }}</text>
+					<!-- 主管说要把存储改为现金 -->
+					<text>现金：</text><text>{{ cutApart(10200000000) }}</text>
 				</tn-tag>
 			</view>
 			<view class="tn-padding-xs tn-radius bg-flex-shadow" style="margin-top: 5rpx;">
