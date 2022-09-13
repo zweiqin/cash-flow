@@ -17,21 +17,62 @@
 		</view>
 
 		<view class="tn-flex tn-flex-direction-column tn-padding-xl container">
-			<view class="around-list"> <AppChange :list-data="appListData" @listChange="listChange"></AppChange></view>
+			<view class="waiting">{{ welcome }}</view>
+			<view v-if="appListData.length > 0" class="around-list"> <AppChange :list-data="appListData" @listChange="listChange"></AppChange></view>
+			<view v-if="appListData.length === 0" class="waiting">正在等待玩家进入房间…</view>
 
 			<view class="tn-flex tn-flex-row-right button-area">
-				<view v-if="isAdmin===false" class="">
-					<!-- <view class="tn-padding-left-sm"> -->
+				<view v-if="role === 'user'" class="">
 					<tn-button :shadow="true" width="100%" height="100rpx" background-color="tn-main-gradient-indigo" margin="10rpx 0" @click="quitGame()">退出房间</tn-button>
 				</view>
-				<view v-if="isAdmin===true" class="">
-					<!-- <view class="tn-padding-left-sm"> -->
-					<tn-button :shadow="true" size="lg" width="100%" height="100rpx" background-color="tn-main-gradient-indigo" margin="10rpx 0" @click="stopGame()">关闭房间</tn-button>
+				<view v-if="role === 'admin'" class="">
+					<view>
+						<tn-button :shadow="true" size="lg" width="100%" height="100rpx" background-color="tn-main-gradient-indigo" margin="10rpx 0" @click="showModel(0)">开始游戏</tn-button>
+					</view>
+					<view>
+						<tn-button :shadow="true" size="lg" width="100%" height="100rpx" background-color="tn-main-gradient-indigo" margin="10rpx 0" @click="showModel(1)">关闭房间</tn-button>
+					</view>
 				</view>
 			</view>
 		</view>
 
-		<view> <tn-toast ref="toast"></tn-toast> </view>
+		<view> <tn-toast ref="toast" @closed="closeToast()"></tn-toast> </view>
+
+		<!-- 模态框 -->
+		<tn-modal
+			v-model="is_show_model"
+			background-color="#E4E9EC"
+			width="84%"
+			padding="30rpx 26rpx"
+			:radius="12"
+			font-color="#BA7027"
+			:font-size="35"
+			title="提示"
+			:content="content"
+			:button="button"
+			:show-close-btn="true"
+			:mask-closeable="true"
+			:zoom="true"
+			:custom="false"
+			@click="clickBtn"
+		>
+			<!-- <view v-if="custom">
+				<view class="custom-modal-content">
+					<tn-form :label-width="140">
+						<tn-form-item label="手机号码" :border-bottom="false">
+							<tn-input placeholder="请输入手机号码"></tn-input>
+						</tn-form-item>
+						<tn-form-item label="验证码" :border-bottom="false">
+							<tn-input placeholder="请输入验证码"></tn-input>
+							<view slot="right" class="tn-flex tn-flex-col-center tn-flex-row-center">
+								<tn-button :font-size="20" padding="10rpx" height="46rpx" background-color="#01BEFF" font-color="tn-color-white">获取验证码</tn-button>
+							</view>
+						</tn-form-item>
+					</tn-form>
+				</view>
+			</view> -->
+		</tn-modal>
+
 	</view>
 </template>
 
@@ -41,6 +82,7 @@ export default {
 	components: { AppChange },
 	data() {
 		return {
+			load_role: '',
 			appListData: [
 				// {
 				// 	// appId: 1,
@@ -73,9 +115,70 @@ export default {
 				// 	appName: '用户6'
 				// }
 			],
-			isAdmin: getApp().globalData.isAdmin
+
+			role: getApp().globalData.role,
+
+			// 模态框
+			is_show_model: false,
+			button: [
+				{
+					text: '取消',
+					backgroundColor: '#A4E82F',
+					fontColor: '#FFFFFF'
+				},
+				{
+					text: '确定',
+					backgroundColor: 'tn-bg-indigo',
+					fontColor: '#FFFFFF'
+				}
+			],
+			button_order: '',
+			content: '',
+
+			toast_significance: ''
 		}
 	},
+
+	computed: {
+		welcome() {
+			if (getApp().globalData.role === 'admin') {
+				return `您好，管理员！`
+			}
+			return `您好，${getApp().globalData.userName}!`
+		}
+	},
+
+	onLoad(options) {
+		this.load_role = options.role
+		// console.log(options)
+	},
+	onShow() {
+		getApp().globalData.drag = this
+		this.appListData = getApp().globalData.appListData
+		// console.log(window.location.pathname, window.location.href, window.location.hash)
+		// console.log(window.location.hash.substring(window.location.hash.indexOf('=') + 1, window.location.hash.length))
+		// if (getApp().globalData.wsHandle === '') {
+		// 	if (window.location.href.substring(window.location.href.indexOf('=') + 1, window.location.href.length) === 'admin') {
+		// 		uni.navigateTo({ url: '/pages/login-admin/index' })
+		// 	} else {
+		// 		uni.navigateTo({ url: '/pages/index/index' })
+		// 	}
+		// }
+
+		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
+		if (getApp().globalData.wsHandle === '') {
+			if (this.load_role === 'admin') {
+				uni.navigateTo({ url: '/pages/login-admin/index' })
+			} else {
+				uni.navigateTo({ url: '/pages/index/index' })
+			}
+		}
+	},
+	onHide() {
+		console.log('隐藏drag组件')
+		getApp().globalData.drag = null
+	},
+
 	methods: {
 		listChange(option) {
 			// console.log('listChange', option)
@@ -83,23 +186,15 @@ export default {
 			option.forEach((item) => {
 				temp_arr.push(item.appName)
 			})
-			getApp().globalData.wsHandle.send(JSON.stringify({
+			getApp().globalData.send({
 				method: 'dragUser',
 				data: {
 					user_list: temp_arr,
 					game_key: getApp().globalData.gameKey
 				}
-			}))
+			})
 		},
-		onShow() {
-			getApp().globalData.drag = this
-			this.appListData = getApp().globalData.appListData
-		},
-		onHide() {
-			console.log('隐藏drag组件')
-			getApp().globalData.drag = null
-		},
-		globalNotice(title, content, icon, data) {
+		globalNotice(title, content, icon, significance) {
 			this.$refs.toast.show({
 				title,
 				content,
@@ -107,27 +202,67 @@ export default {
 				image: '',
 				duration: 1500
 			})
-			// this.toast_icon = icon
+			if (significance) this.toast_significance = significance
 		},
 		syncUserList() {
 			this.appListData = getApp().globalData.appListData
 			// console.log(this.appListData)
 		},
 		quitGame() {
-			getApp().globalData.wsHandle.send(JSON.stringify({
+			getApp().globalData.send({
 				method: 'quitGame',
 				data: {
 					username: getApp().globalData.userName,
 					game_key: getApp().globalData.gameKey
 				}
-			}))
+			})
 		},
-		stopGame() {
-			getApp().globalData.wsHandle.send(JSON.stringify({
-				method: 'stopGame',
-				data: getApp().globalData.gameKey
-			}))
+		showModel(num) {
+			if (num === 0) {
+				this.content = '确定要开始游戏吗？'
+				this.button_order = 0
+			} else if (num === 1) {
+				this.content = '确定要关闭房间吗？'
+				this.button_order = 1
+			}
+			this.is_show_model = true
+		},
+		clickBtn(event) {
+			this.is_show_model = false
+			// console.log(event.index)
+			if (event.index === 1) {
+				if (this.button_order === 0) {
+					getApp().globalData.send({
+						method: 'startGame',
+						data: getApp().globalData.gameKey
+					})
+				} else if (this.button_order === 1) {
+					getApp().globalData.send({
+						method: 'stopGame',
+						data: getApp().globalData.gameKey
+					})
+				}
+			}
+		},
+		closeToast() {
+			if (this.toast_significance === 'stopGame') {
+				// this.toast_significance = ''
+				if (getApp().globalData.role === 'admin') {
+					uni.navigateTo({ url: '/pages/login-admin/index' })
+				} else {
+					uni.navigateTo({ url: '/pages/index/index' })
+				}
+			} else if (this.toast_significance === 'syncInfo') {
+				// this.toast_significance = ''
+				if (getApp().globalData.role === 'admin') {
+					uni.navigateTo({ url: '/pages/manipulate/index?role=admin' })
+				} else {
+					uni.navigateTo({ url: '/pages/game/index' })
+				}
+			}
 		}
+		// stopGame() {
+		// }
 	}
 }
 </script>
@@ -139,6 +274,13 @@ export default {
 		// margin-left: 35vw;
 		// margin-right: 5vw;
 		// padding-top: 10vw;
+	}
+	.waiting {
+		margin-bottom: 100rpx;
+		font-size: 40rpx;
+		font-weight: 700;
+		color: #ffffff;
+		text-align: center;
 	}
 }
 

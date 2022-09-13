@@ -41,48 +41,57 @@
 							<!-- 右s -->
 							<view class="tn-flex tn-flex-direction-column tn-flex-wrap tn-flex-col-bottom tn-padding-xs tn-radius bg-flex-shadow middle-r1">
 								<!-- 按钮s -->
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">下一位</text>
+								<view style="height: 100%;">
+									<tn-button
+										:shadow="true" width="15vw" height="auto" background-color="tn-cool-bg-color-16"
+										:font-size="40" :font-bold="true" padding="2vw 10rpx" margin="10rpx 0"
+										@click="showModel(1)"
+									>
+										<text>关闭房间</text>
+									</tn-button>
+								</view>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>下一位</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">送钱（玩家生孩子随礼）</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>送钱（玩家生孩子随礼）</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">发工资</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>发工资</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">扣钱（触犯规则）</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>扣钱（触犯规则）</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">扣费抽卡</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>扣费抽卡</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">免费抽卡</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>免费抽卡</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">发免费精力</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>发免费精力</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">发收费精力</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>发收费精力</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">玩家生孩子</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>玩家生孩子</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">玩家选择结婚纪念（日）</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>玩家选择结婚纪念（日）</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">心碎（逆流层失恋/逆流层离婚/顺流层离婚）</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>心碎（逆流层失恋/逆流层离婚/顺流层离婚）</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">逆流层失业</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>逆流层失业</text>
 								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-									<text style="white-space:nowrap;">顺流层破产</text>
+								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<text>顺流层破产</text>
 								</tn-button> </view>
 								<view>
-									<tn-button :shadow="true" width="30vw" height="65rpx" background-color="tn-cool-bg-color-2" padding="0 10rpx" margin="10rpx 0">
-										<text style="white-space:nowrap;">用户做慈善</text>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>用户做慈善</text>
 									</tn-button>
 								</view>
 								<!-- 按钮e -->
@@ -119,7 +128,45 @@
 					<view>
 						<tn-button shape="round" width="220rpx" font-color="#080808">关闭弹窗</tn-button>
 					</view>
-				</tn-popup></view>
+				</tn-popup>
+			</view>
+
+			<view> <tn-toast ref="toast" @closed="closeToast()"></tn-toast> </view>
+
+			<!-- 模态框 -->
+			<tn-modal
+				v-model="is_show_model"
+				background-color="#E4E9EC"
+				width="84%"
+				padding="30rpx 26rpx"
+				:radius="12"
+				font-color="#BA7027"
+				:font-size="35"
+				title="提示"
+				:content="content"
+				:button="button"
+				:show-close-btn="true"
+				:mask-closeable="true"
+				:zoom="true"
+				:custom="false"
+				@click="clickBtn"
+			>
+				<!-- <view v-if="custom">
+						<view class="custom-modal-content">
+							<tn-form :label-width="140">
+								<tn-form-item label="手机号码" :border-bottom="false">
+									<tn-input placeholder="请输入手机号码"></tn-input>
+								</tn-form-item>
+								<tn-form-item label="验证码" :border-bottom="false">
+									<tn-input placeholder="请输入验证码"></tn-input>
+									<view slot="right" class="tn-flex tn-flex-col-center tn-flex-row-center">
+										<tn-button :font-size="20" padding="10rpx" height="46rpx" background-color="#01BEFF" font-color="tn-color-white">获取验证码</tn-button>
+									</view>
+								</tn-form-item>
+							</tn-form>
+						</view>
+					</view> -->
+			</tn-modal>
 
 		</view>
 	</view>
@@ -138,20 +185,99 @@ export default {
 	components: { Timer },
 	data() {
 		return {
-			show_popup: false
+			load_role: '',
+			show_popup: false,
+			// 模态框
+			is_show_model: false,
+			button: [
+				{
+					text: '取消',
+					backgroundColor: '#A4E82F',
+					fontColor: '#FFFFFF'
+				},
+				{
+					text: '确定',
+					backgroundColor: 'tn-bg-indigo',
+					fontColor: '#FFFFFF'
+				}
+			],
+			button_order: '',
+			content: '',
+
+			toast_significance: ''
 		}
 	},
+
+	onLoad(options) {
+		this.load_role = options.role
+	},
+	onShow() {
+		getApp().globalData.manipulate = this
+		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
+		if (getApp().globalData.wsHandle === '') {
+			if (this.load_role === 'admin') {
+				uni.navigateTo({ url: '/pages/login-admin/index' })
+			} else {
+				uni.navigateTo({ url: '/pages/index/index' })
+			}
+		}
+	},
+	onHide() {
+		console.log('隐藏manipulate组件')
+		getApp().globalData.manipulate = null
+	},
+
 	methods: {
 		// cutApart,
 		changeTimer(e) {
 			// console.log(e)
 		},
-		changeCountTo(e) {
-			// console.log(e)
-		},
+		// changeCountTo(e) {
+		// 	// console.log(e)
+		// },
 		showPopup() {
 			this.show_popup = true
+		},
+		globalNotice(title, content, icon, significance) {
+			this.$refs.toast.show({
+				title,
+				content,
+				icon,
+				image: '',
+				duration: 1500
+			})
+			if (significance) this.toast_significance = significance
+		},
+		showModel(num) {
+			if (num === 1) {
+				this.content = '确定要关闭房间吗？'
+				this.button_order = 1
+			}
+			this.is_show_model = true
+		},
+		clickBtn(event) {
+			this.is_show_model = false
+			// console.log(event.index)
+			if (event.index === 1) {
+				if (this.button_order === 1) {
+					getApp().globalData.send({
+						method: 'stopGame',
+						data: getApp().globalData.gameKey
+					})
+				}
+			}
+		},
+		closeToast() {
+			if (this.toast_significance === 'stopGame') {
+				this.toast_significance = ''
+				if (getApp().globalData.role === 'admin') {
+					uni.navigateTo({ url: '/pages/login-admin/index' })
+				} else {
+					uni.navigateTo({ url: '/pages/index/index' })
+				}
+			}
 		}
+
 	}
 }
 </script>

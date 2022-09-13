@@ -57,7 +57,7 @@ export default {
 	mounted() {},
 	methods: {
 		AppLi_click(index) {
-			if (getApp().globalData.isAdmin === true) {
+			if (getApp().globalData.role === 'admin') {
 				if (!this.isClickFirst) {
 					// 第一次点击
 					this.deleteAppID = index

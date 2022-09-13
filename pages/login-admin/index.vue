@@ -31,6 +31,10 @@
 				<view class="login__info tn-flex tn-flex-direction-column tn-flex-col-center tn-flex-row-center">
 					<!-- 创建房间 -->
 					<block v-if="currentModeIndex === 0">
+						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
+							<view class="login__info__item__input__left-icon"> <view class="tn-icon-home-capsule"></view> </view>
+							<view class="login__info__item__input__content"> <input v-model="new_num" maxlength="20" placeholder-class="input-placeholder" placeholder="请输入房间号码" /> </view>
+						</view>
 						<!-- <view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
 							<view class="login__info__item__input__left-icon"> <view class="tn-icon-phone"></view> </view>
 							<view class="login__info__item__input__content"> <input maxlength="20" placeholder-class="input-placeholder" placeholder="请输入登录手机号码" /> </view>
@@ -48,7 +52,7 @@
 					<block v-if="currentModeIndex === 1">
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
 							<view class="login__info__item__input__left-icon"> <view class="tn-icon-home-capsule"></view> </view>
-							<view class="login__info__item__input__content"> <input maxlength="20" placeholder-class="input-placeholder" placeholder="请输入房间号码" /> </view>
+							<view class="login__info__item__input__content"> <input v-model="old_num" maxlength="20" placeholder-class="input-placeholder" placeholder="请输入房间号码" /> </view>
 						</view>
 						<!--
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
@@ -174,11 +178,13 @@ export default {
 			modeSliderStyle: {
 				left: 0
 			},
-			toast_icon: ''
+			toast_icon: '',
 			// 是否显示密码
 			// showPassword: false,
 			// 倒计时提示文字
 			// tips: '获取验证码'
+			new_num: '',
+			old_num: ''
 		}
 	},
 	onLoad(options) {
@@ -263,12 +269,12 @@ export default {
 			if (this.currentModeIndex === 0) {
 				getApp().globalData.init({
 					method: 'createGame',
-					data: '2209089999' // 房间秘钥
+					data: this.new_num // 房间秘钥
 				})
 			} else if (this.currentModeIndex === 1) {
 				getApp().globalData.init({
 					method: 'rejoinGame',
-					data: '2209089999' // 房间秘钥
+					data: this.old_num // 房间秘钥
 				})
 			}
 			// console.log(getApp().globalData.wsHandle)
@@ -288,7 +294,7 @@ export default {
 			// console.log('xxx')
 			if (this.toast_icon === 'success') {
 				uni.navigateTo({
-					url: '/pages/drag/index'
+					url: '/pages/drag/index?role=admin'
 				})
 			}
 		}

@@ -30,7 +30,7 @@
 			<!-- <view class="user-info__avatar tn-flex tn-flex-col-center tn-flex-row-center">
 				<view class="tn-shadow-blur" style="background-image:url('https://tnuiimage.tnkjapp.com/logo/tuniao.png');width: 170rpx;height: 170rpx;background-size: cover;"> </view>
 			</view> -->
-			<view class="user-info__avatar tn-flex tn-flex-col-center tn-flex-row-center"> <view class="user-info__nick-name">现金流</view> </view>
+			<view class="user-info__avatar tn-flex tn-flex-col-center tn-flex-row-center"> <view class="user-info__nick-name">财富流</view> </view>
 			<!-- <view class="user-info__nick-name">图鸟UI</view> -->
 		</view>
 
@@ -127,6 +127,7 @@ export default {
 				duration: 1500
 			})
 			this.toast_icon = icon
+			// this.todrag()
 		},
 		toDrag() {
 			// console.log('xxx')

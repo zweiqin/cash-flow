@@ -102,6 +102,43 @@
 					</view>
 				</tn-popup></view>
 
+			<view> <tn-toast ref="toast" @closed="closeToast()"></tn-toast> </view>
+
+			<!-- 模态框 -->
+			<tn-modal
+				v-model="is_show_model"
+				background-color="#E4E9EC"
+				width="84%"
+				padding="30rpx 26rpx"
+				:radius="12"
+				font-color="#BA7027"
+				:font-size="35"
+				title="提示"
+				:content="content"
+				:button="button"
+				:show-close-btn="true"
+				:mask-closeable="true"
+				:zoom="true"
+				:custom="false"
+				@click="clickBtn"
+			>
+				<!-- <view v-if="custom">
+						<view class="custom-modal-content">
+							<tn-form :label-width="140">
+								<tn-form-item label="手机号码" :border-bottom="false">
+									<tn-input placeholder="请输入手机号码"></tn-input>
+								</tn-form-item>
+								<tn-form-item label="验证码" :border-bottom="false">
+									<tn-input placeholder="请输入验证码"></tn-input>
+									<view slot="right" class="tn-flex tn-flex-col-center tn-flex-row-center">
+										<tn-button :font-size="20" padding="10rpx" height="46rpx" background-color="#01BEFF" font-color="tn-color-white">获取验证码</tn-button>
+									</view>
+								</tn-form-item>
+							</tn-form>
+						</view>
+					</view> -->
+			</tn-modal>
+
 		</view>
 	</view>
 </template>
@@ -120,9 +157,48 @@ export default {
 	components: { Timer, CountTo, UpperLeft, LowerLeft, UpperMiddle, LowerMiddle, Bottom, userButton },
 	data() {
 		return {
-			show_popup: false
+			load_role: '',
+			show_popup: false,
+			// 模态框
+			is_show_model: false,
+			button: [
+				{
+					text: '取消',
+					backgroundColor: '#A4E82F',
+					fontColor: '#FFFFFF'
+				},
+				{
+					text: '确定',
+					backgroundColor: 'tn-bg-indigo',
+					fontColor: '#FFFFFF'
+				}
+			],
+			button_order: '',
+			content: '',
+
+			toast_significance: ''
 		}
 	},
+
+	onLoad(options) {
+		this.load_role = options.role
+	},
+	onShow() {
+		getApp().globalData.game = this
+		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
+		if (getApp().globalData.wsHandle === '') {
+			if (this.load_role === 'admin') {
+				uni.navigateTo({ url: '/pages/login-admin/index' })
+			} else {
+				uni.navigateTo({ url: '/pages/index/index' })
+			}
+		}
+	},
+	onHide() {
+		console.log('隐藏game组件')
+		getApp().globalData.game = null
+	},
+
 	methods: {
 		// cutApart,
 		changeTimer(e) {
@@ -133,7 +209,47 @@ export default {
 		},
 		showPopup() {
 			this.show_popup = true
+		},
+		globalNotice(title, content, icon, significance) {
+			this.$refs.toast.show({
+				title,
+				content,
+				icon,
+				image: '',
+				duration: 1500
+			})
+			if (significance) this.toast_significance = significance
+		},
+		showModel(num) {
+			// if (num === 1) {
+			// 	this.content = '确定要关闭房间吗？'
+			// 	this.button_order = 1
+			// }
+			this.is_show_model = true
+		},
+		clickBtn(event) {
+			this.is_show_model = false
+			// console.log(event.index)
+			// if (event.index === 1) {
+			// 	if (this.button_order === 1) {
+			// 		getApp().globalData.send({
+			// 			method: 'stopGame',
+			// 			data: getApp().globalData.gameKey
+			// 		})
+			// 	}
+			// }
+		},
+		closeToast() {
+			if (this.toast_significance === 'stopGame') {
+				this.toast_significance = ''
+				if (getApp().globalData.role === 'admin') {
+					uni.navigateTo({ url: '/pages/login-admin/index' })
+				} else {
+					uni.navigateTo({ url: '/pages/index/index' })
+				}
+			}
 		}
+
 	}
 }
 </script>
