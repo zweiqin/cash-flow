@@ -27,7 +27,16 @@
 	</view>
 </template>
 
-<script>
+<script>export default {
+	data() {
+		return {
+		}
+	},
+
+	methods: {
+	}
+}
+</script>
 </script>
 
 <style>

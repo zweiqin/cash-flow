@@ -219,6 +219,15 @@ export default {
 		},
 		showModel(num) {
 			if (num === 0) {
+				if (getApp().globalData.appListData.length < 1) {
+					return this.$refs.toast.show({
+						title: '提醒',
+						content: '人数不足，不能开始游戏',
+						icon: 'lock',
+						image: '',
+						duration: 2000
+					})
+				}
 				this.content = '确定要开始游戏吗？'
 				this.button_order = 0
 			} else if (num === 1) {

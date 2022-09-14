@@ -55,8 +55,10 @@
 								<view :class="[showPassword ? 'tn-icon-eye' : 'tn-icon-eye-hide']"></view>
 							</view> -->
 						</view>
+
 					</block>
 				</view>
+
 			</view>
 		</view>
 
@@ -194,10 +196,11 @@ export default {
 
 	/* 登录注册信息 start */
 	&__info {
-		margin: 0 50rpx;
+		margin: 0 auto;
 		margin-top: 55rpx;
 		padding: 30rpx 51rpx;
 		padding-bottom: 0;
+		width: 80vmin;
 		border-radius: 20rpx;
 		background-color: rgba(255, 255, 255, 0.2);
 		backdrop-filter: blur(6rpx);

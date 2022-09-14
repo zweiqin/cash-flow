@@ -1,23 +1,24 @@
 <script>
 export default {
 	globalData: {
+		test: { str: 'aaa' },
 		appListData: [
 			// // 针对管理员 首次创房，这里写死 管理员一个人
 			// {
 			// 	appIcon: 'tn-icon-trusty',
-			// 	appName: 'Banker'
+			// 	appName: 'Banker1'
 			// }, {
 			// 	appIcon: 'tn-icon-trusty',
-			// 	appName: 'Banker'
+			// 	appName: 'Banker2'
 			// }, {
 			// 	appIcon: 'tn-icon-trusty',
-			// 	appName: 'Banker'
+			// 	appName: 'Banker3'
 			// }, {
 			// 	appIcon: 'tn-icon-trusty',
-			// 	appName: 'Banker'
+			// 	appName: 'Banker4'
 			// }, {
 			// 	appIcon: 'tn-icon-trusty',
-			// 	appName: 'Banker'
+			// 	appName: 'Banker5'
 			// }
 		],
 		wsHandle: '',
@@ -29,6 +30,7 @@ export default {
 		gameId: '', // 管理员为数字字符串，用户为数字字符串
 		gameUserId: '', // 管理员为空字符串，用户为数字字符串
 		// vm: null,
+		app: '',
 		admin: null,
 		users: null,
 		drag: null,
@@ -144,6 +146,10 @@ export default {
 					appName: item
 				}))
 				_this.drag && _this.drag.syncUserList()
+				// 场景：开始游戏后，断线重连，其它用户能看到，实时同步
+				_this.game && _this.game.syncUserList()
+				// 场景：开始游戏后，断线重连，管理员能看到，实时同步
+				_this.manipulate && _this.manipulate.syncUserList()
 				// _this.action = null
 			}
 
@@ -152,6 +158,7 @@ export default {
 				_this.drag && _this.drag.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
 				_this.game && _this.game.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
 				_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
+				_this.appListData = []
 			}
 
 			if (data.event === 'syncInfo') {
@@ -183,6 +190,7 @@ export default {
 
 	onLaunch() {
 		console.log('App Launch')
+		this.globalData.app = this
 		uni.request({
 			url: 'http://192.168.0.74:19999/v1/card/GetCardList', // 仅为示例，并非真实接口地址。
 			// data: {

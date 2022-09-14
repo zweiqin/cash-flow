@@ -11,24 +11,9 @@
 						<!-- <view class=""> <CountTo :font-size="40" :start-val="90" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view> -->
 					</view>
 					<view class="tn-flex-9">
-						<view class="tn-flex tn-flex-row-center tn-flex-wrap  tn-text-center">
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>1号</view>
-							</view>
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>2号</view>
-							</view>
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>3号</view>
-							</view>
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>4号</view>
-							</view>
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>5号</view>
-							</view>
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>6号</view>
+						<view class="tn-flex tn-flex-row-center tn-flex-wrap tn-text-center">
+							<view v-for="item in appListData" :key="item.appName" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.appName)">
+								<view> <tn-avatar :src="src" size="3.2vw"></tn-avatar> </view> <view>{{ item.appName }}</view>
 							</view>
 						</view>
 					</view>
@@ -43,52 +28,84 @@
 								<!-- 按钮s -->
 								<view style="height: 100%;">
 									<tn-button
-										:shadow="true" width="15vw" height="auto" background-color="tn-cool-bg-color-16"
-										:font-size="40" :font-bold="true" padding="2vw 10rpx" margin="10rpx 0"
+										:shadow="true"
+										width="15vw"
+										height="auto"
+										background-color="tn-cool-bg-color-16"
+										:font-size="40"
+										:font-bold="true"
+										padding="2vw 10rpx"
+										margin="10rpx 0"
 										@click="showModel(1)"
 									>
 										<text>关闭房间</text>
 									</tn-button>
 								</view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>下一位</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>送钱（玩家生孩子随礼）</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>发工资</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>扣钱（触犯规则）</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>扣费抽卡</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>免费抽卡</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>发免费精力</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>发收费精力</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>玩家生孩子</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>玩家选择结婚纪念（日）</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>心碎（逆流层失恋/逆流层离婚/顺流层离婚）</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>逆流层失业</text>
-								</tn-button> </view>
-								<view> <tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-									<text>顺流层破产</text>
-								</tn-button> </view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>下一位</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>送钱（玩家生孩子随礼）</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>发工资</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>扣钱（触犯规则）</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>扣费抽卡</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>免费抽卡</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>发免费精力</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>发收费精力</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>玩家生孩子</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>玩家选择结婚纪念（日）</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>心碎（逆流层失恋/逆流层离婚/顺流层离婚）</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>逆流层失业</text>
+									</tn-button>
+								</view>
+								<view>
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+										<text>顺流层破产</text>
+									</tn-button>
+								</view>
 								<view>
 									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
 										<text>用户做慈善</text>
@@ -125,8 +142,10 @@
 					close-btn-position="top-right"
 					:mask-closeable="true"
 				>
-					<view>
-						<tn-button shape="round" width="220rpx" font-color="#080808">关闭弹窗</tn-button>
+					<view class="tn-height-full tn-flex tn-flex-row-right tn-flex-direction-column">
+						<!-- <tn-button shape="round" width="220rpx" font-color="#080808">关闭弹窗</tn-button> -->
+						<view class="tn-flex-1 popup-name">{{ popup_name }}的个人信息</view> <view class="" style="height: 75%;"><TableDataes></TableDataes></view>
+						<view class="tn-flex-2"><Bottom></Bottom></view>
 					</view>
 				</tn-popup>
 			</view>
@@ -167,7 +186,6 @@
 						</view>
 					</view> -->
 			</tn-modal>
-
 		</view>
 	</view>
 </template>
@@ -179,10 +197,11 @@ import Timer from '@/components/timer/timer.vue'
 // import LowerLeft from '../game/user-child/lower-left.vue'
 // import UpperMiddle from '../game/user-child/upper-middle.vue'
 // import LowerMiddle from '../game/user-child/lower-middle.vue'
-// import Bottom from './user-child/bottom.vue'
+import TableDataes from '@/components/table/table-dataes.vue'
+import Bottom from '@/components/table/bottom.vue'
 // import cutApart from '@/utils/cut-apart/cut-apart.js'
 export default {
-	components: { Timer },
+	components: { Timer, TableDataes, Bottom },
 	data() {
 		return {
 			load_role: '',
@@ -204,7 +223,11 @@ export default {
 			button_order: '',
 			content: '',
 
-			toast_significance: ''
+			toast_significance: '',
+
+			appListData: getApp().globalData.appListData,
+
+			popup_name: ''
 		}
 	},
 
@@ -215,11 +238,11 @@ export default {
 		getApp().globalData.manipulate = this
 		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
 		if (getApp().globalData.wsHandle === '') {
-			if (this.load_role === 'admin') {
-				uni.navigateTo({ url: '/pages/login-admin/index' })
-			} else {
-				uni.navigateTo({ url: '/pages/index/index' })
-			}
+			// if (this.load_role === 'admin') {
+			uni.navigateTo({ url: '/pages/login-admin/index' })
+			// } else {
+			// uni.navigateTo({ url: '/pages/index/index' })
+			// }
 		}
 	},
 	onHide() {
@@ -235,8 +258,9 @@ export default {
 		// changeCountTo(e) {
 		// 	// console.log(e)
 		// },
-		showPopup() {
+		showPopup(name) {
 			this.show_popup = true
+			this.popup_name = name
 		},
 		globalNotice(title, content, icon, significance) {
 			this.$refs.toast.show({
@@ -247,6 +271,10 @@ export default {
 				duration: 1500
 			})
 			if (significance) this.toast_significance = significance
+		},
+		syncUserList() {
+			this.appListData = getApp().globalData.appListData
+			// console.log(this.appListData)
 		},
 		showModel(num) {
 			if (num === 1) {
@@ -277,7 +305,6 @@ export default {
 				}
 			}
 		}
-
 	}
 }
 </script>
@@ -348,23 +375,23 @@ export default {
 					// .middle-m1,
 					// .middle-m2 {
 					// 	overflow-y: hidden;
-						// &::-webkit-scrollbar {
-						// 	/*滚动条整体样式*/
-						// 	display: block;
-						// 	width: 10rpx !important; /*高宽分别对应横竖滚动条的尺寸*/
-						// 	height: 0rpx !important;
-						// 	// border: 10rpx solid red;
-						// }
-						// &::-webkit-scrollbar-track {
-						// 	/*滚动条里面轨道*/
-						// 	background: #ededed;
-						// 	border-radius: 10rpx;
-						// }
-						// &::-webkit-scrollbar-thumb {
-						// 	/*滚动条里面小方块*/
-						// 	border-radius: 10rpx;
-						// 	background-color: #666666;
-						// }
+					// &::-webkit-scrollbar {
+					// 	/*滚动条整体样式*/
+					// 	display: block;
+					// 	width: 10rpx !important; /*高宽分别对应横竖滚动条的尺寸*/
+					// 	height: 0rpx !important;
+					// 	// border: 10rpx solid red;
+					// }
+					// &::-webkit-scrollbar-track {
+					// 	/*滚动条里面轨道*/
+					// 	background: #ededed;
+					// 	border-radius: 10rpx;
+					// }
+					// &::-webkit-scrollbar-thumb {
+					// 	/*滚动条里面小方块*/
+					// 	border-radius: 10rpx;
+					// 	background-color: #666666;
+					// }
 					// }
 				}
 			}
@@ -373,6 +400,14 @@ export default {
 			// 	// height: 20vh;
 			// 	overflow: auto;
 			// }
+		}
+
+		.popup-name {
+			padding-top: 55rpx;
+			font-size: 40rpx;
+			font-weight: 700;
+			color: #ffffff;
+			text-align: center;
 		}
 	}
 }

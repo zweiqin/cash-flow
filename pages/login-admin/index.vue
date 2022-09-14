@@ -33,7 +33,12 @@
 					<block v-if="currentModeIndex === 0">
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
 							<view class="login__info__item__input__left-icon"> <view class="tn-icon-home-capsule"></view> </view>
-							<view class="login__info__item__input__content"> <input v-model="new_num" maxlength="20" placeholder-class="input-placeholder" placeholder="请输入房间号码" /> </view>
+							<view class="login__info__item__input__content"> <input v-model="new_num" type="number" maxlength="4" placeholder-class="input-placeholder" placeholder="请输入房间号码后四位" /> </view>
+							<view class="login__info__item__input__right-button" @click="showPassword = !showPassword">
+								<view class="tn-margin-right-sm">
+									<tn-button size="sm" background-color="#01BEFF" font-color="#FFFFFF" @click="getIntRandomValue">获取整数随机值</tn-button>
+								</view>
+							</view>
 						</view>
 						<!-- <view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
 							<view class="login__info__item__input__left-icon"> <view class="tn-icon-phone"></view> </view>
@@ -52,7 +57,7 @@
 					<block v-if="currentModeIndex === 1">
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
 							<view class="login__info__item__input__left-icon"> <view class="tn-icon-home-capsule"></view> </view>
-							<view class="login__info__item__input__content"> <input v-model="old_num" maxlength="20" placeholder-class="input-placeholder" placeholder="请输入房间号码" /> </view>
+							<view class="login__info__item__input__content"> <input v-model="old_num" type="number" maxlength="4" placeholder-class="input-placeholder" placeholder="请输入房间号码后四位" /> </view>
 						</view>
 						<!--
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
@@ -397,10 +402,11 @@ export default {
 
 	/* 登录注册信息 start */
 	&__info {
-		margin: 0 50rpx;
+		margin: 0 auto;
 		margin-top: 55rpx;
 		padding: 30rpx 51rpx;
 		padding-bottom: 0;
+		width: 80vmin;
 		border-radius: 20rpx;
 		background-color: rgba(255, 255, 255, 0.2);
 		backdrop-filter: blur(6rpx);
@@ -445,6 +451,13 @@ export default {
 				// 	margin-right: 20rpx;
 				// 	color: #ffffff;
 				// }
+
+				&__right-button {
+					width: 10%;
+					font-size: 44rpx;
+					margin-right: 20rpx;
+					color: #ffffff;
+				}
 
 				// &__right-verify-code {
 				// 	width: 34%;

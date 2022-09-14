@@ -11,24 +11,9 @@
 						<view class=""> <CountTo :font-size="40" :start-val="90" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view>
 					</view>
 					<view class="tn-flex-9">
-						<view class="tn-flex tn-flex-row-center tn-flex-wrap  tn-text-center">
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>1号</view>
-							</view>
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>2号</view>
-							</view>
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>3号</view>
-							</view>
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>4号</view>
-							</view>
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>5号</view>
-							</view>
-							<view class="tn-padding-xs" @click="showPopup()">
-								<view> <tn-avatar :src="src" size="sm"></tn-avatar> </view> <view>6号</view>
+						<view class="tn-flex tn-flex-row-center tn-flex-wrap tn-text-center">
+							<view v-for="item in appListData" :key="item.appName" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.appName)">
+								<view> <tn-avatar :src="src" size="3.2vw"></tn-avatar> </view> <view>{{ item.appName }}</view>
 							</view>
 						</view>
 					</view>
@@ -37,34 +22,9 @@
 				<!-- 中间层开始 -->
 				<view class="tn-padding-xs tn-margin-xs tn-radius bg-flex-shadow middle">
 					<view class="tn-flex layer-2">
-						<view class="tn-flex-3 innermost-1">
-							<!-- 左s -->
-							<view class="tn-padding-xs tn-margin-xs tn-radius bg-flex-shadow middle-l1">
-								<!-- 左上s -->
-								<UpperLeft></UpperLeft>
-								<!-- 左上e -->
-							</view>
-							<view class="tn-padding-xs tn-margin-left-xs tn-margin-right-xs tn-margin-top-sm tn-margin-bottom-xs tn-radius bg-flex-shadow middle-l2">
-								<!-- 左下s -->
-								<LowerLeft></LowerLeft>
-								<!-- 左下e -->
-							</view>
-							<!-- 左e -->
-						</view>
-						<view class="tn-flex-3 innermost-2">
-							<!-- 中s -->
-							<view class="tn-padding-xs tn-margin-xs tn-radius bg-flex-shadow middle-m1">
-								<!-- 中上s -->
-								<UpperMiddle></UpperMiddle>
-								<!-- 中上e -->
-							</view>
-							<view class="tn-padding-xs tn-margin-left-xs tn-margin-right-xs tn-margin-top-sm tn-margin-bottom-xs tn-radius bg-flex-shadow middle-m2">
-								<!-- 中下s -->
-								<LowerMiddle></LowerMiddle>
-								<!-- 中下e -->
-							</view>
-							<!-- 中e -->
-						</view>
+						<!-- 四个表格s -->
+						<view class="tn-flex-6"> <TableDataes></TableDataes> </view>
+						<!-- 四个表格e -->
 						<view class="tn-flex-1 tn-padding-xs innermost-3">
 							<!-- 右s -->
 							<userButton></userButton>
@@ -97,10 +57,14 @@
 					close-btn-position="top-right"
 					:mask-closeable="true"
 				>
-					<view>
-						<tn-button shape="round" width="220rpx" font-color="#080808">关闭弹窗</tn-button>
+					<view class="tn-height-full tn-flex tn-flex-row-right tn-flex-direction-column">
+						<!-- <tn-button shape="round" width="220rpx" font-color="#080808">关闭弹窗</tn-button> -->
+						<view class="tn-flex-1 popup-name">{{ popup_name }}的个人信息</view>
+						<view class="" style="height: 75%;"><TableDataes></TableDataes></view>
+						<view class="tn-flex-2"><Bottom></Bottom></view>
 					</view>
-				</tn-popup></view>
+				</tn-popup>
+			</view>
 
 			<view> <tn-toast ref="toast" @closed="closeToast()"></tn-toast> </view>
 
@@ -138,7 +102,6 @@
 						</view>
 					</view> -->
 			</tn-modal>
-
 		</view>
 	</view>
 </template>
@@ -146,15 +109,16 @@
 <script>
 import Timer from '@/components/timer/timer.vue'
 import CountTo from '@/components/count-to/count-to.vue'
-import UpperLeft from './user-child/upper-left.vue'
-import LowerLeft from './user-child/lower-left.vue'
-import UpperMiddle from './user-child/upper-middle.vue'
-import LowerMiddle from './user-child/lower-middle.vue'
+// import UpperLeft from '@/components/table/upper-left.vue'
+// import LowerLeft from '@/components/table/lower-left.vue'
+// import UpperMiddle from '@/components/table/upper-middle.vue'
+// import LowerMiddle from '@/components/table/lower-middle.vue'
+import TableDataes from '@/components/table/table-dataes.vue'
 import userButton from './user-child/user-button.vue'
-import Bottom from './user-child/bottom.vue'
+import Bottom from '@/components/table/bottom.vue'
 // import cutApart from '@/utils/cut-apart/cut-apart.js'
 export default {
-	components: { Timer, CountTo, UpperLeft, LowerLeft, UpperMiddle, LowerMiddle, Bottom, userButton },
+	components: { Timer, CountTo, TableDataes, Bottom, userButton },
 	data() {
 		return {
 			load_role: '',
@@ -176,7 +140,11 @@ export default {
 			button_order: '',
 			content: '',
 
-			toast_significance: ''
+			toast_significance: '',
+
+			appListData: getApp().globalData.appListData,
+
+			popup_name: ''
 		}
 	},
 
@@ -187,12 +155,13 @@ export default {
 		getApp().globalData.game = this
 		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
 		if (getApp().globalData.wsHandle === '') {
-			if (this.load_role === 'admin') {
-				uni.navigateTo({ url: '/pages/login-admin/index' })
-			} else {
-				uni.navigateTo({ url: '/pages/index/index' })
-			}
+			// if (this.load_role === 'admin') {
+			// 	uni.navigateTo({ url: '/pages/login-admin/index' })
+			// } else {
+			// uni.navigateTo({ url: '/pages/index/index' })
+			// }
 		}
+		// console.log(this.appListData)
 	},
 	onHide() {
 		console.log('隐藏game组件')
@@ -207,8 +176,9 @@ export default {
 		changeCountTo(e) {
 			// console.log(e)
 		},
-		showPopup() {
+		showPopup(name) {
 			this.show_popup = true
+			this.popup_name = name
 		},
 		globalNotice(title, content, icon, significance) {
 			this.$refs.toast.show({
@@ -219,6 +189,10 @@ export default {
 				duration: 1500
 			})
 			if (significance) this.toast_significance = significance
+		},
+		syncUserList() {
+			this.appListData = getApp().globalData.appListData
+			// console.log(this.appListData)
 		},
 		showModel(num) {
 			// if (num === 1) {
@@ -249,7 +223,6 @@ export default {
 				}
 			}
 		}
-
 	}
 }
 </script>
@@ -285,56 +258,32 @@ export default {
 				.layer-2 {
 					// width: 100vw;
 					height: 100%;
-					.innermost-1 {
-						display: flex;
-						flex-direction: column;
-						.middle-l1 {
-							flex: 1;
-						}
-						.middle-l2 {
-							flex: 1;
-						}
-					}
-					.innermost-2 {
-						display: flex;
-						flex-direction: column;
-						.middle-m1 {
-							flex: 1;
-						}
-						.middle-m2 {
-							flex: 1;
-						}
-					}
+					// .innermost-1 {
+					// 	display: flex;
+					// 	flex-direction: column;
+					// 	.middle-l1 {
+					// 		flex: 1;
+					// 	}
+					// 	.middle-l2 {
+					// 		flex: 1;
+					// 	}
+					// }
+					// .innermost-2 {
+					// 	display: flex;
+					// 	flex-direction: column;
+					// 	.middle-m1 {
+					// 		flex: 1;
+					// 	}
+					// 	.middle-m2 {
+					// 		flex: 1;
+					// 	}
+					// }
 					.innermost-3 {
 						// display: flex;
 						// flex-direction: column;
 						.middle-r1 {
 							// flex: 1;
 						}
-					}
-
-					.middle-l1,
-					.middle-l2,
-					.middle-m1,
-					.middle-m2 {
-						overflow-y: hidden;
-						// &::-webkit-scrollbar {
-						// 	/*滚动条整体样式*/
-						// 	display: block;
-						// 	width: 10rpx !important; /*高宽分别对应横竖滚动条的尺寸*/
-						// 	height: 0rpx !important;
-						// 	// border: 10rpx solid red;
-						// }
-						// &::-webkit-scrollbar-track {
-						// 	/*滚动条里面轨道*/
-						// 	background: #ededed;
-						// 	border-radius: 10rpx;
-						// }
-						// &::-webkit-scrollbar-thumb {
-						// 	/*滚动条里面小方块*/
-						// 	border-radius: 10rpx;
-						// 	background-color: #666666;
-						// }
 					}
 				}
 			}
@@ -344,21 +293,20 @@ export default {
 				overflow: auto;
 			}
 		}
+
+		.popup-name {
+			padding-top: 55rpx;
+			font-size: 40rpx;
+			font-weight: 700;
+			color: #ffffff;
+			text-align: center;
+		}
 	}
 }
 
 /* 内容容器 start */
 .outermost-1 > .bg-flex-shadow:nth-child(-n + 2) {
 	background-color: #e8ccff;
-}
-.innermost-1 > .bg-flex-shadow {
-	background-color: beige;
-	// background-color: #ffb3ff;
-	// background-color: red;
-}
-.innermost-2 > .bg-flex-shadow {
-	background-color: beige;
-	// background-color: #ffb3ff;
 }
 .innermost-3 > .bg-flex-shadow {
 	background-color: #ffb3ff;

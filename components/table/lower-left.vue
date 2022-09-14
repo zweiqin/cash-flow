@@ -65,6 +65,7 @@ import cutApart from '@/utils/cut-apart/cut-apart.js'
 export default {
 	data() {
 		return {
+			// test: getApp().globalData.test
 		}
 	},
 	mounted() {
