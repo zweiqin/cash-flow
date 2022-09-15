@@ -85,7 +85,7 @@ export default {
 
 			if (data.event === 'globalNotice') {
 				// （创房的时候只有banker一个人）管理员创建游戏后，创建游戏成功
-				_this.admin && _this.admin.globalNotice('创建成功', '即将跳转到等待页面', 'success')
+				_this.admin && _this.admin.globalNotice('创建成功', '即将跳转到等待页面', 'success', 'toDrag')
 
 				// 用户加入游戏后（对其它玩家），玩家1111进入房间
 				// banker重新进入房间
@@ -93,17 +93,19 @@ export default {
 				// 用户（在拖拽页面），退出房间成功，xxx退出房间
 				// 管理员开始游戏后，开始游戏中... 和 游戏开始
 				_this.drag && _this.drag.globalNotice('提示', data.data, 'creative')
-
 				// if(data.data==='位置调整成功'){
 				// // 管理员拖拽后（对所有玩家），位置调整成功
 				// 	_this.drag && _this.drag.globalNotice('提示', data.data, 'creative')
 				// }
 
+				// 在游戏里面，某玩家断线重连后，玩家xxx重新进入游戏
+				_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+				_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+
 				// console.log(111)
 			}
 
 			if (data.event === 'errorMsg') {
-			// if (data.event === 'error_msg') {
 				if (_this.role === 'admin') {
 					// 管理员登录页面
 					// 情况：管理员 创建或重新加入房间 的错误
@@ -135,26 +137,25 @@ export default {
 			}
 
 			if (data.event === 'syncUserList') {
-			// if (data.event === 'sync_user_list') {
-				// 用户 在登录页面 加入游戏后（对用户自己），[xxx,xxx...]
-				_this.users && _this.users.syncUserList('加入成功', '即将跳转到等待页面', 'success')
-				// 管理员 在登录页面 重新加入游戏后（对管理员自己），[xxx,xxx...]
-				_this.admin && _this.admin.globalNotice('重新进入成功', '即将跳转到等待页面', 'success')
+				// 用户 在登录页面 加入（或重新加入）游戏后（对用户自己），[xxx,xxx...]。可能跳转到等待页面，也可能是游戏页面
+				_this.users && _this.users.syncUserList('加入成功', '即将跳转', 'success', 'toDrag')
+				// 管理员 在登录页面 重新加入游戏后（对管理员自己），[xxx,xxx...]。可能跳转到等待页面，也可能是游戏页面
+				_this.admin && _this.admin.globalNotice('重新进入成功', '即将跳转', 'success', 'toDrag')
 				// sync_user_list返回的数组的排序
 				_this.appListData = data.data.slice(1).map((item) => ({
 					appIcon: 'tn-icon-trusty',
 					appName: item
 				}))
+				// 还没开始游戏，实时同步 拖拽列表
 				_this.drag && _this.drag.syncUserList()
-				// 场景：开始游戏后，断线重连，其它用户能看到，实时同步
+				// 场景：开始游戏后，断线重连，其它用户能看到，实时同步 上面的头像列表
 				_this.game && _this.game.syncUserList()
-				// 场景：开始游戏后，断线重连，管理员能看到，实时同步
+				// 场景：开始游戏后，断线重连，管理员能看到，实时同步 上面的头像列表
 				_this.manipulate && _this.manipulate.syncUserList()
-				// _this.action = null
 			}
 
 			if (data.event === 'stopGame') {
-				// 管理员关闭房间后，广播给所有人，房间已关闭
+				// 管理员关闭房间后，广播给所有人，房间已关闭，游戏被管理员结束
 				_this.drag && _this.drag.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
 				_this.game && _this.game.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
 				_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
@@ -162,10 +163,13 @@ export default {
 			}
 
 			if (data.event === 'syncInfo') {
-				// 管理员开始游戏后，广播给所有人，[]。
-				_this.drag && _this.drag.globalNotice('提示', '正在进入游戏', 'game', 'syncInfo')
 				_this.gameUserId = data.game_user_id
 				_this.gameId = data.game_id
+				// 管理员开始游戏后，（在拖拽页面）广播给所有人，data.data,[当前房间里的所有用户的数据，没有管理员，{},{},{}]。
+				_this.drag && _this.drag.globalNotice('提示', '正在进入游戏', 'game', 'syncInfo')
+				// 游戏已经开始，管理员或有用户 断线重连，（在登录页面(两个都是)）只发给断线重连的那个人，data.data,[当前房间里的所有用户的数据，没有管理员，{},{},{}]。 // 注意，这里的toGame或toManipulate，因为toast框关闭之后的操作toInterface是异步的，在关闭toast之前会覆盖掉toDrag（toast_significance）。注意是先syncUserList，再syncInfo
+				_this.users && _this.users.syncUserList('toPlay')
+				_this.admin && _this.admin.globalNotice('toPlay')
 			}
 		},
 
@@ -190,9 +194,8 @@ export default {
 
 	onLaunch() {
 		console.log('App Launch')
-		this.globalData.app = this
 		uni.request({
-			url: 'http://192.168.0.74:19999/v1/card/GetCardList', // 仅为示例，并非真实接口地址。
+			url: '/card/GetCardList', // 仅为示例，并非真实接口地址。
 			// data: {
 			//     text: 'uni.request'
 			// },

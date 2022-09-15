@@ -84,7 +84,7 @@
 		<!-- <nav-index-button></nav-index-button> -->
 
 		<view>
-			<tn-toast ref="toast" @closed="toDrag()"></tn-toast>
+			<tn-toast ref="toast" @closed="toInterface()"></tn-toast>
 		</view>
 
 	</view>
@@ -120,7 +120,8 @@ export default {
 				data: { username: this.user_name, game_key: this.game_key } // 房间秘钥
 			})
 		},
-		syncUserList(title, content, icon) {
+		syncUserList(title, content, icon, significance) {
+			if (title === 'toPlay') return this.toast_significance = 'toPlay'
 			this.$refs.toast.show({
 				title,
 				content,
@@ -128,15 +129,19 @@ export default {
 				image: '',
 				duration: 1500
 			})
-			this.toast_icon = icon
+			if (significance) this.toast_significance = significance
 			// this.todrag()
 		},
-		toDrag() {
+		toInterface() {
 			// console.log('xxx')
-			if (this.toast_icon === 'success') {
+			if (this.toast_significance === 'toDrag') {
+				// this.toast_significance = ''
 				uni.navigateTo({
 					url: '/pages/drag/index'
 				})
+			} else if (this.toast_significance === 'toPlay') {
+				// this.toast_significance = ''
+				uni.navigateTo({ url: '/pages/game/index' })
 			}
 		}
 

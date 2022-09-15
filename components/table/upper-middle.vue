@@ -7,17 +7,9 @@
 					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black">觉察投资</view>
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">权益</view>
 				</view>
-				<view class="tn-flex">
-					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black">个人觉察（股票投资）</view>
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">股票收益增加300000000000%</view>
-				</view>
-				<view class="tn-flex">
-					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black">个人觉察（股票投资）</view>
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">股票收益增加300000000000%</view>
-				</view>
-				<view class="tn-flex">
-					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black">个人觉察（股票投资）</view>
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">股票收益增加300000000000%</view>
+				<view v-for="item in asset1" :key="item.id" class="tn-flex">
+					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black">{{ item.card_name }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">增加</view>
 				</view>
 			</view>
 			<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
@@ -26,15 +18,22 @@
 					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">每股成本</view>
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">股数</view>
 				</view>
-				<view class="tn-flex">
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">jjjjjjjjjjjj</view>
-					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(6969696669969) }}</view>
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(969696969696) }}</view>
+				<view v-for="item in asset2" :key="item.id" class="tn-flex">
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">{{ item.card_name }}</view>
+					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(item.num) }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(item.value) }}</view>
 				</view>
+			</view>
+			<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
 				<view class="tn-flex">
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">avdsvcsd</view>
-					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(4465546) }}</view>
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(4687846) }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">房地产代码</view>
+					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">每月收入</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">价值</view>
+				</view>
+				<view v-for="item in asset3" :key="item.id" class="tn-flex">
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">{{ item.card_name }}</view>
+					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(item.num) }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(item.value) }}</view>
 				</view>
 			</view>
 		</view>
@@ -46,12 +45,33 @@ import cutApart from '@/utils/cut-apart/cut-apart.js'
 export default {
 	data() {
 		return {
+			asset1: [ {
+				id: 1,
+				card_name: '觉察'
+			} ],
+			asset2: [ {
+				id: 1,
+				card_name: '888888',
+				num: 99,
+				value: 99
+			} ],
+			asset3: [ {
+				id: 1,
+				card_name: '888888',
+				num: 99,
+				value: 99
+			} ]
 		}
 	},
 	mounted() {
 	},
 	methods: {
-		cutApart
+		cutApart,
+		setAssets(obj) {
+			this.asset1 = obj.asset1
+			this.asset2 = obj.asset2
+			this.asset3 = obj.asset3
+		}
 	}
 }
 </script>

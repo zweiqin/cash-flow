@@ -23,7 +23,7 @@
 				<view class="tn-padding-xs tn-margin-xs tn-radius bg-flex-shadow middle">
 					<view class="tn-flex layer-2">
 						<!-- 四个表格s -->
-						<view class="tn-flex-6"> <TableDataes></TableDataes> </view>
+						<view class="tn-flex-6"> <TableDataes ref="RefTableMain"></TableDataes> </view>
 						<!-- 四个表格e -->
 						<view class="tn-flex-1 tn-padding-xs innermost-3">
 							<!-- 右s -->
@@ -36,7 +36,7 @@
 				<!-- 底层开始 -->
 				<view class="tn-no-padding tn-margin-xs tn-radius bg-flex-shadow bottom">
 					<!-- 底层格子开始 -->
-					<Bottom></Bottom>
+					<Bottom ref="RefBottomMain"></Bottom>
 					<!-- 底层格子结束 -->
 				</view>
 				<!-- <view class="tn-padding-xl tn-margin-left-xs tn-margin-right-xs tn-margin-top-sm tn-margin-bottom-xs tn-radius bg-flex-shadow">xxxxx</view> -->
@@ -59,9 +59,8 @@
 				>
 					<view class="tn-height-full tn-flex tn-flex-row-right tn-flex-direction-column">
 						<!-- <tn-button shape="round" width="220rpx" font-color="#080808">关闭弹窗</tn-button> -->
-						<view class="tn-flex-1 popup-name">{{ popup_name }}的个人信息</view>
-						<view class="" style="height: 75%;"><TableDataes></TableDataes></view>
-						<view class="tn-flex-2"><Bottom></Bottom></view>
+						<view class="tn-flex-1 popup-name">{{ popup_name }}的个人信息</view> <view class="" style="height: 75%;"><TableDataes ref="RefTableEject"></TableDataes></view>
+						<view class="tn-flex-2"><Bottom ref="RefBottomEject"></Bottom></view>
 					</view>
 				</tn-popup>
 			</view>
@@ -117,6 +116,8 @@ import TableDataes from '@/components/table/table-dataes.vue'
 import userButton from './user-child/user-button.vue'
 import Bottom from '@/components/table/bottom.vue'
 // import cutApart from '@/utils/cut-apart/cut-apart.js'
+
+import { GetUserInfo } from 'config/api.js'
 export default {
 	components: { Timer, CountTo, TableDataes, Bottom, userButton },
 	data() {
@@ -150,6 +151,8 @@ export default {
 
 	onLoad(options) {
 		this.load_role = options.role
+		// 用户进入游戏后，获取用户数据
+		this.syncInfo()
 	},
 	onShow() {
 		getApp().globalData.game = this
@@ -158,9 +161,10 @@ export default {
 			// if (this.load_role === 'admin') {
 			// 	uni.navigateTo({ url: '/pages/login-admin/index' })
 			// } else {
-			// uni.navigateTo({ url: '/pages/index/index' })
+			uni.navigateTo({ url: '/pages/index/index' })
 			// }
 		}
+		// this.syncInfo() // 测试
 		// console.log(this.appListData)
 	},
 	onHide() {
@@ -179,6 +183,7 @@ export default {
 		showPopup(name) {
 			this.show_popup = true
 			this.popup_name = name
+			// console.log(this)
 		},
 		globalNotice(title, content, icon, significance) {
 			this.$refs.toast.show({
@@ -222,7 +227,100 @@ export default {
 					uni.navigateTo({ url: '/pages/index/index' })
 				}
 			}
+		},
+		syncInfo() {
+			// GetUserInfo({ id: getApp().globalData.game_user_id, game_id: getApp().globalData.game_id })
+			GetUserInfo({ id: 31, game_id: 22 })
+				.then((res) => {
+					console.log(res[1].data.data)
+					const data = res[1].data.data
+					this.setRecord(data, 'Main')
+				})
+				.catch((err) => {
+					console.log(err)
+				})
+		},
+		// 根据后端返回的数据，和具体的那一个整体（那两个子组件：四个表table 和 底部栏bottom），来进行数据渲染（调用子组件内部的方法）
+		setRecord(data, refFragment) {
+			// console.log(this.$refs.RefTableMain.$children[0].$children[0].$children[0].$children[0])
+			// console.log(this.$refs.RefTableMain.$children[0].$children[0].$children[1].$children[0])
+			// console.log(this.$refs.RefTableMain.$children[0].$children[1].$children[0].$children[0])
+			// console.log(this.$refs.RefTableMain.$children[0].$children[1].$children[1].$children[0])
+			// this.$refs.RefTableMain.$children[0].$children[0].$children[0].$children[0].setIncome({})
+			// this.$refs.RefTableMain.$children[0].$children[0].$children[1].$children[0].setExpenditure({})
+			// this.$refs.RefTableMain.$children[0].$children[1].$children[0].$children[0].setAssets({})
+			// this.$refs.RefTableMain.$children[0].$children[1].$children[1].$children[0].setLiabilities({})
+			// this.$refs.RefBottomMain.setButtom({})
+			const income1 = data.income.filter((item) => item.class === 5).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
+			const income2 = data.income.filter((item) => item.class === 6).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
+			const income3 = data.income.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
+			const income4 = data.income.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
+			this.$refs[`RefTable${refFragment}`].$children[0].$children[0].$children[0].$children[0].setIncome({
+				in_salary: data.basic_info.in_salary,
+				in_partner: data.basic_info.in_partner,
+				income1,
+				income2,
+				income3,
+				income4
+			})
+			this.$refs[`RefTable${refFragment}`].$children[0].$children[0].$children[1].$children[0].setExpenditure({
+				child_num: data.basic_info.child_num,
+				out_child: data.basic_info.out_child,
+				out_personal: data.basic_info.out_personal,
+				out_partner: data.basic_info.out_partner,
+				out_tax: data.basic_info.out_tax,
+				out_self_housing: data.basic_info.out_self_housing,
+				out_rent: data.basic_info.out_rent,
+				out_car_loan: data.basic_info.out_car_loan,
+				out_credit_card: data.basic_info.out_credit_card,
+				out_additional_liabilities: data.basic_info.out_additional_liabilities,
+				out_insuraunce: data.basic_info.out_insuraunce,
+				out_healthy: data.basic_info.out_healthy,
+				out_bank_loan_interest: data.basic_info.out_bank_loan_interest
+			})
+			const asset1 = data.assets.filter((item) => item.class === 4).map((item) => ({ id: item.id, card_name: item.card_name }))
+			const asset2 = data.assets.filter((item) => item.class === 2).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
+			const asset3 = data.assets.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
+			this.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[0].$children[0].setAssets({
+				asset1,
+				asset2,
+				asset3
+			})
+			const debt1 = data.assets.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
+			const debt2 = data.assets.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
+			this.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[1].$children[0].setLiabilities({
+				debt_self_housing: data.basic_info.child_num,
+				debt_car_loan: data.basic_info.child_num,
+				debt_credit_card: data.basic_info.child_num,
+				debt_additional_liabilities: data.basic_info.child_num,
+				debt1,
+				debt2,
+				debt_bank_loan: data.basic_info.debt_bank_loan
+			})
+			this.$refs[`RefBottom${refFragment}`].setButtom({
+				cash_flow: data.basic_info.cash_flow,
+				passive_in: data.basic_info.passive_in,
+				cash_on_hand: data.basic_info.cash_on_hand,
+				energy: data.basic_info.energy,
+				basics_in: data.basic_info.basics_in,
+				basics_out: data.basic_info.basics_out
+				// charitable: data.basic_info.charitable
+			})
+			// console.log(this.$refs.RefTableMain)
+			// console.log(this.$refs.RefBottomMain)
+			// console.log(this.$refs.RefTableEject.$children[0].$children[0].$children[0].$children[0])
+			// console.log(this.$refs.RefTableEject.$children[0].$children[0].$children[1].$children[0])
+			// console.log(this.$refs.RefTableEject.$children[0].$children[1].$children[0].$children[0])
+			// console.log(this.$refs.RefTableEject.$children[0].$children[1].$children[1].$children[0])
+			// this.$refs.RefTableEject.$children[0].$children[0].$children[0].$children[0].setIncome({})
+			// this.$refs.RefTableEject.$children[0].$children[0].$children[1].$children[0].setExpenditure({})
+			// this.$refs.RefTableEject.$children[0].$children[1].$children[0].$children[0].setAssets({})
+			// this.$refs.RefTableEject.$children[0].$children[1].$children[1].$children[0].setLiabilities({})
+			// this.$refs.RefBottomMain.setButtom({})
+			// console.log(this.$refs.RefTableEject)
+			// console.log(this.$refs.RefBottomEject)
 		}
+
 	}
 }
 </script>

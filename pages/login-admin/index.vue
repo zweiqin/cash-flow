@@ -112,7 +112,7 @@
 		<!-- <tn-verification-code ref="code" uniqueKey="login-demo-2" :seconds="60" @change="codeChange"> </tn-verification-code> -->
 
 		<view>
-			<tn-toast ref="toast" @closed="toDrag()"></tn-toast>
+			<tn-toast ref="toast" @closed="toInterface()"></tn-toast>
 		</view>
 
 	</view>
@@ -183,7 +183,7 @@ export default {
 			modeSliderStyle: {
 				left: 0
 			},
-			toast_icon: '',
+			toast_significance: '',
 			// 是否显示密码
 			// showPassword: false,
 			// 倒计时提示文字
@@ -285,7 +285,8 @@ export default {
 			// console.log(getApp().globalData.wsHandle)
 			// getApp().globalData.wsHandle.send({})
 		},
-		globalNotice(title, content, icon) {
+		globalNotice(title, content, icon, significance) {
+			if (title === 'toPlay') return this.toast_significance = 'toPlay'
 			this.$refs.toast.show({
 				title,
 				content,
@@ -293,14 +294,18 @@ export default {
 				image: '',
 				duration: 1500
 			})
-			this.toast_icon = icon
+			if (significance) this.toast_significance = significance
 		},
-		toDrag() {
+		toInterface() {
 			// console.log('xxx')
-			if (this.toast_icon === 'success') {
+			if (this.toast_significance === 'toDrag') {
+				// this.toast_significance = ''
 				uni.navigateTo({
 					url: '/pages/drag/index?role=admin'
 				})
+			} else if (this.toast_significance === 'toPlay') {
+				// this.toast_significance = ''
+				uni.navigateTo({ url: '/pages/manipulate/index?role=admin' })
 			}
 		}
 

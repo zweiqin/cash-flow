@@ -1,5 +1,8 @@
 function cutApart(strand) {
-	if (typeof strand === 'number') {
+	// console.log(strand)
+	if (typeof strand === 'undefined') {
+		strand = '0'
+	} else if (typeof strand === 'number') {
 		strand = String(strand)
 	}
 	return strand.replace(/\B(?=(?:\d{3})+\b)/g, ',')

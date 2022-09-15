@@ -11,11 +11,11 @@
 					<view class="tn-flex-11">
 						<view class="tn-flex">
 							<view class="tn-flex-6 tn-text-left">本人工资</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(800000000000) }}</view>
+							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(in_salary) }}</view>
 						</view>
 						<view class="tn-flex">
 							<view class="tn-flex-6 tn-text-left">配偶工资</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(8001) }}</view>
+							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(in_partner) }}</view>
 						</view>
 					</view>
 				</view>
@@ -23,9 +23,9 @@
 				<view class="tn-flex-1 tn-flex">
 					<view class="tn-flex-3 tn-flex tn-flex-direction-column tn-flex-row-center">副业收入</view>
 					<view class="tn-flex-11">
-						<view class="tn-flex">
-							<view class="tn-flex-6 tn-text-left">xx副业工资</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(8003) }}</view>
+						<view v-for="item in income1" :key="item.id" class="tn-flex">
+							<view class="tn-flex-6 tn-text-left">{{ item.card_name }}</view>
+							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(item.value) }}</view>
 						</view>
 					</view>
 				</view>
@@ -45,63 +45,14 @@
 							</view>
 							<view class="tn-flex-5 tn-text-right tn-margin-right-xs"></view>
 						</view>
-						<view class="tn-flex">
+						<view v-for="item in income2" :key="item.id" class="tn-flex">
 							<view class="tn-flex-6 tn-flex">
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ '888888' }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(1000000) }}</view>
+								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ item.card_name }}</view>
+								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(item.num) }}</view>
 							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-xs tn-border-solid-bottom tn-border-black">{{ cutApart(99999999999999) }}</view>
+							<view class="tn-flex-5 tn-text-right tn-margin-right-xs tn-border-solid-bottom tn-border-black">{{ cutApart(item.value) }}</view>
 						</view>
 						<!-- 重复测试s -->
-						<view class="tn-flex">
-							<view class="tn-flex-6 tn-flex">
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ '888888' }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(1000000) }}</view>
-							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-xs tn-border-solid-bottom tn-border-black">{{ cutApart(99999999999999) }}</view>
-						</view>
-						<view class="tn-flex">
-							<view class="tn-flex-6 tn-flex">
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ '888888' }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(1000000) }}</view>
-							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-xs tn-border-solid-bottom tn-border-black">{{ cutApart(99999999999999) }}</view>
-						</view>
-						<view class="tn-flex">
-							<view class="tn-flex-6 tn-flex">
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ '888888' }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(1000000) }}</view>
-							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-xs tn-border-solid-bottom tn-border-black">{{ cutApart(99999999999999) }}</view>
-						</view>
-						<view class="tn-flex">
-							<view class="tn-flex-6 tn-flex">
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ '888888' }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(1000000) }}</view>
-							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-xs tn-border-solid-bottom tn-border-black">{{ cutApart(99999999999999) }}</view>
-						</view>
-						<view class="tn-flex">
-							<view class="tn-flex-6 tn-flex">
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ '888888' }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(1000000) }}</view>
-							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-xs tn-border-solid-bottom tn-border-black">{{ cutApart(99999999999999) }}</view>
-						</view>
-						<view class="tn-flex">
-							<view class="tn-flex-6 tn-flex">
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ '888888' }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(1000000) }}</view>
-							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-xs tn-border-solid-bottom tn-border-black">{{ cutApart(99999999999999) }}</view>
-						</view>
-						<view class="tn-flex">
-							<view class="tn-flex-6 tn-flex">
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ '888888' }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(1000000) }}</view>
-							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-xs tn-border-solid-bottom tn-border-black">{{ cutApart(99999999999999) }}</view>
-						</view>
 						<!-- 重复测试s -->
 					</view>
 				</view>
@@ -112,16 +63,16 @@
 						<view class="tn-flex">
 							<view class="tn-flex-6 tn-flex">
 								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">代码</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">首付</view>
+								<!-- <view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">首付</view> -->
 							</view>
 							<view class="tn-flex-5 tn-text-right tn-margin-right-sm"></view>
 						</view>
-						<view class="tn-flex">
+						<view v-for="item in income3" :key="item.id" class="tn-flex">
 							<view class="tn-flex-6 tn-flex">
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ '0000001' }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(28282828) }}</view>
+								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ item.card_name }}</view>
+								<!-- <view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(item.num) }}</view> -->
 							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(9999999999998) }}</view>
+							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(item.value) }}</view>
 						</view>
 					</view>
 				</view>
@@ -136,12 +87,12 @@
 							</view>
 							<view class="tn-flex-5 tn-text-right tn-margin-right-sm"></view>
 						</view>
-						<view class="tn-flex">
+						<view v-for="item in income4" :key="item.id" class="tn-flex">
 							<view class="tn-flex-6 tn-flex">
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ '0000444' }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(2828444) }}</view>
+								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ item.card_name }}</view>
+								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(item.num) }}</view>
 							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(999999999997) }}</view>
+							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(item.value) }}</view>
 						</view>
 					</view>
 				</view>
@@ -156,6 +107,30 @@ export default {
 	data() {
 		return {
 			// test_num: 123456
+			in_salary: 99,
+			in_partner: 99,
+			income1: [ {
+				id: 1,
+				card_name: '副业工资',
+				value: 99
+			} ],
+			income2: [ {
+				id: 1,
+				card_name: '888888',
+				num: 99,
+				value: 99
+			} ],
+			income3: [ {
+				id: 1,
+				card_name: '888888',
+				value: 99
+			} ],
+			income4: [ {
+				id: 1,
+				card_name: '888888',
+				num: 99,
+				value: 99
+			} ]
 		}
 	},
 	mounted() {
@@ -164,7 +139,15 @@ export default {
 		// }, 2000)
 	},
 	methods: {
-		cutApart
+		cutApart,
+		setIncome(obj) {
+			this.in_salary = obj.in_salary
+			this.in_partner = obj.in_partner
+			this.income1 = obj.income1
+			this.income2 = obj.income2
+			this.income3 = obj.income3
+			this.income4 = obj.income4
+		}
 	}
 }
 </script>

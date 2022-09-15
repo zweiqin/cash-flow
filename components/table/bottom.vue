@@ -13,7 +13,7 @@
 					font-color="tn-color-white"
 					margin="2rpx 2rpx"
 				>
-					<text>月现金流：</text><text>{{ cutApart(99999999999) }}</text>
+					<text>月现金流：</text><text>{{ cutApart(cash_flow) }}</text>
 				</tn-tag>
 			</view>
 			<view class="tn-padding-xs tn-radius bg-flex-shadow" style="margin-top: 5rpx;">
@@ -27,7 +27,7 @@
 					font-color="tn-color-white"
 					margin="2rpx 2rpx"
 				>
-					<text>被动收入：</text><text>{{ cutApart(999999999998) }}</text>
+					<text>被动收入：</text><text>{{ cutApart(passive_in) }}</text>
 				</tn-tag>
 			</view>
 		</view>
@@ -45,7 +45,7 @@
 					margin="2rpx 2rpx"
 				>
 					<!-- 主管说要把存储改为现金 -->
-					<text>现金：</text><text>{{ cutApart(10200000000) }}</text>
+					<text>现金：</text><text>{{ cutApart(cash_on_hand) }}</text>
 				</tn-tag>
 			</view>
 			<view class="tn-padding-xs tn-radius bg-flex-shadow" style="margin-top: 5rpx;">
@@ -59,7 +59,7 @@
 					font-color="tn-color-white"
 					margin="2rpx 2rpx"
 				>
-					<text>精力：</text><text>{{ cutApart(103) }}</text>
+					<text>精力：</text><text>{{ cutApart(energy) }}</text>
 				</tn-tag>
 			</view>
 		</view>
@@ -76,7 +76,7 @@
 					font-color="tn-color-white"
 					margin="2rpx 2rpx"
 				>
-					<text>总收入：</text><text>{{ cutApart(104) }}</text>
+					<text>总收入：</text><text>{{ cutApart(basics_in) }}</text>
 				</tn-tag>
 			</view>
 			<view class="tn-padding-xs tn-radius bg-flex-shadow" style="margin-top: 5rpx;">
@@ -90,7 +90,7 @@
 					font-color="tn-color-white"
 					margin="2rpx 2rpx"
 				>
-					<text>总支出：</text><text>{{ cutApart(105) }}</text>
+					<text>总支出：</text><text>{{ cutApart(basics_out) }}</text>
 				</tn-tag>
 			</view>
 		</view>
@@ -107,7 +107,7 @@
 					font-color="tn-color-white"
 					margin="2rpx 2rpx"
 				>
-					<text>慈善：</text><text>{{ cutApart(1111111111111) }}</text>
+					<text>慈善：</text><text>{{ cutApart(charitable) }}</text>
 				</tn-tag>
 			</view>
 			<view class="tn-padding-xs tn-radius bg-flex-shadow" style="margin-top: 5rpx;">
@@ -131,12 +131,28 @@ import cutApart from '@/utils/cut-apart/cut-apart.js'
 export default {
 	data() {
 		return {
+			cash_flow: 99,
+			passive_in: 99,
+			cash_on_hand: 99,
+			energy: 99,
+			basics_in: 99,
+			basics_out: 99,
+			charitable: 99
 		}
 	},
 	mounted() {
 	},
 	methods: {
-		cutApart
+		cutApart,
+		setButtom(obj) {
+			this.cash_flow = obj.cash_flow
+			this.passive_in = obj.passive_in
+			this.cash_on_hand = obj.cash_on_hand
+			this.energy = obj.energy
+			this.basics_in = obj.basics_in
+			this.basics_out = obj.basics_out
+			this.charitable = obj.charitable
+		}
 	}
 }
 </script>
