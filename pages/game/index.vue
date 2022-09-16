@@ -12,7 +12,7 @@
 					</view>
 					<view class="tn-flex-9">
 						<view class="tn-flex tn-flex-row-center tn-flex-wrap tn-text-center">
-							<view v-for="item in appListData" :key="item.appName" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.appName)">
+							<view v-for="(item,index) in appListData" :key="item.appName" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.appName,index)">
 								<view> <tn-avatar :src="src" size="3.2vw"></tn-avatar> </view> <view>{{ item.appName }}</view>
 							</view>
 						</view>
@@ -85,6 +85,7 @@
 				:custom="false"
 				@click="clickBtn"
 			>
+				<view></view>
 				<!-- <view v-if="custom">
 						<view class="custom-modal-content">
 							<tn-form :label-width="140">
@@ -138,12 +139,13 @@ export default {
 					fontColor: '#FFFFFF'
 				}
 			],
-			button_order: '',
+			// button_order: '',
 			content: '',
 
 			toast_significance: '',
 
 			appListData: getApp().globalData.appListData,
+			appListId: getApp().globalData.appListId,
 
 			popup_name: ''
 		}
@@ -159,16 +161,19 @@ export default {
 		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
 		if (getApp().globalData.wsHandle === '') {
 			// if (this.load_role === 'admin') {
-			// 	uni.navigateTo({ url: '/pages/login-admin/index' })
+			// 	uni.redirectTo({ url: '/pages/login-admin/index' })
 			// } else {
-			uni.navigateTo({ url: '/pages/index/index' })
+			uni.redirectTo({ url: '/pages/index/index' })
 			// }
 		}
-		// this.syncInfo() // 测试
 		// console.log(this.appListData)
 	},
 	onHide() {
 		console.log('隐藏game组件')
+		// getApp().globalData.game = null
+	},
+	onUnload() {
+		console.log('卸载game组件')
 		getApp().globalData.game = null
 	},
 
@@ -180,7 +185,19 @@ export default {
 		changeCountTo(e) {
 			// console.log(e)
 		},
-		showPopup(name) {
+		showPopup(name, index) {
+			// this.appListId = getApp().globalData.appListId
+			GetUserInfo({ game_user_id: getApp().globalData.appListId[index], game_id: getApp().globalData.gameId })
+			// GetUserInfo({ game_user_id: 31, game_id: 22 })
+				.then((res) => {
+					console.log(res[1].data.data)
+					const data = res[1].data.data
+					this.setRecord(data, 'Eject')
+				})
+				.catch((err) => {
+					console.log(err)
+				})
+			// console.log('111')
 			this.show_popup = true
 			this.popup_name = name
 			// console.log(this)
@@ -222,17 +239,17 @@ export default {
 			if (this.toast_significance === 'stopGame') {
 				this.toast_significance = ''
 				if (getApp().globalData.role === 'admin') {
-					uni.navigateTo({ url: '/pages/login-admin/index' })
+					uni.redirectTo({ url: '/pages/login-admin/index' })
 				} else {
-					uni.navigateTo({ url: '/pages/index/index' })
+					uni.redirectTo({ url: '/pages/index/index' })
 				}
 			}
 		},
 		syncInfo() {
-			// GetUserInfo({ id: getApp().globalData.game_user_id, game_id: getApp().globalData.game_id })
-			GetUserInfo({ id: 31, game_id: 22 })
+			GetUserInfo({ game_user_id: getApp().globalData.gameUserId, game_id: getApp().globalData.gameId })
+			// GetUserInfo({ id: 31, game_id: 22 })
 				.then((res) => {
-					console.log(res[1].data.data)
+					// console.log(res[1].data.data)
 					const data = res[1].data.data
 					this.setRecord(data, 'Main')
 				})

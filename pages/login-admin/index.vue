@@ -32,13 +32,18 @@
 					<!-- 创建房间 -->
 					<block v-if="currentModeIndex === 0">
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
-							<view class="login__info__item__input__left-icon"> <view class="tn-icon-home-capsule"></view> </view>
-							<view class="login__info__item__input__content"> <input v-model="new_num" type="number" maxlength="4" placeholder-class="input-placeholder" placeholder="请输入房间号码后四位" /> </view>
-							<view class="login__info__item__input__right-button" @click="showPassword = !showPassword">
-								<view class="tn-margin-right-sm">
-									<tn-button size="sm" background-color="#01BEFF" font-color="#FFFFFF" @click="getIntRandomValue">获取整数随机值</tn-button>
+
+							<view class="tn-flex-1 login__info__item__input__left-icon"> <view class="tn-icon-home-capsule"></view> </view>
+
+							<view class="tn-flex-5 tn-flex login__info__item__input__content">
+								<view class="tn-text-lg tn-color-white tn-text-bold" style="padding-right: 5px;;letter-spacing: 2px;">{{ today }}</view> <input v-model="new_num" type="number" maxlength="4" placeholder-class="input-placeholder" placeholder="请输入房间号码后四位" /> </view>
+
+							<view class="tn-flex-4 login__info__item__input__right-button">
+								<view class="tn-margin-right-sm" style="float: right;">
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" @click="getIntRandomValue()">获取随机号</tn-button>
 								</view>
 							</view>
+
 						</view>
 						<!-- <view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
 							<view class="login__info__item__input__left-icon"> <view class="tn-icon-phone"></view> </view>
@@ -56,8 +61,11 @@
 					<!-- 重进房间 -->
 					<block v-if="currentModeIndex === 1">
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
-							<view class="login__info__item__input__left-icon"> <view class="tn-icon-home-capsule"></view> </view>
-							<view class="login__info__item__input__content"> <input v-model="old_num" type="number" maxlength="4" placeholder-class="input-placeholder" placeholder="请输入房间号码后四位" /> </view>
+
+							<view class="tn-flex-1 login__info__item__input__left-icon"> <view class="tn-icon-home-capsule"></view> </view>
+							<view class="tn-flex-5 tn-flex login__info__item__input__content">
+								<view class="tn-text-lg tn-color-white tn-text-bold" style="padding-right: 5px;;letter-spacing: 2px;">{{ today }}</view> <input v-model="old_num" type="number" maxlength="4" placeholder-class="input-placeholder" placeholder="请输入房间号码后四位" /> </view>
+
 						</view>
 						<!--
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
@@ -189,7 +197,9 @@ export default {
 			// 倒计时提示文字
 			// tips: '获取验证码'
 			new_num: '',
-			old_num: ''
+			old_num: '',
+			today: ''
+			// intRandomValue: ''
 		}
 	},
 	onLoad(options) {
@@ -205,6 +215,7 @@ export default {
 		// this.ctx.setFillStyle('red')
 		// this.ctx.fillRect(200, 300, 50, 50)
 		// this.ctx.draw()
+		this.getToday()
 	},
 	onUnload() {
 		clearTimeout(this.timer)
@@ -248,7 +259,7 @@ export default {
 		// 切换模式
 		modeSwitch(index) {
 			this.currentModeIndex = index
-			this.showPassword = false
+			// this.showPassword = false
 		},
 		// 获取验证码
 		// getCode() {
@@ -268,18 +279,30 @@ export default {
 		// codeChange(event) {
 		// 	this.tips = event
 		// }
+		getToday() {
+			const date = new Date()
+			const year = String(date.getFullYear()).substring(2)
+			let month = String(date.getMonth() + 1)
+			let day = String(date.getDate())
+			// console.log(date, year, month, day)
+			month = month.length > 1 ? month : '0' + month
+			day = day.length < 2 ? '0' + day : day
+			this.today = year + month + day
+		},
 
 		createGame() {
 			// console.log(getApp().globalData.wsHandle)
 			if (this.currentModeIndex === 0) {
+				if (this.new_num.length !== 4) return this.globalNotice('提示', '请输入房间号后四位', 'tip-fill')
 				getApp().globalData.init({
 					method: 'createGame',
-					data: this.new_num // 房间秘钥
+					data: this.today + this.new_num // 房间秘钥
 				})
 			} else if (this.currentModeIndex === 1) {
+				if (this.old_num.length !== 4) return this.globalNotice('提示', '请输入房间号后四位', 'tip-fill')
 				getApp().globalData.init({
 					method: 'rejoinGame',
-					data: this.old_num // 房间秘钥
+					data: this.today + this.old_num // 房间秘钥
 				})
 			}
 			// console.log(getApp().globalData.wsHandle)
@@ -307,6 +330,14 @@ export default {
 				// this.toast_significance = ''
 				uni.navigateTo({ url: '/pages/manipulate/index?role=admin' })
 			}
+		},
+		// 获取整数随机值
+		getIntRandomValue() {
+			const temp_num = this.$t.number.randomInt(0, 9999) // 包括头和尾
+			// (Array(n).join(0) + num).slice(-n); //js 数字前面自动补零。// // num传入的数字，n需要的字符长度。// slice当参数为负值时，表示按从右到左的顺序进行定位，即倒数定位法，而不再按正数顺序定位（从左到右），但取值顺序依然是从左到右。
+			this.new_num = (Array(4).join(0) + temp_num).slice(-4)
+
+			console.log(String(temp_num).length, temp_num, (Array(4).join(0) + temp_num).slice(-4), this.new_num)
 		}
 
 	}
@@ -421,6 +452,7 @@ export default {
 
 		&__item {
 			&__input {
+				// position: relative;
 				margin-top: 59rpx;
 				margin-bottom: 50rpx;
 				width: 100%;
@@ -436,7 +468,7 @@ export default {
 				}
 
 				&__content {
-					width: 80%;
+					width: 50%;
 					padding-left: 10rpx;
 
 					&--verify-code {
@@ -458,9 +490,13 @@ export default {
 				// }
 
 				&__right-button {
-					width: 10%;
-					font-size: 44rpx;
-					margin-right: 20rpx;
+					// position: absolute;
+					// right: 20rpx;
+					// float: right;
+					// margin-right: 0;
+					// width: 150rpx;
+					font-size: 20rpx;
+					// margin-right: 10rpx;
 					color: #ffffff;
 				}
 

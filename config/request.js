@@ -57,7 +57,7 @@ module.exports = (vm) => {
 		success(args) {
 			// 请求成功后，修改code值为1
 			// args.data.code = 1
-			// console.log(args)
+			console.log(args)
 			/* 对响应成功做点什么 可使用async await 做异步操作*/
 			const data = args.data
 			// 自定义参数
@@ -77,6 +77,7 @@ module.exports = (vm) => {
 				} else {
 					// 否则返回一个pending中的promise，请求不会进入catch中
 					return new Promise(() => {})
+					// return new Promise.reject(data)
 				}
 			}
 			return data.data ? data.data : {}

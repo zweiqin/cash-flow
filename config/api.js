@@ -1,7 +1,27 @@
-// 获取验证码
+// 获取具体某人的游戏资料信息
 export const GetUserInfo = (data) => uni.request({
 	url: '/game_user/GetUserInfo', // 仅为示例，并非真实接口地址。
 	method: 'GET',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// 获取具体某人的游戏资料信息
+export const GetCardCategoryList = (data) => uni.request({
+	url: '/card_category/GetCardCategoryList', // 仅为示例，并非真实接口地址。
+	method: 'GET',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// 指定某人来进行抽卡
+export const DrawCard = (data) => uni.request({
+	url: '/card/DrawCard', // 仅为示例，并非真实接口地址。
+	method: 'POST',
 	data,
 	custom: {
 		auth: false

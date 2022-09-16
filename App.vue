@@ -21,6 +21,23 @@ export default {
 			// 	appName: 'Banker5'
 			// }
 		],
+		appListId: [
+			// 159, 160
+		],
+		cardCategoryList: [
+			// {
+			// 	'id': 4,
+			// 	'category_name': '副业',
+			// 	'price': 200,
+			// 	'create_time': '2022-09-04 18:19:18'
+			// },
+			// {
+			//     "id": 5,
+			//     "category_name": "金融",
+			//     "price": 200,
+			//     "create_time": "2022-09-04 18:50:50"
+			// },
+		],
 		wsHandle: '',
 		// 用户加入游戏，管理员创建游戏和重新加入游戏。这三种情况的action
 		action: null,
@@ -85,6 +102,7 @@ export default {
 
 			if (data.event === 'globalNotice') {
 				// （创房的时候只有banker一个人）管理员创建游戏后，创建游戏成功
+				// 管理员重新进入房间的时候，banker重新进入游戏，但由于是先globalNotice再syncUserList，所以会被覆盖
 				_this.admin && _this.admin.globalNotice('创建成功', '即将跳转到等待页面', 'success', 'toDrag')
 
 				// 用户加入游戏后（对其它玩家），玩家1111进入房间
@@ -126,7 +144,7 @@ export default {
 					// 用户登录页面
 					// 情况：用户 加入房间失败
 					if (_this.action && _this.action.method === 'joinGame') {
-					// 已经加入房间 或 房间不存在
+					// 已经加入房间 或 房间不存在 或 已经开始游戏,无法加入
 						_this.users && _this.users.syncUserList('加入失败', data.data, 'cross-fill')
 					}
 
@@ -160,11 +178,14 @@ export default {
 				_this.game && _this.game.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
 				_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
 				_this.appListData = []
+				_this.appListId = []
 			}
 
 			if (data.event === 'syncInfo') {
 				_this.gameUserId = data.game_user_id
 				_this.gameId = data.game_id
+				_this.appListId = data.data.map((item) => item.id)
+				// console.log(data.data, _this.appListId, _this.appListData)
 				// 管理员开始游戏后，（在拖拽页面）广播给所有人，data.data,[当前房间里的所有用户的数据，没有管理员，{},{},{}]。
 				_this.drag && _this.drag.globalNotice('提示', '正在进入游戏', 'game', 'syncInfo')
 				// 游戏已经开始，管理员或有用户 断线重连，（在登录页面(两个都是)）只发给断线重连的那个人，data.data,[当前房间里的所有用户的数据，没有管理员，{},{},{}]。 // 注意，这里的toGame或toManipulate，因为toast框关闭之后的操作toInterface是异步的，在关闭toast之前会覆盖掉toDrag（toast_significance）。注意是先syncUserList，再syncInfo

@@ -12,7 +12,7 @@
 					</view>
 					<view class="tn-flex-9">
 						<view class="tn-flex tn-flex-row-center tn-flex-wrap tn-text-center">
-							<view v-for="item in appListData" :key="item.appName" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.appName)">
+							<view v-for="(item,index) in appListData" :key="item.appName" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.appName,index)">
 								<view> <tn-avatar :src="src" size="3.2vw"></tn-avatar> </view> <view>{{ item.appName }}</view>
 							</view>
 						</view>
@@ -36,7 +36,7 @@
 										:font-bold="true"
 										padding="2vw 10rpx"
 										margin="10rpx 0"
-										@click="showModel(1)"
+										@click="handleProcessing('关闭房间')"
 									>
 										<text>关闭房间</text>
 									</tn-button>
@@ -62,7 +62,7 @@
 									</tn-button>
 								</view>
 								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0" @click="handleProcessing('扣费抽卡')">
 										<text>扣费抽卡</text>
 									</tn-button>
 								</view>
@@ -144,8 +144,8 @@
 				>
 					<view class="tn-height-full tn-flex tn-flex-row-right tn-flex-direction-column">
 						<!-- <tn-button shape="round" width="220rpx" font-color="#080808">关闭弹窗</tn-button> -->
-						<view class="tn-flex-1 popup-name">{{ popup_name }}的个人信息</view> <view class="" style="height: 75%;"><TableDataes></TableDataes></view>
-						<view class="tn-flex-2"><Bottom></Bottom></view>
+						<view class="tn-flex-1 popup-name">{{ popup_name }}的个人信息</view> <view class="" style="height: 75%;"><TableDataes ref="RefTableEject"></TableDataes></view>
+						<view class="tn-flex-2"><Bottom ref="RefBottomEject"></Bottom></view>
 					</view>
 				</tn-popup>
 			</view>
@@ -161,15 +161,19 @@
 				:radius="12"
 				font-color="#BA7027"
 				:font-size="35"
-				title="提示"
+				:title="title"
 				:content="content"
 				:button="button"
-				:show-close-btn="true"
-				:mask-closeable="true"
+				:show-close-btn="close_btn"
+				:mask-closeable="mask_closeable"
 				:zoom="true"
-				:custom="false"
+				:custom="custom"
+				:z-index="2"
 				@click="clickBtn"
 			>
+				<view v-if="popup_significance === '扣费抽卡'">
+					<CardDeduction @cancel="clickBtn"></CardDeduction>
+				</view>
 				<!-- <view v-if="custom">
 						<view class="custom-modal-content">
 							<tn-form :label-width="140">
@@ -200,14 +204,22 @@ import Timer from '@/components/timer/timer.vue'
 import TableDataes from '@/components/table/table-dataes.vue'
 import Bottom from '@/components/table/bottom.vue'
 // import cutApart from '@/utils/cut-apart/cut-apart.js'
+
+import CardDeduction from './admin-child/card-deduction.vue'
+
+import { GetUserInfo, GetCardCategoryList } from 'config/api.js'
 export default {
-	components: { Timer, TableDataes, Bottom },
+	components: { Timer, TableDataes, Bottom, CardDeduction },
 	data() {
 		return {
 			load_role: '',
 			show_popup: false,
+
 			// 模态框
+			popup_significance: '',
 			is_show_model: false,
+			title: '提示',
+			content: '',
 			button: [
 				{
 					text: '取消',
@@ -220,8 +232,9 @@ export default {
 					fontColor: '#FFFFFF'
 				}
 			],
-			button_order: '',
-			content: '',
+			close_btn: true,
+			mask_closeable: true,
+			custom: false,
 
 			toast_significance: '',
 
@@ -233,20 +246,25 @@ export default {
 
 	onLoad(options) {
 		this.load_role = options.role
+		this.getCardCategoryList()
 	},
 	onShow() {
 		getApp().globalData.manipulate = this
 		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
 		if (getApp().globalData.wsHandle === '') {
 			// if (this.load_role === 'admin') {
-			uni.navigateTo({ url: '/pages/login-admin/index' })
+			uni.redirectTo({ url: '/pages/login-admin/index' })
 			// } else {
-			// uni.navigateTo({ url: '/pages/index/index' })
+			// uni.redirectTo({ url: '/pages/index/index' })
 			// }
 		}
 	},
 	onHide() {
 		console.log('隐藏manipulate组件')
+		// getApp().globalData.manipulate = null
+	},
+	onUnload() {
+		console.log('卸载manipulate组件')
 		getApp().globalData.manipulate = null
 	},
 
@@ -258,7 +276,49 @@ export default {
 		// changeCountTo(e) {
 		// 	// console.log(e)
 		// },
-		showPopup(name) {
+
+		getCardCategoryList() {
+			GetCardCategoryList({})
+				.then((res) => {
+					// console.log(res[1].data.data)
+					getApp().globalData.cardCategoryList = res[1].data.data
+				})
+				.catch((err) => {
+					console.log(err)
+				})
+		},
+
+		handleProcessing(significance) {
+			if (significance === '关闭房间') {
+				this.popup_significance = '关闭房间'
+				this.title = '提示'
+				this.content = '确定要关闭房间吗？'
+				// this.button = false
+				this.close_btn = true
+				this.mask_closeable = true
+				this.custom = false
+				this.is_show_model = true
+			} else if (significance === '扣费抽卡') {
+				this.popup_significance = '扣费抽卡'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			}
+		},
+
+		showPopup(name, index) {
+			// this.appListId = getApp().globalData.appListId
+			GetUserInfo({ id: getApp().globalData.appListId[index], game_id: getApp().globalData.gameId })
+			// GetUserInfo({ id: 31, game_id: 22 })
+				.then((res) => {
+					// console.log(res[1].data.data)
+					const data = res[1].data.data
+					this.setRecord(data, 'Eject')
+				})
+				.catch((err) => {
+					console.log(err)
+				})
 			this.show_popup = true
 			this.popup_name = name
 		},
@@ -276,18 +336,12 @@ export default {
 			this.appListData = getApp().globalData.appListData
 			// console.log(this.appListData)
 		},
-		showModel(num) {
-			if (num === 1) {
-				this.content = '确定要关闭房间吗？'
-				this.button_order = 1
-			}
-			this.is_show_model = true
-		},
+		// 关闭模态框触发
 		clickBtn(event) {
 			this.is_show_model = false
-			// console.log(event.index)
-			if (event.index === 1) {
-				if (this.button_order === 1) {
+			// console.log(event)
+			if (this.popup_significance === '关闭房间') {
+				if (event.index === 1) {
 					getApp().globalData.send({
 						method: 'stopGame',
 						data: getApp().globalData.gameKey
@@ -299,12 +353,93 @@ export default {
 			if (this.toast_significance === 'stopGame') {
 				this.toast_significance = ''
 				if (getApp().globalData.role === 'admin') {
-					uni.navigateTo({ url: '/pages/login-admin/index' })
+					uni.redirectTo({ url: '/pages/login-admin/index' })
 				} else {
-					uni.navigateTo({ url: '/pages/index/index' })
+					uni.redirectTo({ url: '/pages/index/index' })
 				}
 			}
+		},
+		// 根据后端返回的数据，和具体的那一个整体（那两个子组件：四个表table 和 底部栏bottom），来进行数据渲染（调用子组件内部的方法）
+		setRecord(data, refFragment) {
+			// console.log(this.$refs.RefTableMain.$children[0].$children[0].$children[0].$children[0])
+			// console.log(this.$refs.RefTableMain.$children[0].$children[0].$children[1].$children[0])
+			// console.log(this.$refs.RefTableMain.$children[0].$children[1].$children[0].$children[0])
+			// console.log(this.$refs.RefTableMain.$children[0].$children[1].$children[1].$children[0])
+			// this.$refs.RefTableMain.$children[0].$children[0].$children[0].$children[0].setIncome({})
+			// this.$refs.RefTableMain.$children[0].$children[0].$children[1].$children[0].setExpenditure({})
+			// this.$refs.RefTableMain.$children[0].$children[1].$children[0].$children[0].setAssets({})
+			// this.$refs.RefTableMain.$children[0].$children[1].$children[1].$children[0].setLiabilities({})
+			// this.$refs.RefBottomMain.setButtom({})
+			const income1 = data.income.filter((item) => item.class === 5).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
+			const income2 = data.income.filter((item) => item.class === 6).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
+			const income3 = data.income.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
+			const income4 = data.income.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
+			this.$refs[`RefTable${refFragment}`].$children[0].$children[0].$children[0].$children[0].setIncome({
+				in_salary: data.basic_info.in_salary,
+				in_partner: data.basic_info.in_partner,
+				income1,
+				income2,
+				income3,
+				income4
+			})
+			this.$refs[`RefTable${refFragment}`].$children[0].$children[0].$children[1].$children[0].setExpenditure({
+				child_num: data.basic_info.child_num,
+				out_child: data.basic_info.out_child,
+				out_personal: data.basic_info.out_personal,
+				out_partner: data.basic_info.out_partner,
+				out_tax: data.basic_info.out_tax,
+				out_self_housing: data.basic_info.out_self_housing,
+				out_rent: data.basic_info.out_rent,
+				out_car_loan: data.basic_info.out_car_loan,
+				out_credit_card: data.basic_info.out_credit_card,
+				out_additional_liabilities: data.basic_info.out_additional_liabilities,
+				out_insuraunce: data.basic_info.out_insuraunce,
+				out_healthy: data.basic_info.out_healthy,
+				out_bank_loan_interest: data.basic_info.out_bank_loan_interest
+			})
+			const asset1 = data.assets.filter((item) => item.class === 4).map((item) => ({ id: item.id, card_name: item.card_name }))
+			const asset2 = data.assets.filter((item) => item.class === 2).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
+			const asset3 = data.assets.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
+			this.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[0].$children[0].setAssets({
+				asset1,
+				asset2,
+				asset3
+			})
+			const debt1 = data.assets.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
+			const debt2 = data.assets.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
+			this.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[1].$children[0].setLiabilities({
+				debt_self_housing: data.basic_info.child_num,
+				debt_car_loan: data.basic_info.child_num,
+				debt_credit_card: data.basic_info.child_num,
+				debt_additional_liabilities: data.basic_info.child_num,
+				debt1,
+				debt2,
+				debt_bank_loan: data.basic_info.debt_bank_loan
+			})
+			this.$refs[`RefBottom${refFragment}`].setButtom({
+				cash_flow: data.basic_info.cash_flow,
+				passive_in: data.basic_info.passive_in,
+				cash_on_hand: data.basic_info.cash_on_hand,
+				energy: data.basic_info.energy,
+				basics_in: data.basic_info.basics_in,
+				basics_out: data.basic_info.basics_out
+				// charitable: data.basic_info.charitable
+			})
+			// console.log(this.$refs.RefTableMain)
+			// console.log(this.$refs.RefBottomMain)
+			// console.log(this.$refs.RefTableEject.$children[0].$children[0].$children[0].$children[0])
+			// console.log(this.$refs.RefTableEject.$children[0].$children[0].$children[1].$children[0])
+			// console.log(this.$refs.RefTableEject.$children[0].$children[1].$children[0].$children[0])
+			// console.log(this.$refs.RefTableEject.$children[0].$children[1].$children[1].$children[0])
+			// this.$refs.RefTableEject.$children[0].$children[0].$children[0].$children[0].setIncome({})
+			// this.$refs.RefTableEject.$children[0].$children[0].$children[1].$children[0].setExpenditure({})
+			// this.$refs.RefTableEject.$children[0].$children[1].$children[0].$children[0].setAssets({})
+			// this.$refs.RefTableEject.$children[0].$children[1].$children[1].$children[0].setLiabilities({})
+			// this.$refs.RefBottomMain.setButtom({})
+			// console.log(this.$refs.RefTableEject)
+			// console.log(this.$refs.RefBottomEject)
 		}
+
 	}
 }
 </script>

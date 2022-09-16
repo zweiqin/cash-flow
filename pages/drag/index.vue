@@ -142,7 +142,7 @@ export default {
 	computed: {
 		welcome() {
 			if (getApp().globalData.role === 'admin') {
-				return `您好，管理员！`
+				return `您好，管理员！房间号为${getApp().globalData.gameKey}`
 			}
 			return `您好，${getApp().globalData.userName}!`
 		}
@@ -159,23 +159,27 @@ export default {
 		// console.log(window.location.hash.substring(window.location.hash.indexOf('=') + 1, window.location.hash.length))
 		// if (getApp().globalData.wsHandle === '') {
 		// 	if (window.location.href.substring(window.location.href.indexOf('=') + 1, window.location.href.length) === 'admin') {
-		// 		uni.navigateTo({ url: '/pages/login-admin/index' })
+		// 		uni.redirectTo({ url: '/pages/login-admin/index' })
 		// 	} else {
-		// 		uni.navigateTo({ url: '/pages/index/index' })
+		// 		uni.redirectTo({ url: '/pages/index/index' })
 		// 	}
 		// }
 
 		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
 		if (getApp().globalData.wsHandle === '') {
 			if (this.load_role === 'admin') {
-				uni.navigateTo({ url: '/pages/login-admin/index' })
+				uni.redirectTo({ url: '/pages/login-admin/index' })
 			} else {
-				uni.navigateTo({ url: '/pages/index/index' })
+				uni.redirectTo({ url: '/pages/index/index' })
 			}
 		}
 	},
 	onHide() {
 		console.log('隐藏drag组件')
+		// getApp().globalData.drag = null
+	},
+	onUnload() {
+		console.log('卸载drag组件')
 		getApp().globalData.drag = null
 	},
 
@@ -257,16 +261,16 @@ export default {
 			if (this.toast_significance === 'stopGame') {
 				// this.toast_significance = ''
 				if (getApp().globalData.role === 'admin') {
-					uni.navigateTo({ url: '/pages/login-admin/index' })
+					uni.redirectTo({ url: '/pages/login-admin/index' })
 				} else {
-					uni.navigateTo({ url: '/pages/index/index' })
+					uni.redirectTo({ url: '/pages/index/index' })
 				}
 			} else if (this.toast_significance === 'syncInfo') {
 				// this.toast_significance = ''
 				if (getApp().globalData.role === 'admin') {
-					uni.navigateTo({ url: '/pages/manipulate/index?role=admin' })
+					uni.redirectTo({ url: '/pages/manipulate/index?role=admin' })
 				} else {
-					uni.navigateTo({ url: '/pages/game/index' })
+					uni.redirectTo({ url: '/pages/game/index' })
 				}
 			}
 		}

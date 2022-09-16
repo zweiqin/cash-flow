@@ -43,8 +43,15 @@
 					<!-- 用户进入房间 -->
 					<block>
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
+
 							<view class="login__info__item__input__left-icon"> <view class="tn-icon-home-capsule"></view> </view>
-							<view class="login__info__item__input__content"> <input v-model="game_key" maxlength="20" placeholder-class="input-placeholder" placeholder="请输入房间号码" /> </view>
+
+							<view class="tn-flex login__info__item__input__content">
+
+								<view class="tn-text-lg tn-color-white tn-text-bold" style="padding-right: 5px;;letter-spacing: 2px;">{{ today }}</view> <input v-model="game_key" type="number" maxlength="4" placeholder-class="input-placeholder" placeholder="请输入房间号码后四位" />
+
+							</view>
+
 						</view>
 
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
@@ -103,8 +110,12 @@ export default {
 			// showPassword: false
 			user_name: '',
 			game_key: '',
-			toast_icon: ''
+			toast_icon: '',
+			today: ''
 		}
+	},
+	onLoad() {
+		this.getToday()
 	},
 	onShow() {
 		getApp().globalData.users = this
@@ -114,10 +125,20 @@ export default {
 		getApp().globalData.users = null
 	},
 	methods: {
+		getToday() {
+			const date = new Date()
+			const year = String(date.getFullYear()).substring(2)
+			let month = String(date.getMonth() + 1)
+			let day = String(date.getDate())
+			// console.log(date, year, month, day)
+			month = month.length > 1 ? month : '0' + month
+			day = day.length < 2 ? '0' + day : day
+			this.today = year + month + day
+		},
 		joinGame() {
 			getApp().globalData.init({
 				method: 'joinGame',
-				data: { username: this.user_name, game_key: this.game_key } // 房间秘钥
+				data: { username: this.user_name, game_key: this.today + this.game_key } // 房间秘钥
 			})
 		},
 		syncUserList(title, content, icon, significance) {

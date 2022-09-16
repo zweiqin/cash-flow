@@ -67,10 +67,13 @@ export default {
 				} else {
 					// 第二次点击
 					[this.listData_c[index], this.listData[this.touchIndex]] = [this.listData[this.touchIndex], this.listData_c[index]]
+					if (index !== this.touchIndex) {
+						// 点击的不是同一个，则返回给父组件（进行真正的顺序调整）
+						this.$emit('listChange', this.listData_c)
+					}
 					this.touchIndex = ''
 					this.deleteAppID = ''
 					this.isClickFirst = !this.isClickFirst
-					this.$emit('listChange', this.listData_c)
 				}
 			}
 			// console.log(event)
