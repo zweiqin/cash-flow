@@ -56,7 +56,7 @@
 
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
 							<view class="login__info__item__input__left-icon"> <view class="tn-icon-my"></view> </view>
-							<view class="login__info__item__input__content"> <input v-model="user_name" placeholder-class="input-placeholder" placeholder="请输入用户名" /> </view>
+							<view class="login__info__item__input__content"> <input v-model="user_name" placeholder-class="input-placeholder" placeholder="请输入您的中文昵称" /> </view>
 							<!-- <view class="login__info__item__input__content"> <input :password="!showPassword" placeholder-class="input-placeholder" placeholder="请输入用户名" /> </view>
 							<view class="login__info__item__input__right-icon" @click="showPassword = !showPassword">
 								<view :class="[showPassword ? 'tn-icon-eye' : 'tn-icon-eye-hide']"></view>
@@ -115,15 +115,21 @@ export default {
 		}
 	},
 	onLoad() {
+		getApp().globalData.users = this
 		this.getToday()
 	},
 	onShow() {
-		getApp().globalData.users = this
+		// getApp().globalData.users = this
 	},
 	onHide() {
 		console.log('隐藏users组件')
+		// getApp().globalData.users = null
+	},
+	onUnload() {
+		console.log('卸载users组件')
 		getApp().globalData.users = null
 	},
+
 	methods: {
 		getToday() {
 			const date = new Date()
@@ -135,13 +141,16 @@ export default {
 			day = day.length < 2 ? '0' + day : day
 			this.today = year + month + day
 		},
+
 		joinGame() {
+			if (this.game_key.length !== 4) return this.globalNotice('提示', '请输入房间号后四位', 'tip-fill')
+			if (!/^[\u4E00-\u9FA5]+$/.test(this.user_name)) return this.globalNotice('提示', '请输入中文名称', 'tip-fill')
 			getApp().globalData.init({
 				method: 'joinGame',
 				data: { username: this.user_name, game_key: this.today + this.game_key } // 房间秘钥
 			})
 		},
-		syncUserList(title, content, icon, significance) {
+		globalNotice(title, content, icon, significance) {
 			if (title === 'toPlay') return this.toast_significance = 'toPlay'
 			this.$refs.toast.show({
 				title,
@@ -157,12 +166,12 @@ export default {
 			// console.log('xxx')
 			if (this.toast_significance === 'toDrag') {
 				// this.toast_significance = ''
-				uni.navigateTo({
+				uni.redirectTo({
 					url: '/pages/drag/index'
 				})
 			} else if (this.toast_significance === 'toPlay') {
 				// this.toast_significance = ''
-				uni.navigateTo({ url: '/pages/game/index' })
+				uni.redirectTo({ url: '/pages/game/index' })
 			}
 		}
 

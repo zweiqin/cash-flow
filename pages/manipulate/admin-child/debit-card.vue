@@ -51,17 +51,17 @@ export default {
 		this.$refs.form.setRules(this.rules)
 	},
 	methods: {
+		cancel() {
+			this.$emit('cancel')
+		},
 		// 单选项值改变事件
 		radioGroupChange(event) {
 			console.log(event)
 			this.model.payType = event
 		},
-		cancel() {
-			this.$emit('cancel')
-		},
 		// 表单提交
 		submit() {
-			this.$refs.form.validate((valid) => {
+			this.$refs.form.validate(async (valid) => {
 				if (valid) {
 					// 这里的验证有问题
 					// 验证通过
@@ -69,11 +69,12 @@ export default {
 					console.log(this.model)
 					DrawCard({
 						game_id: getApp().globalData.gameId,
-						game_user_id: getApp().globalData.appListId[0],
+						game_user_id: getApp().globalData.appListId[0].id,
 						category_id: this.model.payType
 					})
 						.then((res) => {
-							console.log(res[1].data.data)
+							console.log(res)
+							// console.log(res[1].data.data)
 						})
 						.catch((err) => {
 							console.log(err)

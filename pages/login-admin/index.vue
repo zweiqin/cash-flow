@@ -203,6 +203,7 @@ export default {
 		}
 	},
 	onLoad(options) {
+		getApp().globalData.admin = this
 		this.from = options.from || ''
 
 		for (let i = 0; i < 80; i++) {
@@ -219,13 +220,15 @@ export default {
 	},
 	onUnload() {
 		clearTimeout(this.timer)
+		console.log('卸载admin组件')
+		getApp().globalData.admin = null
 	},
 	onShow() {
-		getApp().globalData.admin = this
+		// getApp().globalData.admin = this
 	},
 	onHide() {
 		console.log('隐藏admin组件')
-		getApp().globalData.admin = null
+		// getApp().globalData.admin = null
 	},
 
 	watch: {
@@ -323,12 +326,12 @@ export default {
 			// console.log('xxx')
 			if (this.toast_significance === 'toDrag') {
 				// this.toast_significance = ''
-				uni.navigateTo({
+				uni.redirectTo({
 					url: '/pages/drag/index?role=admin'
 				})
 			} else if (this.toast_significance === 'toPlay') {
 				// this.toast_significance = ''
-				uni.navigateTo({ url: '/pages/manipulate/index?role=admin' })
+				uni.redirectTo({ url: '/pages/manipulate/index?role=admin' })
 			}
 		},
 		// 获取整数随机值
@@ -336,8 +339,7 @@ export default {
 			const temp_num = this.$t.number.randomInt(0, 9999) // 包括头和尾
 			// (Array(n).join(0) + num).slice(-n); //js 数字前面自动补零。// // num传入的数字，n需要的字符长度。// slice当参数为负值时，表示按从右到左的顺序进行定位，即倒数定位法，而不再按正数顺序定位（从左到右），但取值顺序依然是从左到右。
 			this.new_num = (Array(4).join(0) + temp_num).slice(-4)
-
-			console.log(String(temp_num).length, temp_num, (Array(4).join(0) + temp_num).slice(-4), this.new_num)
+			// console.log(String(temp_num).length, temp_num, (Array(4).join(0) + temp_num).slice(-4), this.new_num)
 		}
 
 	}

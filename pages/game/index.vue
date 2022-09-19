@@ -12,8 +12,10 @@
 					</view>
 					<view class="tn-flex-9">
 						<view class="tn-flex tn-flex-row-center tn-flex-wrap tn-text-center">
-							<view v-for="(item,index) in appListData" :key="item.appName" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.appName,index)">
-								<view> <tn-avatar :src="src" size="3.2vw"></tn-avatar> </view> <view>{{ item.appName }}</view>
+							<view v-for="(item,index) in appListId" :key="item.id" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.userName, item.id)">
+								<view style="width: 3.2vw;height: 3.2vw;margin:0 auto 5px;border-radius: 50%;" :class="(round[1]-1) === index ? 'my-turn' : ''"> <tn-avatar icon="constellation" size="3.2vw"></tn-avatar> </view>
+								<view>{{ item.userName }}</view>
+								<view>{{ item.roleName }}</view>
 							</view>
 						</view>
 					</view>
@@ -76,31 +78,17 @@
 				:radius="12"
 				font-color="#BA7027"
 				:font-size="35"
-				title="提示"
+				:title="title"
 				:content="content"
 				:button="button"
-				:show-close-btn="true"
-				:mask-closeable="true"
+				:show-close-btn="close_btn"
+				:mask-closeable="mask_closeable"
 				:zoom="true"
-				:custom="false"
+				:custom="custom"
+				:z-index="2"
 				@click="clickBtn"
 			>
 				<view></view>
-				<!-- <view v-if="custom">
-						<view class="custom-modal-content">
-							<tn-form :label-width="140">
-								<tn-form-item label="手机号码" :border-bottom="false">
-									<tn-input placeholder="请输入手机号码"></tn-input>
-								</tn-form-item>
-								<tn-form-item label="验证码" :border-bottom="false">
-									<tn-input placeholder="请输入验证码"></tn-input>
-									<view slot="right" class="tn-flex tn-flex-col-center tn-flex-row-center">
-										<tn-button :font-size="20" padding="10rpx" height="46rpx" background-color="#01BEFF" font-color="tn-color-white">获取验证码</tn-button>
-									</view>
-								</tn-form-item>
-							</tn-form>
-						</view>
-					</view> -->
 			</tn-modal>
 		</view>
 	</view>
@@ -118,15 +106,24 @@ import userButton from './user-child/user-button.vue'
 import Bottom from '@/components/table/bottom.vue'
 // import cutApart from '@/utils/cut-apart/cut-apart.js'
 
+// 接口
 import { GetUserInfo } from 'config/api.js'
+
+// 公共的方法
+import setRecord from 'utils/render-table/render-table.js'
+
 export default {
 	components: { Timer, CountTo, TableDataes, Bottom, userButton },
 	data() {
 		return {
-			load_role: '',
+			// load_role: '',
 			show_popup: false,
+
 			// 模态框
+			popup_significance: '',
 			is_show_model: false,
+			title: '提示',
+			content: '',
 			button: [
 				{
 					text: '取消',
@@ -139,25 +136,23 @@ export default {
 					fontColor: '#FFFFFF'
 				}
 			],
-			// button_order: '',
-			content: '',
+			close_btn: true,
+			mask_closeable: true,
+			custom: false,
 
 			toast_significance: '',
 
-			appListData: getApp().globalData.appListData,
+			// appListData: getApp().globalData.appListData,
 			appListId: getApp().globalData.appListId,
+			round: getApp().globalData.round,
 
 			popup_name: ''
 		}
 	},
 
 	onLoad(options) {
-		this.load_role = options.role
-		// 用户进入游戏后，获取用户数据
-		this.syncInfo()
-	},
-	onShow() {
 		getApp().globalData.game = this
+		// this.load_role = options.role
 		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
 		if (getApp().globalData.wsHandle === '') {
 			// if (this.load_role === 'admin') {
@@ -165,8 +160,13 @@ export default {
 			// } else {
 			uni.redirectTo({ url: '/pages/index/index' })
 			// }
+		} else {
+		// 用户进入游戏后，获取用户数据
+			this.syncInfo()
 		}
-		// console.log(this.appListData)
+	},
+	onShow() {
+		// getApp().globalData.game = this
 	},
 	onHide() {
 		console.log('隐藏game组件')
@@ -185,14 +185,25 @@ export default {
 		changeCountTo(e) {
 			// console.log(e)
 		},
-		showPopup(name, index) {
+
+		handleProcessing(significance) {
+			if (significance === 'debitCard') {
+				this.popup_significance = 'debitCard'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			}
+		},
+
+		showPopup(name, id) {
 			// this.appListId = getApp().globalData.appListId
-			GetUserInfo({ game_user_id: getApp().globalData.appListId[index], game_id: getApp().globalData.gameId })
+			GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
 			// GetUserInfo({ game_user_id: 31, game_id: 22 })
 				.then((res) => {
 					console.log(res[1].data.data)
 					const data = res[1].data.data
-					this.setRecord(data, 'Eject')
+					setRecord(data, 'Eject', this)
 				})
 				.catch((err) => {
 					console.log(err)
@@ -212,16 +223,18 @@ export default {
 			})
 			if (significance) this.toast_significance = significance
 		},
-		syncUserList() {
-			this.appListData = getApp().globalData.appListData
-			// console.log(this.appListData)
-		},
-		showModel(num) {
-			// if (num === 1) {
-			// 	this.content = '确定要关闭房间吗？'
-			// 	this.button_order = 1
-			// }
-			this.is_show_model = true
+		// syncUserList() {
+		// 	this.appListData = getApp().globalData.appListData
+		// 	// console.log(this.appListData)
+		// },
+		syncAvatarStyle() {
+			// 同步头像样式
+			this.round = getApp().globalData.round
+			if (this.round[0] === getApp().globalData.gameUserId) {
+				this.globalNotice('提示', '轮到您了！', 'creative')
+			} else {
+				this.globalNotice('提示', '下一回合！', 'creative')
+			}
 		},
 		clickBtn(event) {
 			this.is_show_model = false
@@ -251,91 +264,11 @@ export default {
 				.then((res) => {
 					// console.log(res[1].data.data)
 					const data = res[1].data.data
-					this.setRecord(data, 'Main')
+					setRecord(data, 'Main', this)
 				})
 				.catch((err) => {
 					console.log(err)
 				})
-		},
-		// 根据后端返回的数据，和具体的那一个整体（那两个子组件：四个表table 和 底部栏bottom），来进行数据渲染（调用子组件内部的方法）
-		setRecord(data, refFragment) {
-			// console.log(this.$refs.RefTableMain.$children[0].$children[0].$children[0].$children[0])
-			// console.log(this.$refs.RefTableMain.$children[0].$children[0].$children[1].$children[0])
-			// console.log(this.$refs.RefTableMain.$children[0].$children[1].$children[0].$children[0])
-			// console.log(this.$refs.RefTableMain.$children[0].$children[1].$children[1].$children[0])
-			// this.$refs.RefTableMain.$children[0].$children[0].$children[0].$children[0].setIncome({})
-			// this.$refs.RefTableMain.$children[0].$children[0].$children[1].$children[0].setExpenditure({})
-			// this.$refs.RefTableMain.$children[0].$children[1].$children[0].$children[0].setAssets({})
-			// this.$refs.RefTableMain.$children[0].$children[1].$children[1].$children[0].setLiabilities({})
-			// this.$refs.RefBottomMain.setButtom({})
-			const income1 = data.income.filter((item) => item.class === 5).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
-			const income2 = data.income.filter((item) => item.class === 6).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
-			const income3 = data.income.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
-			const income4 = data.income.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
-			this.$refs[`RefTable${refFragment}`].$children[0].$children[0].$children[0].$children[0].setIncome({
-				in_salary: data.basic_info.in_salary,
-				in_partner: data.basic_info.in_partner,
-				income1,
-				income2,
-				income3,
-				income4
-			})
-			this.$refs[`RefTable${refFragment}`].$children[0].$children[0].$children[1].$children[0].setExpenditure({
-				child_num: data.basic_info.child_num,
-				out_child: data.basic_info.out_child,
-				out_personal: data.basic_info.out_personal,
-				out_partner: data.basic_info.out_partner,
-				out_tax: data.basic_info.out_tax,
-				out_self_housing: data.basic_info.out_self_housing,
-				out_rent: data.basic_info.out_rent,
-				out_car_loan: data.basic_info.out_car_loan,
-				out_credit_card: data.basic_info.out_credit_card,
-				out_additional_liabilities: data.basic_info.out_additional_liabilities,
-				out_insuraunce: data.basic_info.out_insuraunce,
-				out_healthy: data.basic_info.out_healthy,
-				out_bank_loan_interest: data.basic_info.out_bank_loan_interest
-			})
-			const asset1 = data.assets.filter((item) => item.class === 4).map((item) => ({ id: item.id, card_name: item.card_name }))
-			const asset2 = data.assets.filter((item) => item.class === 2).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
-			const asset3 = data.assets.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
-			this.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[0].$children[0].setAssets({
-				asset1,
-				asset2,
-				asset3
-			})
-			const debt1 = data.assets.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
-			const debt2 = data.assets.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
-			this.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[1].$children[0].setLiabilities({
-				debt_self_housing: data.basic_info.child_num,
-				debt_car_loan: data.basic_info.child_num,
-				debt_credit_card: data.basic_info.child_num,
-				debt_additional_liabilities: data.basic_info.child_num,
-				debt1,
-				debt2,
-				debt_bank_loan: data.basic_info.debt_bank_loan
-			})
-			this.$refs[`RefBottom${refFragment}`].setButtom({
-				cash_flow: data.basic_info.cash_flow,
-				passive_in: data.basic_info.passive_in,
-				cash_on_hand: data.basic_info.cash_on_hand,
-				energy: data.basic_info.energy,
-				basics_in: data.basic_info.basics_in,
-				basics_out: data.basic_info.basics_out
-				// charitable: data.basic_info.charitable
-			})
-			// console.log(this.$refs.RefTableMain)
-			// console.log(this.$refs.RefBottomMain)
-			// console.log(this.$refs.RefTableEject.$children[0].$children[0].$children[0].$children[0])
-			// console.log(this.$refs.RefTableEject.$children[0].$children[0].$children[1].$children[0])
-			// console.log(this.$refs.RefTableEject.$children[0].$children[1].$children[0].$children[0])
-			// console.log(this.$refs.RefTableEject.$children[0].$children[1].$children[1].$children[0])
-			// this.$refs.RefTableEject.$children[0].$children[0].$children[0].$children[0].setIncome({})
-			// this.$refs.RefTableEject.$children[0].$children[0].$children[1].$children[0].setExpenditure({})
-			// this.$refs.RefTableEject.$children[0].$children[1].$children[0].$children[0].setAssets({})
-			// this.$refs.RefTableEject.$children[0].$children[1].$children[1].$children[0].setLiabilities({})
-			// this.$refs.RefBottomMain.setButtom({})
-			// console.log(this.$refs.RefTableEject)
-			// console.log(this.$refs.RefBottomEject)
 		}
 
 	}
@@ -365,6 +298,9 @@ export default {
 				flex: 1;
 				// height: 20vh;
 				overflow: auto;
+				.my-turn {
+					box-shadow: 0px -5px 10px 0px #ff0000, -6px 0px 6px 0px #ff0000, 6px 0px 6px 0px #ff0000, 0px 5px 19px 0px #ff0000;
+				}
 			}
 			.middle {
 				flex: 10;

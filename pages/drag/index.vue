@@ -142,18 +142,19 @@ export default {
 	computed: {
 		welcome() {
 			if (getApp().globalData.role === 'admin') {
-				return `您好，管理员！房间号为${getApp().globalData.gameKey}`
+				return `您好，管理员！房间号为 ${getApp().globalData.gameKey}`
 			}
 			return `您好，${getApp().globalData.userName}!`
 		}
 	},
 
 	onLoad(options) {
+		getApp().globalData.drag = this
 		this.load_role = options.role
 		// console.log(options)
 	},
 	onShow() {
-		getApp().globalData.drag = this
+		// getApp().globalData.drag = this
 		this.appListData = getApp().globalData.appListData
 		// console.log(window.location.pathname, window.location.href, window.location.hash)
 		// console.log(window.location.hash.substring(window.location.hash.indexOf('=') + 1, window.location.hash.length))

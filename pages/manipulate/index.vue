@@ -12,8 +12,10 @@
 					</view>
 					<view class="tn-flex-9">
 						<view class="tn-flex tn-flex-row-center tn-flex-wrap tn-text-center">
-							<view v-for="(item,index) in appListData" :key="item.appName" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.appName,index)">
-								<view> <tn-avatar :src="src" size="3.2vw"></tn-avatar> </view> <view>{{ item.appName }}</view>
+							<view v-for="(item,index) in appListId" :key="item.id" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.userName, item.id)">
+								<view style="width: 3.2vw;height: 3.2vw;margin:0 auto 5px;border-radius: 50%;" :class="(round[1]-1) === index ? 'my-turn' : ''"> <tn-avatar icon="constellation" size="3.2vw"></tn-avatar> </view>
+								<view>{{ item.userName }}</view>
+								<view>{{ item.roleName }}</view>
 							</view>
 						</view>
 					</view>
@@ -41,74 +43,9 @@
 										<text>关闭房间</text>
 									</tn-button>
 								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>下一位</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>送钱（玩家生孩子随礼）</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>发工资</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>扣钱（触犯规则）</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0" @click="handleProcessing('扣费抽卡')">
-										<text>扣费抽卡</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>免费抽卡</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>发免费精力</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>发收费精力</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>玩家生孩子</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>玩家选择结婚纪念（日）</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>心碎（逆流层失恋/逆流层离婚/顺流层离婚）</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>逆流层失业</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>顺流层破产</text>
-									</tn-button>
-								</view>
-								<view>
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0">
-										<text>用户做慈善</text>
+								<view v-for="(item, index) in button_right" :key="index">
+									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0" @click="handleProcessing(item.meaning)">
+										<text>{{ item.name }}</text>
 									</tn-button>
 								</view>
 								<!-- 按钮e -->
@@ -171,24 +108,21 @@
 				:z-index="2"
 				@click="clickBtn"
 			>
-				<view v-if="popup_significance === '扣费抽卡'">
-					<CardDeduction @cancel="clickBtn"></CardDeduction>
+				<view v-if="popup_significance === 'next'">
+					<Next @cancel="clickBtn" @submit="clickBtn"></Next>
 				</view>
-				<!-- <view v-if="custom">
-						<view class="custom-modal-content">
-							<tn-form :label-width="140">
-								<tn-form-item label="手机号码" :border-bottom="false">
-									<tn-input placeholder="请输入手机号码"></tn-input>
-								</tn-form-item>
-								<tn-form-item label="验证码" :border-bottom="false">
-									<tn-input placeholder="请输入验证码"></tn-input>
-									<view slot="right" class="tn-flex tn-flex-col-center tn-flex-row-center">
-										<tn-button :font-size="20" padding="10rpx" height="46rpx" background-color="#01BEFF" font-color="tn-color-white">获取验证码</tn-button>
-									</view>
-								</tn-form-item>
-							</tn-form>
-						</view>
-					</view> -->
+				<view v-else-if="popup_significance === 'wasteMoney'">
+					<WasteMoney @cancel="clickBtn" @submit="clickBtn"></WasteMoney>
+				</view>
+				<view v-else-if="popup_significance === 'payOff'">
+					<PayOff @cancel="clickBtn" @submit="clickBtn"></PayOff>
+				</view>
+				<view v-else-if="popup_significance === 'deductMoney'">
+					<DeductMoney @cancel="clickBtn" @submit="clickBtn"></DeductMoney>
+				</view>
+				<view v-else-if="popup_significance === 'debitCard'">
+					<DebitCard @cancel="clickBtn"></DebitCard>
+				</view>
 			</tn-modal>
 		</view>
 	</view>
@@ -205,14 +139,70 @@ import TableDataes from '@/components/table/table-dataes.vue'
 import Bottom from '@/components/table/bottom.vue'
 // import cutApart from '@/utils/cut-apart/cut-apart.js'
 
-import CardDeduction from './admin-child/card-deduction.vue'
+// 封装的模态框的自定义内容的组件
+import Next from './admin-child/next.vue'
+import WasteMoney from './admin-child/waste-money.vue'
+import PayOff from './admin-child/pay-off.vue'
+import DeductMoney from './admin-child/deduct-money.vue'
 
-import { GetUserInfo, GetCardCategoryList } from 'config/api.js'
+import DebitCard from './admin-child/debit-card.vue'
+
+// 接口
+import { GetCardCategoryList, GetUserInfo } from 'config/api.js'
+
+// 公共的方法
+import setRecord from 'utils/render-table/render-table.js'
+
 export default {
-	components: { Timer, TableDataes, Bottom, CardDeduction },
+	components: { Timer, TableDataes, Bottom, Next, WasteMoney, PayOff, DeductMoney, DebitCard },
 	data() {
 		return {
-			load_role: '',
+			// load_role: '',
+
+			// 按钮列表
+			button_right: [
+				{
+					name: '下一位',
+					meaning: 'next'
+				}, {
+					name: '送钱',
+					meaning: 'wasteMoney'
+				}, {
+					name: '发工资',
+					meaning: 'payOff'
+				}, {
+					name: '扣钱（触犯规则）',
+					meaning: 'deductMoney'
+				}, {
+					name: '扣费抽卡',
+					meaning: 'debitCard'
+				}, {
+					name: '免费抽卡',
+					meaning: 'drawCard'
+				}, {
+					name: '玩家休息精力补充',
+					meaning: 'freeEnergy'
+				}, {
+					name: '玩家选择结婚纪念（日）/结算日的精力补充',
+					meaning: 'anniversary'
+				}, {
+					name: '玩家生孩子',
+					meaning: 'givesBirth'
+				}, {
+					name: '心碎（逆流层失恋/逆流层离婚/顺流层离婚）',
+					meaning: 'heartbreak'
+				}, {
+					name: '逆流层失业',
+					meaning: 'unemployment'
+				}, {
+					name: '顺流层破产',
+					meaning: 'bankruptcy'
+				}, {
+					name: '用户做慈善',
+					meaning: 'charitable'
+				}
+			],
+
 			show_popup: false,
 
 			// 模态框
@@ -238,26 +228,30 @@ export default {
 
 			toast_significance: '',
 
-			appListData: getApp().globalData.appListData,
+			// appListData: getApp().globalData.appListData,
+			appListId: getApp().globalData.appListId,
+			round: getApp().globalData.round,
 
 			popup_name: ''
 		}
 	},
 
 	onLoad(options) {
-		this.load_role = options.role
-		this.getCardCategoryList()
-	},
-	onShow() {
 		getApp().globalData.manipulate = this
+		// this.load_role = options.role
 		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
 		if (getApp().globalData.wsHandle === '') {
 			// if (this.load_role === 'admin') {
-			uni.redirectTo({ url: '/pages/login-admin/index' })
+			// uni.redirectTo({ url: '/pages/login-admin/index' })
 			// } else {
 			// uni.redirectTo({ url: '/pages/index/index' })
 			// }
+		} else {
+			this.getCardCategoryList()
 		}
+	},
+	onShow() {
+		// getApp().globalData.manipulate = this
 	},
 	onHide() {
 		console.log('隐藏manipulate组件')
@@ -298,8 +292,32 @@ export default {
 				this.mask_closeable = true
 				this.custom = false
 				this.is_show_model = true
-			} else if (significance === '扣费抽卡') {
-				this.popup_significance = '扣费抽卡'
+			} else if (significance === 'next') {
+				this.popup_significance = 'next'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'wasteMoney') {
+				this.popup_significance = 'wasteMoney'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'payOff') {
+				this.popup_significance = 'payOff'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'deductMoney') {
+				this.popup_significance = 'deductMoney'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'debitCard') {
+				this.popup_significance = 'debitCard'
 				this.close_btn = false
 				this.mask_closeable = false
 				this.custom = true
@@ -307,14 +325,14 @@ export default {
 			}
 		},
 
-		showPopup(name, index) {
+		showPopup(name, id) {
 			// this.appListId = getApp().globalData.appListId
-			GetUserInfo({ id: getApp().globalData.appListId[index], game_id: getApp().globalData.gameId })
+			GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
 			// GetUserInfo({ id: 31, game_id: 22 })
 				.then((res) => {
 					// console.log(res[1].data.data)
 					const data = res[1].data.data
-					this.setRecord(data, 'Eject')
+					setRecord(data, 'Eject', this)
 				})
 				.catch((err) => {
 					console.log(err)
@@ -332,9 +350,13 @@ export default {
 			})
 			if (significance) this.toast_significance = significance
 		},
-		syncUserList() {
-			this.appListData = getApp().globalData.appListData
-			// console.log(this.appListData)
+		// syncUserList() {
+		// 	this.appListData = getApp().globalData.appListData
+		// 	// console.log(this.appListData)
+		// },
+		syncAvatarStyle() {
+			// 同步头像样式
+			this.round = getApp().globalData.round
 		},
 		// 关闭模态框触发
 		clickBtn(event) {
@@ -358,86 +380,6 @@ export default {
 					uni.redirectTo({ url: '/pages/index/index' })
 				}
 			}
-		},
-		// 根据后端返回的数据，和具体的那一个整体（那两个子组件：四个表table 和 底部栏bottom），来进行数据渲染（调用子组件内部的方法）
-		setRecord(data, refFragment) {
-			// console.log(this.$refs.RefTableMain.$children[0].$children[0].$children[0].$children[0])
-			// console.log(this.$refs.RefTableMain.$children[0].$children[0].$children[1].$children[0])
-			// console.log(this.$refs.RefTableMain.$children[0].$children[1].$children[0].$children[0])
-			// console.log(this.$refs.RefTableMain.$children[0].$children[1].$children[1].$children[0])
-			// this.$refs.RefTableMain.$children[0].$children[0].$children[0].$children[0].setIncome({})
-			// this.$refs.RefTableMain.$children[0].$children[0].$children[1].$children[0].setExpenditure({})
-			// this.$refs.RefTableMain.$children[0].$children[1].$children[0].$children[0].setAssets({})
-			// this.$refs.RefTableMain.$children[0].$children[1].$children[1].$children[0].setLiabilities({})
-			// this.$refs.RefBottomMain.setButtom({})
-			const income1 = data.income.filter((item) => item.class === 5).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
-			const income2 = data.income.filter((item) => item.class === 6).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
-			const income3 = data.income.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
-			const income4 = data.income.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
-			this.$refs[`RefTable${refFragment}`].$children[0].$children[0].$children[0].$children[0].setIncome({
-				in_salary: data.basic_info.in_salary,
-				in_partner: data.basic_info.in_partner,
-				income1,
-				income2,
-				income3,
-				income4
-			})
-			this.$refs[`RefTable${refFragment}`].$children[0].$children[0].$children[1].$children[0].setExpenditure({
-				child_num: data.basic_info.child_num,
-				out_child: data.basic_info.out_child,
-				out_personal: data.basic_info.out_personal,
-				out_partner: data.basic_info.out_partner,
-				out_tax: data.basic_info.out_tax,
-				out_self_housing: data.basic_info.out_self_housing,
-				out_rent: data.basic_info.out_rent,
-				out_car_loan: data.basic_info.out_car_loan,
-				out_credit_card: data.basic_info.out_credit_card,
-				out_additional_liabilities: data.basic_info.out_additional_liabilities,
-				out_insuraunce: data.basic_info.out_insuraunce,
-				out_healthy: data.basic_info.out_healthy,
-				out_bank_loan_interest: data.basic_info.out_bank_loan_interest
-			})
-			const asset1 = data.assets.filter((item) => item.class === 4).map((item) => ({ id: item.id, card_name: item.card_name }))
-			const asset2 = data.assets.filter((item) => item.class === 2).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
-			const asset3 = data.assets.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
-			this.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[0].$children[0].setAssets({
-				asset1,
-				asset2,
-				asset3
-			})
-			const debt1 = data.assets.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
-			const debt2 = data.assets.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
-			this.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[1].$children[0].setLiabilities({
-				debt_self_housing: data.basic_info.child_num,
-				debt_car_loan: data.basic_info.child_num,
-				debt_credit_card: data.basic_info.child_num,
-				debt_additional_liabilities: data.basic_info.child_num,
-				debt1,
-				debt2,
-				debt_bank_loan: data.basic_info.debt_bank_loan
-			})
-			this.$refs[`RefBottom${refFragment}`].setButtom({
-				cash_flow: data.basic_info.cash_flow,
-				passive_in: data.basic_info.passive_in,
-				cash_on_hand: data.basic_info.cash_on_hand,
-				energy: data.basic_info.energy,
-				basics_in: data.basic_info.basics_in,
-				basics_out: data.basic_info.basics_out
-				// charitable: data.basic_info.charitable
-			})
-			// console.log(this.$refs.RefTableMain)
-			// console.log(this.$refs.RefBottomMain)
-			// console.log(this.$refs.RefTableEject.$children[0].$children[0].$children[0].$children[0])
-			// console.log(this.$refs.RefTableEject.$children[0].$children[0].$children[1].$children[0])
-			// console.log(this.$refs.RefTableEject.$children[0].$children[1].$children[0].$children[0])
-			// console.log(this.$refs.RefTableEject.$children[0].$children[1].$children[1].$children[0])
-			// this.$refs.RefTableEject.$children[0].$children[0].$children[0].$children[0].setIncome({})
-			// this.$refs.RefTableEject.$children[0].$children[0].$children[1].$children[0].setExpenditure({})
-			// this.$refs.RefTableEject.$children[0].$children[1].$children[0].$children[0].setAssets({})
-			// this.$refs.RefTableEject.$children[0].$children[1].$children[1].$children[0].setLiabilities({})
-			// this.$refs.RefBottomMain.setButtom({})
-			// console.log(this.$refs.RefTableEject)
-			// console.log(this.$refs.RefBottomEject)
 		}
 
 	}
@@ -467,6 +409,9 @@ export default {
 				flex: 1;
 				// height: 20vh;
 				overflow: auto;
+				.my-turn {
+					box-shadow: 0px -5px 10px 0px #ff0000, -6px 0px 6px 0px #ff0000, 6px 0px 6px 0px #ff0000, 0px 5px 19px 0px #ff0000;
+				}
 			}
 			.middle {
 				flex: 10;

@@ -1,3 +1,23 @@
+// 获取获取全部卡列表的所有信息
+export const GetCardList = (data) => uni.request({
+	url: '/card/GetCardList', // 仅为示例，并非真实接口地址。
+	method: 'GET',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// 获取9种卡的列表信息
+export const GetCardCategoryList = (data) => uni.request({
+	url: '/card_category/GetCardCategoryList', // 仅为示例，并非真实接口地址。
+	method: 'GET',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
 // 获取具体某人的游戏资料信息
 export const GetUserInfo = (data) => uni.request({
 	url: '/game_user/GetUserInfo', // 仅为示例，并非真实接口地址。
@@ -8,9 +28,10 @@ export const GetUserInfo = (data) => uni.request({
 	}
 })
 
-// 获取具体某人的游戏资料信息
-export const GetCardCategoryList = (data) => uni.request({
-	url: '/card_category/GetCardCategoryList', // 仅为示例，并非真实接口地址。
+// banker
+// 下一位。开始游戏时要点下一位用户id传0，才真正开始
+export const NextUser = (data) => uni.request({
+	url: '/game_user/NextUser', // 仅为示例，并非真实接口地址。
 	method: 'GET',
 	data,
 	custom: {
@@ -21,6 +42,36 @@ export const GetCardCategoryList = (data) => uni.request({
 // 指定某人来进行抽卡
 export const DrawCard = (data) => uni.request({
 	url: '/card/DrawCard', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给当前回合的那个人发钱
+export const SendMoney = (data) => uni.request({
+	url: '/game_user/SendMoney', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给当前回合的那个人发工资
+export const Payroll = (data) => uni.request({
+	url: '/game_user/Payroll', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给某个人 扣钱
+export const DeductMoney = (data) => uni.request({
+	url: '/game_user/DeductMoney', // 仅为示例，并非真实接口地址。
 	method: 'POST',
 	data,
 	custom: {

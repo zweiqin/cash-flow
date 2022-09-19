@@ -57,33 +57,35 @@ module.exports = (vm) => {
 		success(args) {
 			// 请求成功后，修改code值为1
 			// args.data.code = 1
-			console.log(args)
+			// console.log(args)
 			/* 对响应成功做点什么 可使用async await 做异步操作*/
 			const data = args.data
-			// 自定义参数
-			const custom = args.config?.custom
-			if (data.status !== 200 && data.code !== 200) {
+			if (data.status !== 200) {
 				// 如果没有显式定义custom的toast参数为false的话，默认对报错进行toast弹出提示
-				if (custom?.toast !== false) {
-					uni.showToast({
-						title: data.msg,
-						icon: 'error'
-					})
-					return Promise.reject(data)
+				uni.showToast({
+					title: data.msg,
+					icon: 'error'
+				})
+				// return Promise.resolve(data)
+				// return Promise.reject(data)
+				// return Promise.reject(new Error(data))
+				// return new Error(data) // 正常返回
+				// throw Error(data) // [system] Error: [object Object]
+				return {
+					msg: data.msg,
+					status: data.status
 				}
-				// 如果需要catch返回，则进行reject
-				if (custom?.catch) {
-					return Promise.reject(data)
-				} else {
-					// 否则返回一个pending中的promise，请求不会进入catch中
-					return new Promise(() => {})
-					// return new Promise.reject(data)
-				}
+				// return data
+				// throw data
 			}
 			return data.data ? data.data : {}
 		},
 		fail(err) {
 			// console.log('interceptor-fail',err)
+				uni.showToast({
+					title: '网络错误！',
+					icon: 'error'
+				})
 			return Promise.reject(err)
 		},
 		complete(res) {

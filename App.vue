@@ -1,8 +1,12 @@
 <script>
+// 接口
+import { GetCardList } from 'config/api.js'
+
 export default {
 	globalData: {
 		test: { str: 'aaa' },
 		appListData: [
+			// 拖拽页面的用户列表用到这个appListData数据
 			// // 针对管理员 首次创房，这里写死 管理员一个人
 			// {
 			// 	appIcon: 'tn-icon-trusty',
@@ -22,8 +26,23 @@ export default {
 			// }
 		],
 		appListId: [
-			// 159, 160
+			// 两个游戏页面的上面的头像列表用到这个appListId数据
+			// {
+			// 	id: "169", // 游戏角色表主键
+			// 	userName: '去',
+			// 	roleId: "8", // 关联角色表主键
+			// 	roleName: '护士'
+			// },
+			// {
+			// 	id: "170",
+			// 	userName: '玩家二号',
+			// 	roleId: "7",
+			// 	roleName: '产品经理'
+			// }
 		],
+		// 当前轮的game_user_id和对应索引index，数据格式[game_user_id, index]
+		// NextUser接口用到这个数据
+		round: ['0', '0'],
 		cardCategoryList: [
 			// {
 			// 	'id': 4,
@@ -145,18 +164,22 @@ export default {
 					// 情况：用户 加入房间失败
 					if (_this.action && _this.action.method === 'joinGame') {
 					// 已经加入房间 或 房间不存在 或 已经开始游戏,无法加入
-						_this.users && _this.users.syncUserList('加入失败', data.data, 'cross-fill')
+						_this.users && _this.users.globalNotice('加入失败', data.data, 'cross-fill')
 					}
 
 					// 拖拽页面
 					// 情况：用户 退出房间失败，此连接未加入任何房间 或 房间不存在
 					_this.drag && _this.drag.globalNotice('提示', data.data, 'cross-fill')
 				}
+
+				// 游戏页面，其他情况
+				_this.game && _this.game.globalNotice('提示', data.data, 'cross-fill')
+				_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'cross-fill')
 			}
 
 			if (data.event === 'syncUserList') {
 				// 用户 在登录页面 加入（或重新加入）游戏后（对用户自己），[xxx,xxx...]。可能跳转到等待页面，也可能是游戏页面
-				_this.users && _this.users.syncUserList('加入成功', '即将跳转', 'success', 'toDrag')
+				_this.users && _this.users.globalNotice('加入成功', '即将跳转', 'success', 'toDrag')
 				// 管理员 在登录页面 重新加入游戏后（对管理员自己），[xxx,xxx...]。可能跳转到等待页面，也可能是游戏页面
 				_this.admin && _this.admin.globalNotice('重新进入成功', '即将跳转', 'success', 'toDrag')
 				// sync_user_list返回的数组的排序
@@ -166,10 +189,11 @@ export default {
 				}))
 				// 还没开始游戏，实时同步 拖拽列表
 				_this.drag && _this.drag.syncUserList()
-				// 场景：开始游戏后，断线重连，其它用户能看到，实时同步 上面的头像列表
-				_this.game && _this.game.syncUserList()
-				// 场景：开始游戏后，断线重连，管理员能看到，实时同步 上面的头像列表
-				_this.manipulate && _this.manipulate.syncUserList()
+				// // 这里以后可能需要（appListData），现在采用的是appListId
+				// // 场景：开始游戏后，断线重连，其它用户能看到，实时同步 上面的头像列表
+				// _this.game && _this.game.syncUserList()
+				// // 场景：开始游戏后，断线重连，管理员能看到，实时同步 上面的头像列表
+				// _this.manipulate && _this.manipulate.syncUserList()
 			}
 
 			if (data.event === 'stopGame') {
@@ -179,18 +203,55 @@ export default {
 				_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
 				_this.appListData = []
 				_this.appListId = []
+				_this.round = ['0', '0']
 			}
 
 			if (data.event === 'syncInfo') {
 				_this.gameUserId = data.game_user_id
 				_this.gameId = data.game_id
-				_this.appListId = data.data.map((item) => item.id)
+				_this.appListId = data.data.map((item) => ({ id: String(item.id), userName: item.username, roleId: String(item.role_id), roleName: item.role_name }))
 				// console.log(data.data, _this.appListId, _this.appListData)
 				// 管理员开始游戏后，（在拖拽页面）广播给所有人，data.data,[当前房间里的所有用户的数据，没有管理员，{},{},{}]。
 				_this.drag && _this.drag.globalNotice('提示', '正在进入游戏', 'game', 'syncInfo')
 				// 游戏已经开始，管理员或有用户 断线重连，（在登录页面(两个都是)）只发给断线重连的那个人，data.data,[当前房间里的所有用户的数据，没有管理员，{},{},{}]。 // 注意，这里的toGame或toManipulate，因为toast框关闭之后的操作toInterface是异步的，在关闭toast之前会覆盖掉toDrag（toast_significance）。注意是先syncUserList，再syncInfo
-				_this.users && _this.users.syncUserList('toPlay')
+				_this.users && _this.users.globalNotice('toPlay')
 				_this.admin && _this.admin.globalNotice('toPlay')
+			}
+
+			if (data.event === 'myTurn') {
+				// _this.round = [_this.appListId[data.data.index - 1].id, data.data.index]
+				// 这里的game_user_id是指当前轮的玩家的用户id（统一都是）
+				_this.round = [data.game_user_id, data.data.index]
+				// 同步头像样式
+				_this.game && _this.game.syncAvatarStyle()
+				_this.manipulate && _this.manipulate.syncAvatarStyle()
+			}
+
+			if (data.event === 'sendMoney') {
+				// data: "banker发送现金1元给玩家去"，game_user_id: "xxx"（统一为那个收到钱的那个人） is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('好消息', `banker发现金${data.data.replace(/[^\d]/g, ' ')}元给您啦！`, 'lucky-money')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+				}
+			}
+
+			if (data.event === 'payroll') {
+				// data: "banker发工资2500元给玩家去"，game_user_id: "xxx"（统一为那个收到钱的那个人） is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('好消息', `banker发工资${data.data.replace(/[^\d]/g, ' ')}元给您啦！`, 'alipay')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+				}
+			}
+
+			if (data.event === 'deductMoney') {
+				// data: "banker发工资2500元给玩家去"，game_user_id: "xxx"（统一为那个收到钱的那个人） is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('坏消息', `banker扣了您${data.data.replace(/[^\d]/g, ' ')}元钱！`, 'reduce-circle')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+				}
 			}
 		},
 
@@ -215,31 +276,41 @@ export default {
 
 	onLaunch() {
 		console.log('App Launch')
-		uni.request({
-			url: '/card/GetCardList', // 仅为示例，并非真实接口地址。
-			// data: {
-			//     text: 'uni.request'
-			// },
-			// header: {
-			//     'custom-header': 'hello' //自定义请求头信息
-			// },
-			success: (res) => {
-				uni.setStorage({
-					key: 'cards',
-					data: res.data
-					// success() {
-					// 	console.log('success')
-					// }
-				})
-				// uni.getStorage({
-				// 	key: 'cards',
-				// 	success(res) {
-				// 		console.log(res.data)
-				// 	}
-				// })
-				// console.log(res.data)
-			}
-		})
+		GetCardList({})
+			.then((res) => {
+				// console.log(res)
+				// res[1]为类似axios封装改造好的数据，里面的data才是服务器真正的返回
+				if (res[1].data.status === 200) {
+					uni.setStorage({
+						key: 'cards',
+						data: res[1].data.data.items,
+						success() {
+							// console.log('success')
+						}
+					})
+					// uni.getStorage({
+					// 	key: 'cards',
+					// 	success(res) {
+					// 		console.log(res.data)
+					// 	}
+					// })
+				} else {
+					this.globalData.users && this.globalData.users.globalNotice('提示', res[1].data.msg, 'warning-fill')
+					this.globalData.admin && this.globalData.admin.globalNotice('提示', res[1].data.msg, 'warning-fill')
+				}
+			})
+			.catch((err) => {
+				console.log(err)
+				this.globalData.users && this.globalData.users.globalNotice('提示', '网络错误！', 'warning-fill')
+				this.globalData.admin && this.globalData.admin.globalNotice('提示', '网络错误！', 'warning-fill')
+			})
+
+		// uni.getStorage({
+		// 	key: 'cards',
+		// 	success(res) {
+		// 		console.log(res.data)
+		// 	}
+		// })
 	},
 	onShow() {
 		console.log('App Show')
