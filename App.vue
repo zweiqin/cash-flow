@@ -4,7 +4,8 @@ import { GetCardList } from 'config/api.js'
 
 export default {
 	globalData: {
-		test: { str: 'aaa' },
+		cardList: [],
+		currentCard: '', // 一个对象，当前用户展示的卡牌的数据信息
 		appListData: [
 			// 拖拽页面的用户列表用到这个appListData数据
 			// // 针对管理员 首次创房，这里写死 管理员一个人
@@ -43,6 +44,8 @@ export default {
 		// 当前轮的game_user_id和对应索引index，数据格式[game_user_id, index]
 		// NextUser接口用到这个数据
 		round: ['0', '0'],
+		// 有某个人抽到的那张卡的id：[data.game_user_id字符串, data.data.id数字]
+		cardMsg: ['0', 0],
 		cardCategoryList: [
 			// {
 			// 	'id': 4,
@@ -136,6 +139,7 @@ export default {
 				// }
 
 				// 在游戏里面，某玩家断线重连后，玩家xxx重新进入游戏
+				// 玩家xxx使用xxxx卡牌成功
 				_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 				_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
 
@@ -204,6 +208,7 @@ export default {
 				_this.appListData = []
 				_this.appListId = []
 				_this.round = ['0', '0']
+				_this.cardMsg = ['0', 0]
 			}
 
 			if (data.event === 'syncInfo') {
@@ -225,6 +230,7 @@ export default {
 				// 同步头像样式
 				_this.game && _this.game.syncAvatarStyle()
 				_this.manipulate && _this.manipulate.syncAvatarStyle()
+				_this.game && _this.game.syncInfo()
 			}
 
 			if (data.event === 'sendMoney') {
@@ -234,6 +240,7 @@ export default {
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 				}
+				_this.game && _this.game.syncInfo()
 			}
 
 			if (data.event === 'payroll') {
@@ -243,6 +250,7 @@ export default {
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 				}
+				_this.game && _this.game.syncInfo()
 			}
 
 			if (data.event === 'deductMoney') {
@@ -252,6 +260,14 @@ export default {
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 				}
+				_this.game && _this.game.syncInfo()
+			}
+
+			if (data.event === 'drawCard') {
+				// data: {id: 28}，game_user_id: "254"（统一为那个收到卡的那个人） is_all: true
+				_this.cardMsg = [data.game_user_id, data.data.id]
+				_this.game && _this.game.handleProcessing('drawCard')
+				_this.game && _this.game.syncInfo()
 			}
 		},
 
@@ -288,12 +304,13 @@ export default {
 							// console.log('success')
 						}
 					})
-					// uni.getStorage({
-					// 	key: 'cards',
-					// 	success(res) {
-					// 		console.log(res.data)
-					// 	}
-					// })
+					uni.getStorage({
+						key: 'cards',
+						success: (res) => {
+							this.globalData.cardList = res.data
+							console.log(this.globalData.cardList)
+						}
+					})
 				} else {
 					this.globalData.users && this.globalData.users.globalNotice('提示', res[1].data.msg, 'warning-fill')
 					this.globalData.admin && this.globalData.admin.globalNotice('提示', res[1].data.msg, 'warning-fill')

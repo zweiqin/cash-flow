@@ -79,6 +79,16 @@ export const DeductMoney = (data) => uni.request({
 	}
 })
 
+// user被抽到卡后，确认卡牌
+export const ConfirmCard = (data) => uni.request({
+	url: '/card/ConfirmCard', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
 // // 下面为通过uview组件库进行封装：
 // const http = uni.$u.http
 

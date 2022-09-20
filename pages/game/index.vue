@@ -11,13 +11,7 @@
 						<view class=""> <CountTo :font-size="40" :start-val="90" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view>
 					</view>
 					<view class="tn-flex-9">
-						<view class="tn-flex tn-flex-row-center tn-flex-wrap tn-text-center">
-							<view v-for="(item,index) in appListId" :key="item.id" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.userName, item.id)">
-								<view style="width: 3.2vw;height: 3.2vw;margin:0 auto 5px;border-radius: 50%;" :class="(round[1]-1) === index ? 'my-turn' : ''"> <tn-avatar icon="constellation" size="3.2vw"></tn-avatar> </view>
-								<view>{{ item.userName }}</view>
-								<view>{{ item.roleName }}</view>
-							</view>
-						</view>
+						<HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup" @notice="globalNotice"></HeadNavigationBar>
 					</view>
 				</view>
 				<!-- 顶层结束 -->
@@ -58,6 +52,7 @@
 					close-btn-icon="close"
 					close-btn-position="top-right"
 					:mask-closeable="true"
+					:z-index="2"
 				>
 					<view class="tn-height-full tn-flex tn-flex-row-right tn-flex-direction-column">
 						<!-- <tn-button shape="round" width="220rpx" font-color="#080808">关闭弹窗</tn-button> -->
@@ -67,7 +62,7 @@
 				</tn-popup>
 			</view>
 
-			<view> <tn-toast ref="toast" @closed="closeToast()"></tn-toast> </view>
+			<view> <tn-toast ref="toast" :z-index="4" @closed="closeToast()"></tn-toast> </view>
 
 			<!-- 模态框 -->
 			<tn-modal
@@ -85,10 +80,15 @@
 				:mask-closeable="mask_closeable"
 				:zoom="true"
 				:custom="custom"
-				:z-index="2"
+				:z-index="3"
 				@click="clickBtn"
 			>
-				<view></view>
+				<view v-if="popup_significance === 'drawCard'">
+					<DrawCard @cancel="clickBtn" @submit="clickBtn"></DrawCard>
+				</view>
+				<!-- <view v-else-if="popup_significance === 'wasteMoney'">
+					<WasteMoney @cancel="clickBtn" @submit="clickBtn"></WasteMoney>
+				</view> -->
 			</tn-modal>
 		</view>
 	</view>
@@ -97,6 +97,7 @@
 <script>
 import Timer from '@/components/timer/timer.vue'
 import CountTo from '@/components/count-to/count-to.vue'
+import HeadNavigationBar from '@/components/head-navigation-bar/head-navigation-bar.vue'
 // import UpperLeft from '@/components/table/upper-left.vue'
 // import LowerLeft from '@/components/table/lower-left.vue'
 // import UpperMiddle from '@/components/table/upper-middle.vue'
@@ -104,7 +105,9 @@ import CountTo from '@/components/count-to/count-to.vue'
 import TableDataes from '@/components/table/table-dataes.vue'
 import userButton from './user-child/user-button.vue'
 import Bottom from '@/components/table/bottom.vue'
-// import cutApart from '@/utils/cut-apart/cut-apart.js'
+
+// 封装的模态框的自定义内容的组件
+import DrawCard from './user-child/draw-card.vue'
 
 // 接口
 import { GetUserInfo } from 'config/api.js'
@@ -113,7 +116,7 @@ import { GetUserInfo } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, TableDataes, Bottom, userButton },
+	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, userButton, DrawCard },
 	data() {
 		return {
 			// load_role: '',
@@ -142,11 +145,8 @@ export default {
 
 			toast_significance: '',
 
-			// appListData: getApp().globalData.appListData,
-			appListId: getApp().globalData.appListId,
-			round: getApp().globalData.round,
-
-			popup_name: ''
+			popup_name: '',
+			popup_id: ''
 		}
 	},
 
@@ -187,31 +187,33 @@ export default {
 		},
 
 		handleProcessing(significance) {
-			if (significance === 'debitCard') {
-				this.popup_significance = 'debitCard'
-				this.close_btn = false
-				this.mask_closeable = false
-				this.custom = true
-				this.is_show_model = true
-			}
+			this.is_show_model = false
+			this.$nextTick(() => {
+				if (significance === 'drawCard') {
+					this.popup_significance = 'drawCard'
+					this.close_btn = false
+					this.mask_closeable = false
+					this.custom = true
+					this.is_show_model = true
+				}
+			})
 		},
 
 		showPopup(name, id) {
-			// this.appListId = getApp().globalData.appListId
+			// console.log(name, id)
 			GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
 			// GetUserInfo({ game_user_id: 31, game_id: 22 })
 				.then((res) => {
-					console.log(res[1].data.data)
+					// console.log(res[1].data.data)
 					const data = res[1].data.data
 					setRecord(data, 'Eject', this)
 				})
 				.catch((err) => {
 					console.log(err)
 				})
-			// console.log('111')
 			this.show_popup = true
 			this.popup_name = name
-			// console.log(this)
+			this.popup_id = id
 		},
 		globalNotice(title, content, icon, significance) {
 			this.$refs.toast.show({
@@ -223,18 +225,8 @@ export default {
 			})
 			if (significance) this.toast_significance = significance
 		},
-		// syncUserList() {
-		// 	this.appListData = getApp().globalData.appListData
-		// 	// console.log(this.appListData)
-		// },
 		syncAvatarStyle() {
-			// 同步头像样式
-			this.round = getApp().globalData.round
-			if (this.round[0] === getApp().globalData.gameUserId) {
-				this.globalNotice('提示', '轮到您了！', 'creative')
-			} else {
-				this.globalNotice('提示', '下一回合！', 'creative')
-			}
+			this.$refs.RefHeadNav.syncAvatarStyle()
 		},
 		clickBtn(event) {
 			this.is_show_model = false
@@ -265,6 +257,7 @@ export default {
 					// console.log(res[1].data.data)
 					const data = res[1].data.data
 					setRecord(data, 'Main', this)
+					this.show_popup && this.showPopup(this.popup_name, this.popup_id)
 				})
 				.catch((err) => {
 					console.log(err)
@@ -298,9 +291,6 @@ export default {
 				flex: 1;
 				// height: 20vh;
 				overflow: auto;
-				.my-turn {
-					box-shadow: 0px -5px 10px 0px #ff0000, -6px 0px 6px 0px #ff0000, 6px 0px 6px 0px #ff0000, 0px 5px 19px 0px #ff0000;
-				}
 			}
 			.middle {
 				flex: 10;
