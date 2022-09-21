@@ -5,7 +5,6 @@ import { GetCardList } from 'config/api.js'
 export default {
 	globalData: {
 		cardList: [],
-		currentCard: '', // 一个对象，当前用户展示的卡牌的数据信息
 		appListData: [
 			// 拖拽页面的用户列表用到这个appListData数据
 			// // 针对管理员 首次创房，这里写死 管理员一个人
@@ -42,10 +41,12 @@ export default {
 			// }
 		],
 		// 当前轮的game_user_id和对应索引index，数据格式[game_user_id, index]
-		// NextUser接口用到这个数据
+		// NextUser等接口用到这个数据，第二个元素用于同步顶部栏的头像显示效果
 		round: ['0', '0'],
 		// 有某个人抽到的那张卡的id：[data.game_user_id字符串, data.data.id数字]
 		cardMsg: ['0', 0],
+		// 大多数时候是一个对象，当前用户展示的卡牌的数据信息。三种情况：'',一个对象,undefined（找不到这张卡的时候）
+		currentCard: '',
 		cardCategoryList: [
 			// {
 			// 	'id': 4,
@@ -205,6 +206,7 @@ export default {
 				_this.drag && _this.drag.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
 				_this.game && _this.game.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
 				_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
+				_this.currentCard = ''
 				_this.appListData = []
 				_this.appListId = []
 				_this.round = ['0', '0']
@@ -227,7 +229,7 @@ export default {
 				// _this.round = [_this.appListId[data.data.index - 1].id, data.data.index]
 				// 这里的game_user_id是指当前轮的玩家的用户id（统一都是）
 				_this.round = [data.game_user_id, data.data.index]
-				// 同步头像样式
+				// 同步头像样式 并且 同步倒计时信息
 				_this.game && _this.game.syncAvatarStyle()
 				_this.manipulate && _this.manipulate.syncAvatarStyle()
 				_this.game && _this.game.syncInfo()
@@ -266,7 +268,33 @@ export default {
 			if (data.event === 'drawCard') {
 				// data: {id: 28}，game_user_id: "254"（统一为那个收到卡的那个人） is_all: true
 				_this.cardMsg = [data.game_user_id, data.data.id]
+				// _this.currentCard = _this.cardList.find((item) => item.id === _this.cardMsg[1])
+				_this.currentCard = _this.cardList.find((item) => item.id === data.data.id)
 				_this.game && _this.game.handleProcessing('drawCard')
+				_this.game && _this.game.syncInfo()
+			}
+
+			if (data.event === 'energize') {
+				// banker_action: false，data: "玩家牛免费补充2点精力"，event: "energize"，game_id: "153"，game_user_id: ""，is_all: true
+				// banker_action: false，data: "玩家牛补充2点精力，扣除一个月的总支出"，event: "energize"，game_id: "153"，game_user_id: "
+				// banker_action: false，data: "玩家牛补充2点精力，从现金中扣除10%的总收入800元"，event: "energize"，game_id: "154"，game_user_id: ""，is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('提示', data.data.replace(/^.{3}/, '您'), 'battery-mid')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
+				_this.game && _this.game.syncInfo()
+			}
+
+			if (data.event === 'haveBaby') {
+				// banker_action: false，data: "玩家牛生了一个孩子"，event: "haveBaby"，game_id: "156"，game_user_id: ""，is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('恭喜', data.data.replace(/^.{3}/, '您'), 'battery-mid')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
 				_this.game && _this.game.syncInfo()
 			}
 		},
@@ -339,6 +367,9 @@ export default {
 </script>
 
 <style lang="scss">
+.pad-top {
+	padding-top: 0.4vmin;
+}
 /*每个页面公共css */
 /* 注意要写在第一行，同时给style标签加入lang="scss"属性 */
 @import './tuniao-ui/index.scss';

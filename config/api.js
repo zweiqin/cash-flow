@@ -39,16 +39,6 @@ export const NextUser = (data) => uni.request({
 	}
 })
 
-// 指定某人来进行抽卡
-export const DrawCard = (data) => uni.request({
-	url: '/card/DrawCard', // 仅为示例，并非真实接口地址。
-	method: 'POST',
-	data,
-	custom: {
-		auth: false
-	}
-})
-
 // banker给当前回合的那个人发钱
 export const SendMoney = (data) => uni.request({
 	url: '/game_user/SendMoney', // 仅为示例，并非真实接口地址。
@@ -72,6 +62,46 @@ export const Payroll = (data) => uni.request({
 // banker给某个人 扣钱
 export const DeductMoney = (data) => uni.request({
 	url: '/game_user/DeductMoney', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// 指定某人来进行抽卡
+export const DrawCard = (data) => uni.request({
+	url: '/card/DrawCard', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给当前轮的玩家进行休息精力补充
+export const EnergizeRest = (data) => uni.request({
+	url: '/game_user/EnergizeRest', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给当前轮的玩家进行结婚纪念日/结算日的精力补充
+export const EnergizeNormal = (data) => uni.request({
+	url: '/game_user/EnergizeNormal', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给当前轮的玩家进行生孩子
+export const HaveBaby = (data) => uni.request({
+	url: '/game_user/HaveBaby', // 仅为示例，并非真实接口地址。
 	method: 'POST',
 	data,
 	custom: {

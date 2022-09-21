@@ -1,10 +1,11 @@
 <template>
 	<view class="tn-flex tn-flex-row-center tn-flex-wrap tn-text-center">
 		<view v-for="(item, index) in appListId" :key="item.id" class="tn-padding-xs tn-padding-left-xl" @click="showPopup(item.userName, item.id)">
-			<view style="width: 3.2vw;height: 3.2vw;margin:0 auto 5px;border-radius: 50%;" :class="round[1] - 1 === index ? 'my-turn' : ''">
-				<tn-avatar icon="constellation" size="3.2vw"></tn-avatar>
+			<view style="width: 2.2vh;height: 2.2vh;margin:0 auto 5px;border-radius: 50%;" :class="round[1] - 1 === index ? 'my-turn' : ''">
+				<tn-avatar icon="constellation" size="2.2vh"></tn-avatar>
 			</view>
-			<view>{{ item.userName }}</view> <view>{{ item.roleName }}</view>
+			<view class="tn-text-bold" style="font-size: 1.8vh;">{{ item.userName }}</view>
+			<view class="pad-top tn-text-bold tn-color-brown" style="font-size: 1.6vh;">{{ item.roleName }}</view>
 		</view>
 	</view>
 </template>

@@ -41,7 +41,7 @@ export default {
 		confirm() {
 			const round = getApp().globalData.round
 			NextUser({
-				game_id: getApp().globalData.gameId,
+				game_id: Number(getApp().globalData.gameId),
 				game_user_id: Number(round[0])
 			})
 				.then((res) => {

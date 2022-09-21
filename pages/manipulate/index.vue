@@ -5,10 +5,10 @@
 				<!-- 顶层开始 -->
 				<view class="tn-flex tn-padding-sm tn-margin-xs tn-radius bg-flex-shadow top">
 					<!-- <tn-count-down :timestamp="900" :font-size="60" :separator-size="60"></tn-count-down> -->
-					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-flex-1 tn-bg-white tn-text-center">
+					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-flex-1 tn-bg-white tn-text-center tn-padding-xs tn-radius">
 						<view class="tn-border-solid-bottom tn-bold-border"> <Timer @timing="changeTimer"></Timer> </view>
 						<!-- <tn-count-to :start-val="90" :end-val="0" :duration="90000" :use-easing="false"></tn-count-to> -->
-						<!-- <view class=""> <CountTo :font-size="40" :start-val="90" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view> -->
+						<view class=""> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" @change="changeCountTo"></CountTo> </view>
 					</view>
 					<view class="tn-flex-9">
 						<HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup" @notice="globalNotice"></HeadNavigationBar>
@@ -121,6 +121,15 @@
 				<view v-else-if="popup_significance === 'drawCard'">
 					<DebitCard text="免费抽卡" :is-free="0" icon="add" @cancel="clickBtn" @submit="clickBtn"></DebitCard>
 				</view>
+				<view v-else-if="popup_significance === 'freeEnergy'">
+					<FreeEnergy @cancel="clickBtn" @submit="clickBtn"></FreeEnergy>
+				</view>
+				<view v-else-if="popup_significance === 'anniversary'">
+					<Anniversary @cancel="clickBtn" @submit="clickBtn"></Anniversary>
+				</view>
+				<view v-else-if="popup_significance === 'givesBirth'">
+					<GivesBirth @cancel="clickBtn" @submit="clickBtn"></GivesBirth>
+				</view>
 			</tn-modal>
 		</view>
 	</view>
@@ -128,7 +137,7 @@
 
 <script>
 import Timer from '@/components/timer/timer.vue'
-// import CountTo from '@/components/count-to/count-to.vue'
+import CountTo from '@/components/count-to/count-to.vue'
 import HeadNavigationBar from '@/components/head-navigation-bar/head-navigation-bar.vue'
 // import UpperLeft from '../game/user-child/upper-left.vue'
 // import LowerLeft from '../game/user-child/lower-left.vue'
@@ -143,6 +152,9 @@ import WasteMoney from './admin-child/waste-money.vue'
 import PayOff from './admin-child/pay-off.vue'
 import DeductMoney from './admin-child/deduct-money.vue'
 import DebitCard from './admin-child/debit-card.vue' // 二合一
+import FreeEnergy from './admin-child/free-energy.vue'
+import Anniversary from './admin-child/anniversary.vue'
+import GivesBirth from './admin-child/gives-birth.vue'
 
 // 接口
 import { GetCardCategoryList, GetUserInfo } from 'config/api.js'
@@ -151,10 +163,11 @@ import { GetCardCategoryList, GetUserInfo } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, HeadNavigationBar, TableDataes, Bottom, Next, WasteMoney, PayOff, DeductMoney, DebitCard },
+	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, Next, WasteMoney, PayOff, DeductMoney, DebitCard, FreeEnergy, Anniversary, GivesBirth },
 	data() {
 		return {
 			// load_role: '',
+			count_text: '等待下一轮',
 
 			// 按钮列表
 			button_right: [
@@ -200,8 +213,6 @@ export default {
 				}
 			],
 
-			show_popup: false,
-
 			// 模态框
 			popup_significance: '',
 			is_show_model: false,
@@ -226,7 +237,8 @@ export default {
 			toast_significance: '',
 
 			popup_name: '',
-			popup_id: ''
+			popup_id: '',
+			show_popup: false
 		}
 	},
 
@@ -236,7 +248,7 @@ export default {
 		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
 		if (getApp().globalData.wsHandle === '') {
 			// if (this.load_role === 'admin') {
-			// uni.redirectTo({ url: '/pages/login-admin/index' })
+			uni.redirectTo({ url: '/pages/login-admin/index' })
 			// } else {
 			// uni.redirectTo({ url: '/pages/index/index' })
 			// }
@@ -322,6 +334,24 @@ export default {
 				this.mask_closeable = false
 				this.custom = true
 				this.is_show_model = true
+			} else if (significance === 'freeEnergy') {
+				this.popup_significance = 'freeEnergy'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'anniversary') {
+				this.popup_significance = 'anniversary'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'givesBirth') {
+				this.popup_significance = 'givesBirth'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
 			}
 		},
 
@@ -352,6 +382,11 @@ export default {
 		},
 		syncAvatarStyle() {
 			this.$refs.RefHeadNav.syncAvatarStyle()
+			const temp_id = getApp().globalData.round[0]
+			const temp_obj = getApp().globalData.appListId.find((item) => item.id === temp_id)
+			if (temp_obj) {
+				this.count_text = `${temp_obj.userName}的回合`
+			}
 		},
 		// 关闭模态框触发
 		clickBtn(event) {

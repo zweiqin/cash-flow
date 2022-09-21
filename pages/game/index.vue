@@ -5,10 +5,10 @@
 				<!-- 顶层开始 -->
 				<view class="tn-flex tn-padding-sm tn-margin-xs tn-radius bg-flex-shadow top">
 					<!-- <tn-count-down :timestamp="900" :font-size="60" :separator-size="60"></tn-count-down> -->
-					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-flex-1 tn-bg-white tn-text-center">
+					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-flex-1 tn-bg-white tn-text-center tn-padding-xs tn-radius">
 						<view class="tn-border-solid-bottom tn-bold-border"> <Timer @timing="changeTimer"></Timer> </view>
 						<!-- <tn-count-to :start-val="90" :end-val="0" :duration="90000" :use-easing="false"></tn-count-to> -->
-						<view class=""> <CountTo :font-size="40" :start-val="90" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view>
+						<view class=""> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view>
 					</view>
 					<view class="tn-flex-9">
 						<HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup" @notice="globalNotice"></HeadNavigationBar>
@@ -120,7 +120,7 @@ export default {
 	data() {
 		return {
 			// load_role: '',
-			show_popup: false,
+			count_text: '等待下一轮',
 
 			// 模态框
 			popup_significance: '',
@@ -146,7 +146,8 @@ export default {
 			toast_significance: '',
 
 			popup_name: '',
-			popup_id: ''
+			popup_id: '',
+			show_popup: false
 		}
 	},
 
@@ -227,6 +228,15 @@ export default {
 		},
 		syncAvatarStyle() {
 			this.$refs.RefHeadNav.syncAvatarStyle()
+			const temp_id = getApp().globalData.round[0]
+			const temp_obj = getApp().globalData.appListId.find((item) => item.id === temp_id)
+			if (temp_obj) {
+				if (temp_id === getApp().globalData.gameUserId) {
+					this.count_text = 90
+				} else {
+					this.count_text = `${temp_obj.userName}的回合`
+				}
+			}
 		},
 		clickBtn(event) {
 			this.is_show_model = false

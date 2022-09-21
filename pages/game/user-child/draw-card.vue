@@ -7,8 +7,41 @@
 			</view>
 		</view>
 
-		<view class="card-container">
+		<!-- 副业 -->
+		<view v-if="currentCard.id===4" class="card-container">
+			<SideHustle></SideHustle>
+		</view>
+		<!-- 金融 -->
+		<view v-else-if="currentCard.id===5" class="card-container">
+			<Finance></Finance>
+		</view>
+		<!-- 房地产 -->
+		<view v-else-if="currentCard.id===6" class="card-container">
 			<RealEstate></RealEstate>
+		</view>
+		<!-- 企业 -->
+		<view v-else-if="currentCard.id===8" class="card-container">
+			<Enterprise></Enterprise>
+		</view>
+		<!-- 行情 -->
+		<view v-else-if="currentCard.id===11" class="card-container">
+			<Quotation></Quotation>
+		</view>
+		<!-- 觉察 -->
+		<view v-else-if="currentCard.id===12" class="card-container">
+			<Perceive></Perceive>
+		</view>
+		<!-- 相亲 -->
+		<view v-else-if="currentCard.id===9" class="card-container">
+			<BlindDate></BlindDate>
+		</view>
+		<!-- 逆流 -->
+		<view v-else-if="currentCard.id===7" class="card-container">
+			<Backset></Backset>
+		</view>
+		<!-- 项目 -->
+		<view v-else-if="currentCard.id===10" class="card-container">
+			<Project></Project>
 		</view>
 
 		<view v-if="is_drew" class="tn-flex tn-flex-row-around button">
@@ -22,11 +55,21 @@
 </template>
 
 <script>
+import SideHustle from '@/components/cards/side-hustle.vue'
+import Finance from '@/components/cards/finance.vue'
 import RealEstate from '@/components/cards/real-estate.vue'
+import Enterprise from '@/components/cards/enterprise.vue'
+import Quotation from '@/components/cards/quotation.vue'
+import Perceive from '@/components/cards/perceive.vue'
+import BlindDate from '@/components/cards/blind-date.vue'
+import Backset from '@/components/cards/backset.vue'
+import Project from '@/components/cards/project.vue'
+
+// 接口
 import { ConfirmCard } from 'config/api.js'
 
 export default {
-	components: { RealEstate },
+	components: { SideHustle, Finance, RealEstate, Enterprise, Quotation, Perceive, BlindDate, Backset, Project },
 	data() {
 		return {
 			// 左图标
@@ -35,8 +78,8 @@ export default {
 			rightIcon: 'bankcard-fill',
 			// 这个人是否抽到卡的那个人
 			is_drew: false,
-			// card: ''
-			cardMsg: getApp().globalData.cardMsg
+			cardMsg: getApp().globalData.cardMsg,
+			currentCard: getApp().globalData.currentCard
 
 		}
 	},
@@ -45,6 +88,9 @@ export default {
 		userName() {
 			const temp_obj = getApp().globalData.appListId.find((item) => item.id === this.cardMsg[0])
 			if (temp_obj) {
+				if (this.cardMsg[0] === getApp().globalData.gameUserId) {
+					return '您抽到了这张卡：'
+				}
 				return `玩家 ${temp_obj.userName} 抽到了一张卡`
 			}
 			return '获取玩家信息失败，请重试！'
@@ -52,9 +98,7 @@ export default {
 	},
 
 	created() {
-		getApp().globalData.currentCard = getApp().globalData.cardList.find((item) => item.id === this.cardMsg[1])
 		this.is_drew = this.cardMsg[0] === getApp().globalData.gameUserId
-		// this.card = getApp().globalData.cardList.find((item) => item.id === cardMsg[1])
 	},
 	onReady() {},
 

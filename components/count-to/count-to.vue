@@ -20,14 +20,14 @@ export default {
 	props: {
 		// 开始的数值，默认为0
 		startVal: {
-			type: Number,
+			type: [String, Number],
 			default: 0
 		},
 		// 结束目标数值
 		endVal: {
 			type: Number,
-			default: 0,
-			required: true
+			default: 0
+			// required: true
 		},
 		// 是否自动开始
 		autoplay: {
@@ -71,7 +71,7 @@ export default {
 			localStartVal: this.startVal,
 			localDuration: this.duration,
 			// 显示的数值
-			displayValue: this.formatNumber(this.startVal),
+			displayValue: typeof this.startVal === 'string' ? this.startVal : this.formatNumber(this.startVal),
 			// 打印的数值
 			printValue: null,
 			// 是否暂停
@@ -107,6 +107,12 @@ export default {
 	methods: {
 		// 开始滚动
 		start() {
+			if (typeof this.startVal === 'string') {
+				this.rAF && this.clearAnimationFrame(this.rAF)
+				this.displayValue = this.startVal
+				return
+			}
+
 			this.localStartVal = this.startVal
 			this.startTime = null
 			this.localDuration = this.duration
@@ -125,7 +131,7 @@ export default {
 		},
 		// 停止
 		stop() {
-			this.cancelAnimationFrame(this.rAF)
+			this.clearAnimationFrame(this.rAF)
 		},
 		// 恢复
 		resume() {
@@ -137,12 +143,14 @@ export default {
 		// 重置
 		reset() {
 			this.startTime = null
-			this.cnacelAnimationFrame(this.rAF)
+			// this.cnacelAnimationFrame(this.rAF)
+			this.clearAnimationFrame(this.rAF)
 			this.displayValue = this.formatNumber(this.startVal)
 		},
 		// 销毁组件
 		destroyed() {
-			this.cancelAnimationFrame(this.rAF)
+			// this.cancelAnimationFrame(this.rAF)
+			this.clearAnimationFrame(this.rAF)
 		},
 		// 累加时间
 		count(timestamp) {
@@ -212,6 +220,7 @@ export default {
 					num1 = num1.replace(reg, '$1' + this.thousandthsSeparator + '$2')
 				}
 			}
+			// console.log(num1 + num2)
 			return num1 + num2
 		},
 		// 判断是否为数字

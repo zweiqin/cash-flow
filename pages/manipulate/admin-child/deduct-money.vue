@@ -16,7 +16,7 @@
 				>
 					<tn-radio-group v-model="value" @change="radioGroupChange">
 
-						<tn-list-cell v-for="(item,index) in appListId" :arrow="false" :arrow-right="false" :unlined="false" :line-left="true" :line-right="true">
+						<tn-list-cell v-for="(item,index) in appListId" :key="item.id" :arrow="false" :arrow-right="false" :unlined="false" :line-left="true" :line-right="true">
 							<view>
 								<tn-radio :name="item.id">
 									<text>用户{{ index+1 }}：</text>
@@ -88,7 +88,7 @@ export default {
 				})
 			}
 			DeductMoney({
-				game_id: getApp().globalData.gameId,
+				game_id: Number(getApp().globalData.gameId),
 				game_user_id: Number(this.value),
 				money_number: Number(this.money)
 			})

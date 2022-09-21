@@ -47,8 +47,14 @@ export default {
 		},
 		confirm() {
 			const round = getApp().globalData.round
+			if (round[0] === '0') {
+				return uni.showToast({
+					title: '获取玩家信息失败！',
+					icon: 'error'
+				})
+			}
 			Payroll({
-				game_id: getApp().globalData.gameId,
+				game_id: Number(getApp().globalData.gameId),
 				game_user_id: Number(round[0])
 			})
 				.then((res) => {
