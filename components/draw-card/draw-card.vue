@@ -7,69 +7,45 @@
 			</view>
 		</view>
 
-		<!-- 副业 -->
-		<view v-if="currentCard.id===4" class="card-container">
-			<SideHustle></SideHustle>
-		</view>
-		<!-- 金融 -->
-		<view v-else-if="currentCard.id===5" class="card-container">
-			<Finance></Finance>
-		</view>
-		<!-- 房地产 -->
-		<view v-else-if="currentCard.id===6" class="card-container">
-			<RealEstate></RealEstate>
-		</view>
-		<!-- 企业 -->
-		<view v-else-if="currentCard.id===8" class="card-container">
-			<Enterprise></Enterprise>
-		</view>
-		<!-- 行情 -->
-		<view v-else-if="currentCard.id===11" class="card-container">
-			<Quotation></Quotation>
-		</view>
-		<!-- 觉察 -->
-		<view v-else-if="currentCard.id===12" class="card-container">
-			<Perceive></Perceive>
-		</view>
-		<!-- 相亲 -->
-		<view v-else-if="currentCard.id===9" class="card-container">
-			<BlindDate></BlindDate>
-		</view>
-		<!-- 逆流 -->
-		<view v-else-if="currentCard.id===7" class="card-container">
-			<Backset></Backset>
-		</view>
-		<!-- 项目 -->
-		<view v-else-if="currentCard.id===10" class="card-container">
-			<Project></Project>
-		</view>
+		<!-- 卡片cards组件 -->
+		<view class="card-container"> <Cards :card="currentCard"></Cards> </view>
 
 		<view v-if="is_drew" class="tn-flex tn-flex-row-around button">
 			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
 			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">使用</tn-button>
 		</view>
-		<view v-else class="tn-flex tn-flex-row-around button">
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
-		</view>
+		<view v-else class="tn-flex tn-flex-row-around button"> <tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button> </view>
 	</view>
 </template>
 
 <script>
-import SideHustle from '@/components/cards/side-hustle.vue'
-import Finance from '@/components/cards/finance.vue'
-import RealEstate from '@/components/cards/real-estate.vue'
-import Enterprise from '@/components/cards/enterprise.vue'
-import Quotation from '@/components/cards/quotation.vue'
-import Perceive from '@/components/cards/perceive.vue'
-import BlindDate from '@/components/cards/blind-date.vue'
-import Backset from '@/components/cards/backset.vue'
-import Project from '@/components/cards/project.vue'
+// 一开始采用的是九张卡九个组件的方式，后面因为卡片的信息都统一在name和desc属性上，所以组件的重复度变高，就可以封装成单独的组件。另外，之所以封装成统一的cards组件，是因为考虑到卡片（cards组件）可能在不同的组件里用到，譬如用户可能要查询单独的卡片的信息，这里就要在其它组件里用到cards组件了
+// <!-- 副业 -->
+// <!-- 金融 -->
+// <!-- 房地产 -->
+// <!-- 企业 -->
+// <!-- 行情 -->
+// <!-- 觉察 -->
+// <!-- 相亲 -->
+// <!-- 逆流 -->
+// <!-- 项目 -->
+// import SideHustle from '@/components/cards/side-hustle.vue'
+// import Finance from '@/components/cards/finance.vue'
+// import RealEstate from '@/components/cards/real-estate.vue'
+// import Enterprise from '@/components/cards/enterprise.vue'
+// import Quotation from '@/components/cards/quotation.vue'
+// import Perceive from '@/components/cards/perceive.vue'
+// import BlindDate from '@/components/cards/blind-date.vue'
+// import Backset from '@/components/cards/backset.vue'
+// import Project from '@/components/cards/project.vue'
+import Cards from '@/components/cards/cards.vue'
 
 // 接口
 import { ConfirmCard } from 'config/api.js'
 
 export default {
-	components: { SideHustle, Finance, RealEstate, Enterprise, Quotation, Perceive, BlindDate, Backset, Project },
+	// components: { SideHustle, Finance, RealEstate, Enterprise, Quotation, Perceive, BlindDate, Backset, Project },
+	components: { Cards },
 	data() {
 		return {
 			// 左图标
@@ -80,7 +56,6 @@ export default {
 			is_drew: false,
 			cardMsg: getApp().globalData.cardMsg,
 			currentCard: getApp().globalData.currentCard
-
 		}
 	},
 
@@ -99,6 +74,7 @@ export default {
 
 	created() {
 		this.is_drew = this.cardMsg[0] === getApp().globalData.gameUserId
+		// console.log(this.currentCard)
 	},
 	onReady() {},
 
@@ -109,7 +85,7 @@ export default {
 		confirm() {
 			// console.log(this.money)
 			// // 多一份保险，判断抽到的这张卡有没有放到storage里面
-			// if (!this.card) {
+			// if (!this.currentCard) {
 			// 	return uni.showToast({
 			// 		title: '获取卡牌信息失败！',
 			// 		icon: 'error'
@@ -160,8 +136,8 @@ export default {
 		font-size: 34rpx;
 	}
 }
-.card-container{
-	width: 45vmin;
+.card-container {
+	width: 55vmin;
 	// height: 65vmin;
 	margin: 0 auto;
 }

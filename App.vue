@@ -270,7 +270,19 @@ export default {
 				_this.cardMsg = [data.game_user_id, data.data.id]
 				// _this.currentCard = _this.cardList.find((item) => item.id === _this.cardMsg[1])
 				_this.currentCard = _this.cardList.find((item) => item.id === data.data.id)
-				_this.game && _this.game.handleProcessing('drawCard')
+				_this.game && _this.game.handleManage('drawCard')
+				_this.manipulate && _this.manipulate.handleManage('drawCard')
+				_this.game && _this.game.syncInfo()
+			}
+
+			if (data.event === 'confirmCard') {
+				// banker_action: false,data: "玩家牛确认卡片房产投资-3室2厅1卫(3-2-1)成功",event: "confirmCard",game_id: "173",game_user_id: "311",is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('提示', data.data.replace(/^.{3}/, '您'), 'bankcard-fill')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
 				_this.game && _this.game.syncInfo()
 			}
 

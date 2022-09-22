@@ -23,7 +23,7 @@
 						<!-- 四个表格e -->
 						<view class="tn-flex-1 tn-padding-xs innermost-3">
 							<!-- 右s -->
-							<userButton></userButton>
+							<userButton @clickBtn="handleProcessing"></userButton>
 							<!-- 右e -->
 						</view>
 					</view>
@@ -52,7 +52,7 @@
 					close-btn-icon="close"
 					close-btn-position="top-right"
 					:mask-closeable="true"
-					:z-index="2"
+					:z-index="5"
 				>
 					<view class="tn-height-full tn-flex tn-flex-row-right tn-flex-direction-column">
 						<!-- <tn-button shape="round" width="220rpx" font-color="#080808">关闭弹窗</tn-button> -->
@@ -62,9 +62,9 @@
 				</tn-popup>
 			</view>
 
-			<view> <tn-toast ref="toast" :z-index="4" @closed="closeToast()"></tn-toast> </view>
+			<view> <tn-toast ref="toast" :z-index="8" @closed="closeToast()"></tn-toast> </view>
 
-			<!-- 模态框 -->
+			<!-- 主动点击的模态框 -->
 			<tn-modal
 				v-model="is_show_model"
 				background-color="#E4E9EC"
@@ -80,14 +80,50 @@
 				:mask-closeable="mask_closeable"
 				:zoom="true"
 				:custom="custom"
-				:z-index="3"
+				:z-index="6"
 				@click="clickBtn"
 			>
-				<view v-if="popup_significance === 'drawCard'">
-					<DrawCard @cancel="clickBtn" @submit="clickBtn"></DrawCard>
+				<view v-if="popup_significance === 'loan'">
+					<Loan @cancel="clickBtn" @submit="clickBtn"></Loan>
 				</view>
-				<!-- <view v-else-if="popup_significance === 'wasteMoney'">
-					<WasteMoney @cancel="clickBtn" @submit="clickBtn"></WasteMoney>
+				<view v-else-if="popup_significance === 'repayment'">
+					<Repayment @cancel="clickBtn" @submit="clickBtn"></Repayment>
+				</view>
+				<view v-else-if="popup_significance === 'giveMoney'">
+					<GiveMoney @cancel="clickBtn" @submit="clickBtn"></GiveMoney>
+				</view>
+				<view v-else-if="popup_significance === 'litigate'">
+					<Litigate @cancel="clickBtn" @submit="clickBtn"></Litigate>
+				</view>
+				<view v-else-if="popup_significance === 'hunting'">
+					<Hunting @cancel="clickBtn" @submit="clickBtn"></Hunting>
+				</view>
+			</tn-modal>
+
+			<!-- 被动收到的模态框 -->
+			<tn-modal
+				v-model="is_show_model_pa"
+				background-color="#E4E9EC"
+				width="64%"
+				padding="30rpx 26rpx"
+				:radius="12"
+				font-color="#BA7027"
+				:font-size="35"
+				:title="title_pa"
+				:content="content_pa"
+				:button="button_pa"
+				:show-close-btn="close_btn_pa"
+				:mask-closeable="mask_closeable_pa"
+				:zoom="true"
+				:custom="custom_pa"
+				:z-index="2"
+				@click="clickPaBtn"
+			>
+				<view v-if="popup_significance_pa === 'drawCard'">
+					<DrawCard @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+				</view>
+				<!-- <view v-else-if="popup_significance_pa === 'wasteMoney'">
+					<WasteMoney @cancel="clickPaBtn" @submit="clickPaBtn"></WasteMoney>
 				</view> -->
 			</tn-modal>
 		</view>
@@ -106,8 +142,15 @@ import TableDataes from '@/components/table/table-dataes.vue'
 import userButton from './user-child/user-button.vue'
 import Bottom from '@/components/table/bottom.vue'
 
-// 封装的模态框的自定义内容的组件
-import DrawCard from './user-child/draw-card.vue'
+// 封装的模态框的自定义内容的组件(主动)
+import Loan from './user-child/loan.vue'
+import Repayment from './user-child/repayment.vue'
+import GiveMoney from './user-child/give-money.vue'
+import Litigate from './user-child/litigate.vue'
+import Hunting from './user-child/hunting.vue'
+
+// 封装的模态框的自定义内容的组件(被动)
+import DrawCard from '@/components/draw-card/draw-card.vue'
 
 // 接口
 import { GetUserInfo } from 'config/api.js'
@@ -116,13 +159,13 @@ import { GetUserInfo } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, userButton, DrawCard },
+	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, userButton, DrawCard, Loan, Repayment, GiveMoney, Litigate, Hunting },
 	data() {
 		return {
 			// load_role: '',
 			count_text: '等待下一轮',
 
-			// 模态框
+			// 主动点击的模态框
 			popup_significance: '',
 			is_show_model: false,
 			title: '提示',
@@ -142,6 +185,27 @@ export default {
 			close_btn: true,
 			mask_closeable: true,
 			custom: false,
+
+			// 被动收到的模态框
+			popup_significance_pa: '',
+			is_show_model_pa: false,
+			title_pa: '提示',
+			content_pa: '',
+			button_pa: [
+				{
+					text: '取消',
+					backgroundColor: '#A4E82F',
+					fontColor: '#FFFFFF'
+				},
+				{
+					text: '确定',
+					backgroundColor: 'tn-bg-indigo',
+					fontColor: '#FFFFFF'
+				}
+			],
+			close_btn_pa: true,
+			mask_closeable_pa: true,
+			custom_pa: false,
 
 			toast_significance: '',
 
@@ -187,25 +251,67 @@ export default {
 			// console.log(e)
 		},
 
+		// 主动
 		handleProcessing(significance) {
-			this.is_show_model = false
+			// if (significance === '关闭房间') {
+			// 	this.popup_significance = '关闭房间'
+			// 	this.title = '提示'
+			// 	this.content = '确定要关闭房间吗？'
+			// 	// this.button = false
+			// 	this.close_btn = true
+			// 	this.mask_closeable = true
+			// 	this.custom = false
+			// 	this.is_show_model = true
+			// } else
+			if (significance === 'loan') {
+				this.popup_significance = 'loan'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'repayment') {
+				this.popup_significance = 'repayment'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'giveMoney') {
+				this.popup_significance = 'giveMoney'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'litigate') {
+				this.popup_significance = 'litigate'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'hunting') {
+				this.popup_significance = 'hunting'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			}
+		},
+		// 被动收到的模态框
+		handleManage(significance) {
+			this.is_show_model_pa = false
 			this.$nextTick(() => {
 				if (significance === 'drawCard') {
-					this.popup_significance = 'drawCard'
-					this.close_btn = false
-					this.mask_closeable = false
-					this.custom = true
-					this.is_show_model = true
+					this.popup_significance_pa = 'drawCard'
+					this.close_btn_pa = false
+					this.mask_closeable_pa = false
+					this.custom_pa = true
+					this.is_show_model_pa = true
 				}
 			})
 		},
 
 		showPopup(name, id) {
-			// console.log(name, id)
 			GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
-			// GetUserInfo({ game_user_id: 31, game_id: 22 })
 				.then((res) => {
-					// console.log(res[1].data.data)
 					const data = res[1].data.data
 					setRecord(data, 'Eject', this)
 				})
@@ -238,17 +344,12 @@ export default {
 				}
 			}
 		},
+		clickPaBtn(event) {
+			this.is_show_model_pa = false
+		},
+		// 关闭模态框触发
 		clickBtn(event) {
 			this.is_show_model = false
-			// console.log(event.index)
-			// if (event.index === 1) {
-			// 	if (this.button_order === 1) {
-			// 		getApp().globalData.send({
-			// 			method: 'stopGame',
-			// 			data: getApp().globalData.gameKey
-			// 		})
-			// 	}
-			// }
 		},
 		closeToast() {
 			if (this.toast_significance === 'stopGame') {

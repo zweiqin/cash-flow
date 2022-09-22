@@ -20,9 +20,10 @@
 					<view class="tn-flex layer-2">
 						<view class="tn-flex-1 innermost-3">
 							<!-- 右s -->
-							<view class="tn-flex tn-flex-direction-column tn-flex-wrap tn-flex-col-bottom tn-padding-xs tn-radius bg-flex-shadow middle-r1">
+							<!-- 弹出被动收到的模态框时，动态改变align-content，关闭房间按钮的height，其它按钮的width -->
+							<view class="tn-flex tn-flex-direction-column tn-flex-wrap tn-padding-xs tn-radius bg-flex-shadow middle-r1" :style="{alignContent: align_content_btn}">
 								<!-- 按钮s -->
-								<view style="height: 100%;">
+								<view :style="{height: close_btn_height}">
 									<tn-button
 										:shadow="true"
 										width="15vw"
@@ -37,8 +38,8 @@
 										<text>关闭房间</text>
 									</tn-button>
 								</view>
-								<view v-for="(item, index) in button_right" :key="index">
-									<tn-button :shadow="true" width="30vw" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0" @click="handleProcessing(item.meaning)">
+								<view v-for="(item, index) in button_right" :key="index" class="tn-shadow-blur" style="z-index: 4;">
+									<tn-button :shadow="true" :width="rest_btn_width" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0" @click="handleProcessing(item.meaning)">
 										<text>{{ item.name }}</text>
 									</tn-button>
 								</view>
@@ -72,7 +73,7 @@
 					close-btn-icon="close"
 					close-btn-position="top-right"
 					:mask-closeable="true"
-					:z-index="2"
+					:z-index="5"
 				>
 					<view class="tn-height-full tn-flex tn-flex-row-right tn-flex-direction-column">
 						<!-- <tn-button shape="round" width="220rpx" font-color="#080808">关闭弹窗</tn-button> -->
@@ -82,9 +83,9 @@
 				</tn-popup>
 			</view>
 
-			<view> <tn-toast ref="toast" :z-index="4" @closed="closeToast()"></tn-toast> </view>
+			<view> <tn-toast ref="toast" :z-index="8" @closed="closeToast()"></tn-toast> </view>
 
-			<!-- 模态框 -->
+			<!-- 主动点击的模态框 -->
 			<tn-modal
 				v-model="is_show_model"
 				background-color="#E4E9EC"
@@ -100,7 +101,7 @@
 				:mask-closeable="mask_closeable"
 				:zoom="true"
 				:custom="custom"
-				:z-index="3"
+				:z-index="6"
 				@click="clickBtn"
 			>
 				<view v-if="popup_significance === 'next'">
@@ -131,6 +132,34 @@
 					<GivesBirth @cancel="clickBtn" @submit="clickBtn"></GivesBirth>
 				</view>
 			</tn-modal>
+
+			<!-- 被动收到的模态框 -->
+			<tn-modal
+				v-model="is_show_model_pa"
+				background-color="#E4E9EC"
+				width="64%"
+				padding="30rpx 26rpx"
+				:radius="12"
+				font-color="#BA7027"
+				:font-size="35"
+				:title="title_pa"
+				:content="content_pa"
+				:button="button_pa"
+				:show-close-btn="close_btn_pa"
+				:mask-closeable="mask_closeable_pa"
+				:zoom="true"
+				:custom="custom_pa"
+				:z-index="2"
+				@click="clickPaBtn"
+			>
+				<view v-if="popup_significance_pa === 'drawCard'">
+					<DrawCard @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+				</view>
+				<!-- <view v-else-if="popup_significance_pa === 'wasteMoney'">
+					<WasteMoney @cancel="clickPaBtn" @submit="clickPaBtn"></WasteMoney>
+				</view> -->
+			</tn-modal>
+
 		</view>
 	</view>
 </template>
@@ -146,7 +175,7 @@ import HeadNavigationBar from '@/components/head-navigation-bar/head-navigation-
 import TableDataes from '@/components/table/table-dataes.vue'
 import Bottom from '@/components/table/bottom.vue'
 
-// 封装的模态框的自定义内容的组件
+// 封装的模态框的自定义内容的组件(主动)
 import Next from './admin-child/next.vue'
 import WasteMoney from './admin-child/waste-money.vue'
 import PayOff from './admin-child/pay-off.vue'
@@ -156,6 +185,9 @@ import FreeEnergy from './admin-child/free-energy.vue'
 import Anniversary from './admin-child/anniversary.vue'
 import GivesBirth from './admin-child/gives-birth.vue'
 
+// 封装的模态框的自定义内容的组件(被动)
+import DrawCard from '@/components/draw-card/draw-card.vue'
+
 // 接口
 import { GetCardCategoryList, GetUserInfo } from 'config/api.js'
 
@@ -163,7 +195,7 @@ import { GetCardCategoryList, GetUserInfo } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, Next, WasteMoney, PayOff, DeductMoney, DebitCard, FreeEnergy, Anniversary, GivesBirth },
+	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, Next, WasteMoney, PayOff, DeductMoney, DebitCard, FreeEnergy, Anniversary, GivesBirth, DrawCard },
 	data() {
 		return {
 			// load_role: '',
@@ -213,7 +245,7 @@ export default {
 				}
 			],
 
-			// 模态框
+			// 主动点击的模态框
 			popup_significance: '',
 			is_show_model: false,
 			title: '提示',
@@ -234,11 +266,51 @@ export default {
 			mask_closeable: true,
 			custom: false,
 
+			// 被动收到的模态框
+			popup_significance_pa: '',
+			is_show_model_pa: false,
+			title_pa: '提示',
+			content_pa: '',
+			button_pa: [
+				{
+					text: '取消',
+					backgroundColor: '#A4E82F',
+					fontColor: '#FFFFFF'
+				},
+				{
+					text: '确定',
+					backgroundColor: 'tn-bg-indigo',
+					fontColor: '#FFFFFF'
+				}
+			],
+			close_btn_pa: true,
+			mask_closeable_pa: true,
+			custom_pa: false,
+
+			// 弹出被动收到的模态框时，动态改变的样式
+			align_content_btn: 'space-around',
+			close_btn_height: '100%',
+			rest_btn_width: '30vw',
+
 			toast_significance: '',
 
 			popup_name: '',
 			popup_id: '',
 			show_popup: false
+		}
+	},
+
+	watch: {
+		is_show_model_pa(newVal, oldVal) {
+			if (newVal) {
+				this.align_content_btn = 'space-between'
+				this.close_btn_height = 'auto'
+				this.rest_btn_width = '15vw'
+			} else {
+				this.align_content_btn = 'space-around'
+				this.close_btn_height = '100%'
+				this.rest_btn_width = '30vw'
+			}
 		}
 	},
 
@@ -288,6 +360,7 @@ export default {
 				})
 		},
 
+		// 主动
 		handleProcessing(significance) {
 			if (significance === '关闭房间') {
 				this.popup_significance = '关闭房间'
@@ -354,12 +427,23 @@ export default {
 				this.is_show_model = true
 			}
 		},
+		// 被动收到的模态框
+		handleManage(significance) {
+			this.is_show_model_pa = false
+			this.$nextTick(() => {
+				if (significance === 'drawCard') {
+					this.popup_significance_pa = 'drawCard'
+					this.close_btn_pa = false
+					this.mask_closeable_pa = false
+					this.custom_pa = true
+					this.is_show_model_pa = true
+				}
+			})
+		},
 
 		showPopup(name, id) {
 			GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
-			// GetUserInfo({ id: 31, game_id: 22 })
 				.then((res) => {
-					// console.log(res[1].data.data)
 					const data = res[1].data.data
 					setRecord(data, 'Eject', this)
 				})
@@ -400,6 +484,9 @@ export default {
 					})
 				}
 			}
+		},
+		clickPaBtn(event) {
+			this.is_show_model_pa = false
 		},
 		closeToast() {
 			if (this.toast_significance === 'stopGame') {
