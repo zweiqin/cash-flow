@@ -309,6 +309,17 @@ export default {
 				}
 				_this.game && _this.game.syncInfo()
 			}
+
+			if (data.event === 'heartBreak') {
+				// banker_action: false，data: "玩家牛失恋了,消耗2点精力"，event: "heartBreak"，game_id: "184"，game_user_id: ""，is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('坏消息', data.data.replace(/^.{3}/, '您'), 'like-break')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
+				_this.game && _this.game.syncInfo()
+			}
 		},
 
 		onError() {

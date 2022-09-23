@@ -109,6 +109,16 @@ export const HaveBaby = (data) => uni.request({
 	}
 })
 
+// banker给当前轮的玩家进行心碎
+export const HeartBreak = (data) => uni.request({
+	url: '/game_user/HeartBreak', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
 // user被抽到卡后，确认卡牌
 export const ConfirmCard = (data) => uni.request({
 	url: '/card/ConfirmCard', // 仅为示例，并非真实接口地址。

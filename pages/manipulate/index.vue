@@ -89,7 +89,7 @@
 			<tn-modal
 				v-model="is_show_model"
 				background-color="#E4E9EC"
-				width="84%"
+				width="60%"
 				padding="30rpx 26rpx"
 				:radius="12"
 				font-color="#BA7027"
@@ -130,6 +130,9 @@
 				</view>
 				<view v-else-if="popup_significance === 'givesBirth'">
 					<GivesBirth @cancel="clickBtn" @submit="clickBtn"></GivesBirth>
+				</view>
+				<view v-else-if="popup_significance === 'heartbreak'">
+					<Heartbreak @cancel="clickBtn" @submit="clickBtn"></Heartbreak>
 				</view>
 			</tn-modal>
 
@@ -184,6 +187,7 @@ import DebitCard from './admin-child/debit-card.vue' // 二合一
 import FreeEnergy from './admin-child/free-energy.vue'
 import Anniversary from './admin-child/anniversary.vue'
 import GivesBirth from './admin-child/gives-birth.vue'
+import Heartbreak from './admin-child/heartbreak.vue'
 
 // 封装的模态框的自定义内容的组件(被动)
 import DrawCard from '@/components/draw-card/draw-card.vue'
@@ -195,7 +199,7 @@ import { GetCardCategoryList, GetUserInfo } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, Next, WasteMoney, PayOff, DeductMoney, DebitCard, FreeEnergy, Anniversary, GivesBirth, DrawCard },
+	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, Next, WasteMoney, PayOff, DeductMoney, DebitCard, FreeEnergy, Anniversary, GivesBirth, Heartbreak, DrawCard },
 	data() {
 		return {
 			// load_role: '',
@@ -421,6 +425,12 @@ export default {
 				this.is_show_model = true
 			} else if (significance === 'givesBirth') {
 				this.popup_significance = 'givesBirth'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'heartbreak') {
+				this.popup_significance = 'heartbreak'
 				this.close_btn = false
 				this.mask_closeable = false
 				this.custom = true

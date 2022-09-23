@@ -76,9 +76,20 @@ export default {
 				this.card_bg = 'project'
 		}
 		const temp_arr = this.card.card_name.split('/')
-		const temp_name = temp_arr[0].split('-')
-		this.card_name_top = temp_name[0]
-		this.card_name_bottom = temp_name[1]
+
+		// 不用这种方式，考虑到temp_arr[0]里可能有多个-
+		// const temp_name = temp_arr[0].split('-')
+		// this.card_name_top = temp_name[0]
+		// this.card_name_bottom = temp_name[1]
+
+		const name_arr = temp_arr[0].match(/([^-]*)-(.*)/)
+		if (name_arr) {
+			this.card_name_top = name_arr[1].substring(0, name_arr[1].length)
+			this.card_name_bottom = name_arr[2]
+		} else {
+			this.card_name_top = temp_arr[0]
+		}
+
 		this.card_name_text = temp_arr[1] || false
 		let temp_info = this.card.describe.match(/\[(.+?)\]/g)
 		if (temp_info) {

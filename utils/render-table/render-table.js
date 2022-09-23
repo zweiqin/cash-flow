@@ -44,8 +44,8 @@ function setRecord(data, refFragment, vm) {
 		asset2,
 		asset3
 	})
-	const debt1 = data.assets.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
-	const debt2 = data.assets.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
+	const debt1 = data.debts.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
+	const debt2 = data.debts.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
 	vm.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[1].$children[0].setLiabilities({
 		debt_self_housing: data.basic_info.child_num,
 		debt_car_loan: data.basic_info.child_num,

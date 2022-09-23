@@ -10,10 +10,11 @@
 					<view class="tn-flex-3 tn-flex tn-flex-direction-column tn-flex-row-center">工作收入</view>
 					<view class="tn-flex-11">
 						<view class="tn-flex tn-margin-right-sm tn-border-solid-bottom tn-border-black pad-top">
-							<view class="tn-flex-6 tn-text-left">本人工资</view> <view class="tn-flex-5 tn-text-right">{{ cutApart(in_salary) }}</view>
+							<view class="tn-flex-6 tn-text-left">本人工资</view> <view class="tn-flex-5 tn-text-right tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(in_salary) }}</view>
+							<!-- style="line-height: 100%;vertical-align:text-bottom;" -->
 						</view>
 						<view class="tn-flex tn-margin-right-sm tn-border-solid-bottom tn-border-black pad-top">
-							<view class="tn-flex-6 tn-text-left">配偶工资</view> <view class="tn-flex-5 tn-text-right">{{ cutApart(in_partner) }}</view>
+							<view class="tn-flex-6 tn-text-left">配偶工资</view> <view class="tn-flex-5 tn-text-right tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(in_partner) }}</view>
 						</view>
 					</view>
 				</view>
@@ -22,7 +23,7 @@
 					<view class="tn-flex-3 tn-flex tn-flex-direction-column tn-flex-row-center">副业收入</view>
 					<view class="tn-flex-11">
 						<view v-for="item in income1" :key="item.id" class="tn-flex tn-margin-right-sm tn-border-solid-bottom tn-border-black pad-top">
-							<view class="tn-flex-6 tn-text-left">{{ item.card_name }}</view> <view class="tn-flex-5 tn-text-right">{{ cutApart(item.value) }}</view>
+							<view class="tn-flex-6 tn-text-left">{{ item.card_name }}</view> <view class="tn-flex-5 tn-text-right tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.value) }}</view>
 						</view>
 					</view>
 				</view>
@@ -45,9 +46,9 @@
 						<view v-for="item in income2" :key="item.id" class="tn-flex pad-top">
 							<view class="tn-flex-6 tn-flex">
 								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ item.card_name }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(item.num) }}</view>
+								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.num) }}</view>
 							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-xs tn-border-solid-bottom tn-border-black">{{ cutApart(item.value) }}</view>
+							<view class="tn-flex-5 tn-text-right tn-margin-right-xs tn-border-solid-bottom tn-border-black tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.value) }}</view>
 						</view>
 						<!-- 重复测试s -->
 						<!-- 重复测试s -->
@@ -69,7 +70,7 @@
 								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ item.card_name }}</view>
 								<!-- <view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(item.num) }}</view> -->
 							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(item.value) }}</view>
+							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.value) }}</view>
 						</view>
 					</view>
 				</view>
@@ -87,9 +88,9 @@
 						<view v-for="item in income4" :key="item.id" class="tn-flex pad-top">
 							<view class="tn-flex-6 tn-flex">
 								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ item.card_name }}</view>
-								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs">{{ cutApart(item.num) }}</view>
+								<view class="tn-flex-1 tn-border-solid-bottom tn-border-black tn-margin-right-xs tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.num) }}</view>
 							</view>
-							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black">{{ cutApart(item.value) }}</view>
+							<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-border-solid-bottom tn-border-black tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.value) }}</view>
 						</view>
 					</view>
 				</view>

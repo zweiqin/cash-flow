@@ -8,8 +8,8 @@
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">权益</view>
 				</view>
 				<view v-for="item in asset1" :key="item.id" class="tn-flex pad-top">
-					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black">{{ item.card_name }}</view>
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">未知</view>
+					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black tn-flex tn-flex-col-bottom tn-flex-row-right">{{ item.card_name }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">未知</view>
 				</view>
 			</view>
 			<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
@@ -20,8 +20,8 @@
 				</view>
 				<view v-for="item in asset2" :key="item.id" class="tn-flex pad-top">
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">{{ item.card_name }}</view>
-					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(item.num) }}</view>
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(item.value) }}</view>
+					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.num) }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.value) }}</view>
 				</view>
 			</view>
 			<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
@@ -32,8 +32,8 @@
 				</view>
 				<view v-for="item in asset3" :key="item.id" class="tn-flex pad-top">
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">{{ item.card_name }}</view>
-					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(item.num) }}</view>
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">{{ cutApart(item.value) }}</view>
+					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.num) }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.value) }}</view>
 				</view>
 			</view>
 		</view>
@@ -69,8 +69,8 @@ export default {
 		cutApart,
 		setAssets(obj) {
 			obj.asset1.length && (this.asset1 = obj.asset1)
-			obj.asset1.length && (this.asset2 = obj.asset2)
-			obj.asset1.length && (this.asset3 = obj.asset3)
+			obj.asset2.length && (this.asset2 = obj.asset2)
+			obj.asset3.length && (this.asset3 = obj.asset3)
 		}
 	}
 }

@@ -68,7 +68,7 @@
 			<tn-modal
 				v-model="is_show_model"
 				background-color="#E4E9EC"
-				width="84%"
+				width="60%"
 				padding="30rpx 26rpx"
 				:radius="12"
 				font-color="#BA7027"
@@ -363,9 +363,7 @@ export default {
 		},
 		syncInfo() {
 			GetUserInfo({ game_user_id: getApp().globalData.gameUserId, game_id: getApp().globalData.gameId })
-			// GetUserInfo({ id: 31, game_id: 22 })
 				.then((res) => {
-					// console.log(res[1].data.data)
 					const data = res[1].data.data
 					setRecord(data, 'Main', this)
 					this.show_popup && this.showPopup(this.popup_name, this.popup_id)

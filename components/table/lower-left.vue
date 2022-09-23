@@ -6,55 +6,55 @@
 			<view class="tn-flex-3">
 				<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
 					<view class="tn-flex-1">孩子</view>
-					<view class="tn-flex-3">{{ cutApart(child_num) }} 个 ×</view>
-					<view class="tn-flex-2 tn-text-right tn-margin-right-sm">{{ cutApart(out_child) }}</view>
+					<view class="tn-flex-3 tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(child_num) }} 个 ×</view>
+					<view class="tn-flex-2 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_child) }}</view>
 				</view>
 				<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
 					<view class="tn-flex-1">本人</view>
-					<view class="tn-flex-5 tn-text-right tn-margin-right-sm">{{ cutApart(out_personal) }}</view>
+					<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_personal) }}</view>
 				</view>
 				<view class="tn-flex pad-top">
 					<view class="tn-flex-1">配偶</view>
-					<view class="tn-flex-5 tn-text-right tn-margin-right-sm">{{ cutApart(out_partner) }}</view>
+					<view class="tn-flex-5 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_partner) }}</view>
 				</view>
 			</view>
 		</view>
 		<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
 			<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
 				<view class="tn-flex-2 tn-text-left">税金</view>
-				<view class="tn-flex-3 tn-text-right tn-margin-right-sm">{{ cutApart(out_tax) }}</view>
+				<view class="tn-flex-3 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_tax) }}</view>
 			</view>
 			<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
 				<view class="tn-flex-2 tn-text-left">自住房贷款支出</view>
-				<view class="tn-flex-3 tn-text-right tn-margin-right-sm">{{ cutApart(out_self_housing) }}</view>
+				<view class="tn-flex-3 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_self_housing) }}</view>
 			</view>
 			<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
 				<view class="tn-flex-2 tn-text-left">房租支出</view>
-				<view class="tn-flex-3 tn-text-right tn-margin-right-sm">{{ cutApart(out_rent) }}</view>
+				<view class="tn-flex-3 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_rent) }}</view>
 			</view>
 			<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
 				<view class="tn-flex-2 tn-text-left">购车贷款支出</view>
-				<view class="tn-flex-3 tn-text-right tn-margin-right-sm">{{ cutApart(out_car_loan) }}</view>
+				<view class="tn-flex-3 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_car_loan) }}</view>
 			</view>
 			<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
 				<view class="tn-flex-2 tn-text-left">信用卡支出</view>
-				<view class="tn-flex-3 tn-text-right tn-margin-right-sm">{{ cutApart(out_credit_card) }}</view>
+				<view class="tn-flex-3 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_credit_card) }}</view>
 			</view>
 			<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
 				<view class="tn-flex-2 tn-text-left">额外负债支出</view>
-				<view class="tn-flex-3 tn-text-right tn-margin-right-sm">{{ cutApart(out_additional_liabilities) }}</view>
+				<view class="tn-flex-3 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_additional_liabilities) }}</view>
 			</view>
 			<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
 				<view class="tn-flex-2 tn-text-left">保险支出</view>
-				<view class="tn-flex-3 tn-text-right tn-margin-right-sm">{{ cutApart(out_insuraunce) }}</view>
+				<view class="tn-flex-3 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_insuraunce) }}</view>
 			</view>
 			<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
 				<view class="tn-flex-2 tn-text-left">健康支出</view>
-				<view class="tn-flex-3 tn-text-right tn-margin-right-sm">{{ cutApart(out_healthy) }}</view>
+				<view class="tn-flex-3 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_healthy) }}</view>
 			</view>
 			<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
 				<view class="tn-flex-2 tn-text-left">银行贷款利息支出</view>
-				<view class="tn-flex-3 tn-text-right tn-margin-right-sm">{{ cutApart(out_bank_loan_interest) }}</view>
+				<view class="tn-flex-3 tn-text-right tn-margin-right-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(out_bank_loan_interest) }}</view>
 			</view>
 		</view>
 	</view>

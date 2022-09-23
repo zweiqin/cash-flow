@@ -63,7 +63,7 @@ module.exports = (vm) => {
 			if (data.status !== 200) {
 				// 如果没有显式定义custom的toast参数为false的话，默认对报错进行toast弹出提示
 				uni.showToast({
-					title: data.msg,
+					title: `${data.msg}。${data.data}`,
 					icon: 'error'
 				})
 				// return Promise.resolve(data)
