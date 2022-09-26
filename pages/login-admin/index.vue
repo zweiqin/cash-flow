@@ -129,6 +129,9 @@
 <script>
 // import template_page_mixin from '@/libs/mixin/template_page_mixin.js'
 
+// 接口
+import { GetCurrentUser } from 'config/api.js'
+
 const Point = class {
 	constructor(x, y) {
 		this.x = x
@@ -331,7 +334,21 @@ export default {
 				})
 			} else if (this.toast_significance === 'toPlay') {
 				// this.toast_significance = ''
-				uni.redirectTo({ url: '/pages/manipulate/index?role=admin' })
+				GetCurrentUser({
+					game_id: getApp().globalData.gameId
+				})
+					.then((res) => {
+					// console.log(res)
+					// console.log(res[1].data.data)
+						if (res[1].data.status === 200) {
+							getApp().globalData.round = [res[1].data.data.game_user_id, res[1].data.data.index]
+							uni.redirectTo({ url: '/pages/manipulate/index?role=admin' })
+						} else {
+						}
+					})
+					.catch((err) => {
+						console.log(err)
+					})
 			}
 		},
 		// 获取整数随机值
@@ -347,230 +364,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '@/static/css/templatePage/custom_nav_bar.scss';
+	@import '@/static/css/particle/particle.scss';
 
-/* 粒子背景 start*/
-.template-login1 {
-	background: linear-gradient(90deg, #892fe8, #3d7eff);
-	min-height: 100vh;
-}
-// .template-login2:before {
-// 		content: "";
-// 		position: absolute;
-// 		top: 0;
-// 		left: 0;
-// 		bottom: 0;
-//     right: 0;
-// 		-webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(transparent), to(black));
-// 		-webkit-mask-image: linear-gradient(to bottom, transparent, black);
-// 		        mask-image: -webkit-gradient(linear, left top, left bottom, from(transparent), to(black));
-// 		        mask-image: linear-gradient(to bottom, transparent, black);
-// 		background: -webkit-gradient(linear, left top, right top, from(#E72F8C), to(#892FE8));
-// 		background: linear-gradient(90deg, #E72F8C, #892FE8);
-//   }
-
-.mycanvas {
-	position: absolute;
-	background-size: cover;
-	width: 100vw;
-	height: 100vh;
-	justify-content: center;
-	flex-direction: column;
-	color: #fff;
-}
-
-.login {
-	position: relative;
-	height: 100%;
-	z-index: 1;
-
-	/* 内容 start */
-	&__wrapper {
-		padding-top: 100rpx;
-		padding-bottom: 100rpx;
-		width: 100%;
-		.login-tag {
-			margin-bottom: 20rpx;
-			font-weight: 700;
-			letter-spacing: 0.3em;
-		}
-	}
-
-	/* 切换 start */
-	&__mode {
-		position: relative;
-		margin: 0 auto;
-		width: 476rpx;
-		height: 77rpx;
-		background-color: rgba(255, 255, 255, 0.2);
-		backdrop-filter: blur(6rpx);
-		-webkit-backdrop-filter: blur(6rpx);
-		box-shadow: 0rpx 10rpx 50rpx 0rpx rgba(0, 3, 72, 0.1);
-		border-radius: 39rpx;
-
-		&__item {
-			height: 77rpx;
-			width: 100%;
-			line-height: 77rpx;
-			text-align: center;
-			font-size: 31rpx;
-			color: #ffffff;
-			letter-spacing: 0.5em;
-			text-indent: 0.5em;
-			z-index: 2;
-			transition: all 0.4s;
-
-			&--active {
-				font-weight: bold;
-				color: #ffffff;
-			}
-		}
-
-		&__slider {
-			position: absolute;
-			height: inherit;
-			width: calc(476rpx / 2);
-			border-radius: inherit;
-			box-shadow: 0rpx 18rpx 72rpx 18rpx rgba(0, 195, 255, 0.1);
-			z-index: 1;
-			transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-		}
-	}
-	/* 切换 end */
-
-	/* 登录注册信息 start */
-	&__info {
-		margin: 0 auto;
-		margin-top: 55rpx;
-		padding: 30rpx 51rpx;
-		padding-bottom: 0;
-		width: 80vmin;
-		border-radius: 20rpx;
-		background-color: rgba(255, 255, 255, 0.2);
-		backdrop-filter: blur(6rpx);
-		-webkit-backdrop-filter: blur(6rpx);
-		border: 2rpx solid rgba(255, 255, 255, 0.1);
-		box-shadow: 0rpx 10rpx 50rpx 0rpx rgba(0, 3, 72, 0.1);
-
-		&__item {
-			&__input {
-				// position: relative;
-				margin-top: 59rpx;
-				margin-bottom: 50rpx;
-				width: 100%;
-				height: 77rpx;
-				border: 1rpx solid #ffffff;
-				border-radius: 39rpx;
-
-				&__left-icon {
-					width: 10%;
-					font-size: 44rpx;
-					margin-left: 20rpx;
-					color: #ffffff;
-				}
-
-				&__content {
-					width: 50%;
-					padding-left: 10rpx;
-
-					&--verify-code {
-						width: 56%;
-					}
-
-					input {
-						font-size: 24rpx;
-						color: #ffffff;
-						// letter-spacing: 0.1em;
-					}
-				}
-
-				// &__right-icon {
-				// 	width: 10%;
-				// 	font-size: 44rpx;
-				// 	margin-right: 20rpx;
-				// 	color: #ffffff;
-				// }
-
-				&__right-button {
-					// position: absolute;
-					// right: 20rpx;
-					// float: right;
-					// margin-right: 0;
-					// width: 150rpx;
-					font-size: 20rpx;
-					// margin-right: 10rpx;
-					color: #ffffff;
-				}
-
-				// &__right-verify-code {
-				// 	width: 34%;
-				// 	margin-right: 20rpx;
-				// }
-			}
-
-			&__button {
-				margin-top: 5rpx;
-				margin-bottom: 39rpx;
-				width: 100%;
-				height: 77rpx;
-				text-align: center;
-				font-size: 31rpx;
-				font-weight: bold;
-				line-height: 77rpx;
-				letter-spacing: 1em;
-				text-indent: 1em;
-				border-radius: 100rpx;
-				color: #ffffff;
-				background-color: rgba(255, 255, 255, 0.2);
-				// border: 2rpx solid #FFFFFF;
-			}
-
-			// &__tips {
-			// 	margin: 30rpx 0;
-			// 	color: #ffffff;
-			// }
-		}
-	}
-	/* 登录注册信息 end */
-
-	/* 登录方式切换 start */
-	// &__way {
-	// 	margin: 0 auto;
-	// 	margin-top: 110rpx;
-
-	// 	&__item {
-	// 		&--icon {
-	// 			width: 77rpx;
-	// 			height: 77rpx;
-	// 			font-size: 50rpx;
-	// 			border-radius: 100rpx;
-	// 			margin-bottom: 18rpx;
-	// 			position: relative;
-	// 			z-index: 1;
-
-	// 			&::after {
-	// 				content: ' ';
-	// 				position: absolute;
-	// 				z-index: -1;
-	// 				width: 100%;
-	// 				height: 100%;
-	// 				left: 0;
-	// 				bottom: 0;
-	// 				border-radius: inherit;
-	// 				opacity: 1;
-	// 				transform: scale(1, 1);
-	// 				background-size: 100% 100%;
-	// 				background-image: url(https://tnuiimage.tnkjapp.com/cool_bg_image/icon_bg5.png);
-	// 			}
-	// 		}
-	// 	}
-	// }
-	/* 登录方式切换 end */
-	/* 内容 end */
-}
-
-/deep/.input-placeholder {
-	font-size: 24rpx;
-	color: #e6e6e6;
-}
 </style>

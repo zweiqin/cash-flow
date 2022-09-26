@@ -33,15 +33,6 @@ export default {
 		syncAvatarStyle() {
 		// 同步头像样式
 			this.round = getApp().globalData.round
-			if (getApp().globalData.role === 'user') {
-				if (this.round[0] === getApp().globalData.gameUserId) {
-					this.$emit('notice', '提示', '轮到您了！', 'creative')
-					// this.globalNotice('提示', '轮到您了！', 'creative')
-				} else {
-					this.$emit('notice', '提示', '下一回合！', 'creative')
-					// this.globalNotice('提示', '下一回合！', 'creative')
-				}
-			}
 		}
 	}
 }

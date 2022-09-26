@@ -8,18 +8,18 @@
 					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-flex-1 tn-bg-white tn-text-center tn-padding-xs tn-radius">
 						<view class="tn-border-solid-bottom tn-bold-border"> <Timer @timing="changeTimer"></Timer> </view>
 						<!-- <tn-count-to :start-val="90" :end-val="0" :duration="90000" :use-easing="false"></tn-count-to> -->
-						<view class=""> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view>
+						<view class="">
+							<CountTo :font-size="2" font-unit="vh" :start-val="count_text" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo>
+						</view>
 					</view>
-					<view class="tn-flex-9">
-						<HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup" @notice="globalNotice"></HeadNavigationBar>
-					</view>
+					<view class="tn-flex-9"> <HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar> </view>
 				</view>
 				<!-- 顶层结束 -->
 				<!-- 中间层开始 -->
 				<view class="tn-padding-xs tn-margin-xs tn-radius bg-flex-shadow middle">
 					<view class="tn-flex layer-2">
 						<!-- 四个表格s -->
-						<view class="tn-flex-6"> <TableDataes ref="RefTableMain"></TableDataes> </view>
+						<view class="tn-flex-6" :class="tableClass"> <TableDataes ref="RefTableMain"></TableDataes> </view>
 						<!-- 四个表格e -->
 						<view class="tn-flex-1 tn-padding-xs innermost-3">
 							<!-- 右s -->
@@ -83,21 +83,11 @@
 				:z-index="6"
 				@click="clickBtn"
 			>
-				<view v-if="popup_significance === 'loan'">
-					<Loan @cancel="clickBtn" @submit="clickBtn"></Loan>
-				</view>
-				<view v-else-if="popup_significance === 'repayment'">
-					<Repayment @cancel="clickBtn" @submit="clickBtn"></Repayment>
-				</view>
-				<view v-else-if="popup_significance === 'giveMoney'">
-					<GiveMoney @cancel="clickBtn" @submit="clickBtn"></GiveMoney>
-				</view>
-				<view v-else-if="popup_significance === 'litigate'">
-					<Litigate @cancel="clickBtn" @submit="clickBtn"></Litigate>
-				</view>
-				<view v-else-if="popup_significance === 'hunting'">
-					<Hunting @cancel="clickBtn" @submit="clickBtn"></Hunting>
-				</view>
+				<view v-if="popup_significance === 'loan'"> <Loan @cancel="clickBtn" @submit="clickBtn"></Loan> </view>
+				<view v-else-if="popup_significance === 'repayment'"> <Repayment @cancel="clickBtn" @submit="clickBtn"></Repayment> </view>
+				<view v-else-if="popup_significance === 'giveMoney'"> <GiveMoney @cancel="clickBtn" @submit="clickBtn"></GiveMoney> </view>
+				<view v-else-if="popup_significance === 'litigate'"> <Litigate @cancel="clickBtn" @submit="clickBtn"></Litigate> </view>
+				<view v-else-if="popup_significance === 'hunting'"> <Hunting @cancel="clickBtn" @submit="clickBtn"></Hunting> </view>
 			</tn-modal>
 
 			<!-- 被动收到的模态框 -->
@@ -119,9 +109,7 @@
 				:z-index="2"
 				@click="clickPaBtn"
 			>
-				<view v-if="popup_significance_pa === 'drawCard'">
-					<DrawCard @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
-				</view>
+				<view v-if="popup_significance_pa === 'drawCard'"> <DrawCard :personal="my_info" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard> </view>
 				<!-- <view v-else-if="popup_significance_pa === 'wasteMoney'">
 					<WasteMoney @cancel="clickPaBtn" @submit="clickPaBtn"></WasteMoney>
 				</view> -->
@@ -164,6 +152,8 @@ export default {
 		return {
 			// load_role: '',
 			count_text: '等待下一轮',
+			my_info: '',
+			tableClass: '',
 
 			// 主动点击的模态框
 			popup_significance: '',
@@ -226,7 +216,7 @@ export default {
 			uni.redirectTo({ url: '/pages/index/index' })
 			// }
 		} else {
-		// 用户进入游戏后，获取用户数据
+			// 用户进入游戏后，获取用户数据
 			this.syncInfo()
 		}
 	},
@@ -240,6 +230,9 @@ export default {
 	onUnload() {
 		console.log('卸载game组件')
 		getApp().globalData.game = null
+	},
+	mounted() {
+		this.syncAvatarStyle()
 	},
 
 	methods: {
@@ -310,17 +303,33 @@ export default {
 		},
 
 		showPopup(name, id) {
-			GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
-				.then((res) => {
-					const data = res[1].data.data
-					setRecord(data, 'Eject', this)
-				})
-				.catch((err) => {
-					console.log(err)
-				})
-			this.show_popup = true
-			this.popup_name = name
-			this.popup_id = id
+			if (String(id) === getApp().globalData.gameUserId) {
+				if (this.is_show_model_pa) {
+					this.show_popup = true
+					this.popup_name = name
+					this.popup_id = id
+					this.$nextTick(() => {
+						setRecord(this.my_info, 'Eject', this)
+					})
+				} else {
+					this.tableClass = 'table-ani'
+					setTimeout(() => {
+						this.tableClass = ''
+					}, 2000)
+				}
+			} else {
+				GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
+					.then((res) => {
+						const data = res[1].data.data
+						setRecord(data, 'Eject', this)
+					})
+					.catch((err) => {
+						console.log(err)
+					})
+				this.show_popup = true
+				this.popup_name = name
+				this.popup_id = id
+			}
 		},
 		globalNotice(title, content, icon, significance) {
 			this.$refs.toast.show({
@@ -361,16 +370,18 @@ export default {
 				}
 			}
 		},
-		syncInfo() {
+		syncInfo(meaning) {
 			GetUserInfo({ game_user_id: getApp().globalData.gameUserId, game_id: getApp().globalData.gameId })
 				.then((res) => {
 					const data = res[1].data.data
 					setRecord(data, 'Main', this)
+					this.my_info = data
 					this.show_popup && this.showPopup(this.popup_name, this.popup_id)
 				})
 				.catch((err) => {
 					console.log(err)
 				})
+			if (meaning === 'myTurn' && this.is_show_model_pa && this.popup_significance_pa === 'drawCard') this.is_show_model_pa = false
 		}
 
 	}
@@ -378,7 +389,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* 波浪*/
+@keyframes table-ani {
+	0% {
+		opacity: 0.4;
+		box-shadow: 0 0 10px 3px #ff0000;
+	}
+	25% {
+		opacity: 1;
+		box-shadow: none;
+	}
+	50% {
+		opacity: 0.4;
+		box-shadow: 0 0 10px 3px #ff0000;
+	}
+	75% {
+		opacity: 1;
+		box-shadow: none;
+	}
+	100% {
+		opacity: 0.4;
+		box-shadow: 0 0 10px 3px #ff0000;
+	}
+}
+
 .template-outset {
 	width: 100vw;
 	height: 100vh;
@@ -428,6 +461,9 @@ export default {
 					// 		flex: 1;
 					// 	}
 					// }
+					.table-ani {
+						animation: table-ani 2s 1;
+					}
 					.innermost-3 {
 						// display: flex;
 						// flex-direction: column;

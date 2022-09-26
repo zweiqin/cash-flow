@@ -78,6 +78,7 @@ export default {
 		},
 		confirm() {
 			// console.log(this.money)
+			// 应为上面的type已经限定为number，所以不用考虑NaN的情况
 			if (Number(this.money) <= 0) {
 				return uni.showToast({
 					title: '请输入正确的数值！',

@@ -232,7 +232,14 @@ export default {
 				// 同步头像样式 并且 同步倒计时信息
 				_this.game && _this.game.syncAvatarStyle()
 				_this.manipulate && _this.manipulate.syncAvatarStyle()
-				_this.game && _this.game.syncInfo()
+				if (_this.round[0] === getApp().globalData.gameUserId) {
+					_this.game && _this.game.globalNotice('提示', '轮到您了！', 'creative')
+				} else {
+					_this.game && _this.game.globalNotice('提示', '下一回合！', 'creative')
+				}
+				// 同步信息，并且关闭用户的游戏界面 里的 被动弹出的 抽卡 的模态框
+				_this.game && _this.game.syncInfo('myTurn')
+				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
 			if (data.event === 'sendMoney') {
@@ -243,6 +250,7 @@ export default {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 				}
 				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
 			if (data.event === 'payroll') {
@@ -253,6 +261,7 @@ export default {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 				}
 				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
 			if (data.event === 'deductMoney') {
@@ -263,6 +272,7 @@ export default {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 				}
 				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
 			if (data.event === 'drawCard') {
@@ -273,6 +283,7 @@ export default {
 				_this.game && _this.game.handleManage('drawCard')
 				_this.manipulate && _this.manipulate.handleManage('drawCard')
 				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
 			if (data.event === 'confirmCard') {
@@ -284,6 +295,7 @@ export default {
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
 				}
 				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
 			if (data.event === 'energize') {
@@ -297,6 +309,7 @@ export default {
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
 				}
 				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
 			if (data.event === 'haveBaby') {
@@ -308,6 +321,7 @@ export default {
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
 				}
 				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
 			if (data.event === 'heartBreak') {
@@ -319,6 +333,7 @@ export default {
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
 				}
 				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
 			}
 		},
 

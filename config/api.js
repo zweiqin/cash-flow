@@ -28,6 +28,16 @@ export const GetUserInfo = (data) => uni.request({
 	}
 })
 
+// 获取当前轮数
+export const GetCurrentUser = (data) => uni.request({
+	url: '/game_user/GetCurrentUser', // 仅为示例，并非真实接口地址。
+	method: 'GET',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
 // banker
 // 下一位。开始游戏时要点下一位用户id传0，才真正开始
 export const NextUser = (data) => uni.request({

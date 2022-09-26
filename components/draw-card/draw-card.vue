@@ -10,11 +10,122 @@
 		<!-- 卡片cards组件 -->
 		<view class="card-container"> <Cards :card="currentCard"></Cards> </view>
 
-		<view v-if="is_drew" class="tn-flex tn-flex-row-around button">
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">使用</tn-button>
+		<view v-if="role === 'user'" class="tn-margin-top tn-text-xxl">
+			<view v-if="currentCard.category_id === 4 || currentCard.category_id === 6 || currentCard.category_id === 8">
+				<view>
+					<view v-if="currentCard.card_name.includes('2室0厅1卫')"></view>
+					<view v-else-if="currentCard.card_name.startsWith('P14')"></view>
+					<view v-else>
+						<view v-if="is_drew" class="card-container">
+							<view>
+								<text>是否转让：</text>
+								<tn-radio-group v-model="is_transfer" :size="36" width="auto" :wrap="false">
+									<tn-radio :name="'0'" :label-size="38">不转让</tn-radio>
+									<tn-radio :name="'1'" :label-size="38">转让</tn-radio>
+								</tn-radio-group>
+							</view>
+							<view v-if="is_transfer === '1'">
+								<text>转让给：</text>
+								<tn-radio-group v-model="person_transfer" :size="36" width="auto" :wrap="false">
+									<tn-radio v-for="item in appListId" :key="item.id" :name="item.id" :label-size="38">{{ `${item.userName}(${item.roleName})` }}</tn-radio>
+								</tn-radio-group>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view>
+					<view v-if="is_transfer === '0'">
+						<view v-if="currentCard.card_name.startsWith('C01') || currentCard.card_name.startsWith('C02') || currentCard.card_name.startsWith('C03') || currentCard.card_name.startsWith('C06')" class="tn-flex tn-flex-row-center tn-margin-top">
+							<tn-number-box
+								v-model="quantity" :step="1" :min="0" :max="3"
+								:input-width="140" :input-height="60" :font-size="40" :disabled-input="true"
+								:disabled="false" :long-press="false" background-color="#dddddd" font-color="#00aaaa"
+							></tn-number-box>
+						</view>
+					</view>
+				</view>
+				<view>
+					<view v-if="currentCard.card_name.startsWith('P14')">
+						<!-- 判断是否有购车贷款，有就 有可以购买的按钮 -->
+						<view v-if="personal.out_car_loan > 0" class="tn-flex tn-flex-row-around tn-margin-top">
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{
+								is_transfer === '1' ? '确定' : currentCard.category_id === 6 ? '购买' : '投资'
+							}}</tn-button>
+						</view>
+						<view v-else class="tn-flex tn-flex-row-around tn-margin-top">
+							<view class="tn-margin-bottom-sm"><text>抱歉，您没有购车贷款，不能投资该副业！</text></view>
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+						</view>
+					</view>
+					<view v-else>
+						<view v-if="is_drew" class="tn-flex tn-flex-row-around tn-margin-top">
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{
+								is_transfer === '1' ? '确定' : currentCard.category_id === 6 ? '购买' : '投资'
+							}}</tn-button>
+						</view>
+						<view v-else class="tn-flex tn-flex-row-around tn-margin-top">
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+						</view>
+					</view>
+				</view>
+			</view>
+
+			<view v-else-if="currentCard.category_id === 5">
+				<view v-if="currentCard.card_name.includes('新股上市')">
+					<view v-if="is_drew" class="card-container">
+						<view>
+							<text>是否转让：</text>
+							<tn-radio-group v-model="is_transfer" :size="36" width="auto" :wrap="false">
+								<tn-radio :name="'0'" :label-size="38">不转让</tn-radio>
+								<tn-radio :name="'1'" :label-size="38">转让</tn-radio>
+							</tn-radio-group>
+						</view>
+						<view v-if="is_transfer === '0'"> <tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" /> </view>
+						<view v-else>
+							<text>转让给：</text>
+							<tn-radio-group v-model="person_transfer" :size="36" width="auto" :wrap="false">
+								<tn-radio v-for="item in appListId" :key="item.id" :name="item.id" :label-size="38">{{ `${item.userName}(${item.roleName})` }}</tn-radio>
+							</tn-radio-group>
+						</view>
+					</view>
+					<view>
+						<view v-if="is_drew" class="tn-flex tn-flex-row-around tn-margin-top">
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{ is_transfer === '1' ? '确定' : '购买' }}</tn-button>
+						</view>
+						<view v-else class="tn-flex tn-flex-row-around tn-margin-top">
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+						</view>
+					</view>
+				</view>
+				<view v-else>
+					<view>
+						<view v-if="currentCard.card_name.startsWith('股票交易')">
+							<tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" />
+						</view>
+						<view v-else-if="currentCard.card_name.startsWith('银行') || currentCard.card_name.startsWith('基金交易') || currentCard.card_name.startsWith('互联网')">
+							<tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" />
+						</view>
+						<view v-else-if="currentCard.card_name.startsWith('投资黄金')">
+							<tn-input v-model="quantity" type="number" placeholder="在此输入购买克数" :focus="true" :border="true" />
+						</view>
+					</view>
+					<view>
+						<view class="tn-flex tn-flex-row-around tn-margin-top">
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{ is_transfer === '1' ? '确定' : '购买' }}</tn-button>
+						</view>
+					</view>
+				</view>
+			</view>
+
+			<view v-else-if="currentCard.category_id === 11"> <view> </view> </view>
 		</view>
-		<view v-else class="tn-flex tn-flex-row-around button"> <tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button> </view>
+		<view v-else class="tn-flex tn-flex-row-around tn-margin-top">
+			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+		</view>
 	</view>
 </template>
 
@@ -46,8 +157,21 @@ import { ConfirmCard } from 'config/api.js'
 export default {
 	// components: { SideHustle, Finance, RealEstate, Enterprise, Quotation, Perceive, BlindDate, Backset, Project },
 	components: { Cards },
+	personal: {
+		card: {
+			type: Object,
+			required: true
+		}
+	},
 	data() {
 		return {
+			role: getApp().globalData.role,
+
+			// 不同卡的不同的要填的内容，表单
+			is_transfer: '0',
+			person_transfer: '',
+			quantity: '',
+
 			// 左图标
 			leftIcon: 'bankcard-fill',
 			// 右图标
@@ -55,7 +179,8 @@ export default {
 			// 这个人是否抽到卡的那个人
 			is_drew: false,
 			cardMsg: getApp().globalData.cardMsg,
-			currentCard: getApp().globalData.currentCard
+			currentCard: getApp().globalData.currentCard,
+			appListId: getApp().globalData.appListId
 		}
 	},
 
@@ -74,6 +199,9 @@ export default {
 
 	created() {
 		this.is_drew = this.cardMsg[0] === getApp().globalData.gameUserId
+		if (this.currentCard.card_name.startsWith('C01') || this.currentCard.card_name.startsWith('C02') || this.currentCard.card_name.startsWith('C03') || this.currentCard.card_name.startsWith('C06')) {
+			this.quantity = 0
+		}
 		// console.log(this.currentCard)
 	},
 	onReady() {},
@@ -91,10 +219,56 @@ export default {
 			// 		icon: 'error'
 			// 	})
 			// }
+			if (this.is_transfer === '1' && !this.person_transfer) {
+				return uni.showToast({
+					title: '请选择要转让的人！',
+					icon: 'error'
+				})
+			}
+			if (this.currentCard.category_id === 4) {
+			} else if (this.currentCard.category_id === 5) {
+				if (Number(this.quantity) <= 0) {
+					return uni.showToast({
+						title: '请输入正确的数值！',
+						icon: 'error'
+					})
+				}
+				if (this.currentCard.card_name.includes('新股上市') && (Number(this.quantity) < 100 || Number(this.quantity) > 1000)) {
+					return uni.showToast({
+						title: '购买范围为100~1000股！',
+						icon: 'error'
+					})
+				}
+				if (
+					(this.currentCard.card_name.includes('新股上市') ||
+						this.currentCard.card_name.startsWith('股票交易') ||
+						this.currentCard.card_name.startsWith('银行') ||
+						this.currentCard.card_name.startsWith('基金交易') ||
+						this.currentCard.card_name.startsWith('互联网') ||
+						this.currentCard.card_name.startsWith('投资黄金')) &&
+					Number(this.quantity) % 100 !== 0
+				) {
+					return uni.showToast({
+						title: '请购买100的整数倍！',
+						icon: 'error'
+					})
+				}
+			} else if (this.currentCard.category_id === 6) {
+			} else if (this.currentCard.category_id === 8) {
+				if (this.currentCard.card_name.startsWith('C01') || this.currentCard.card_name.startsWith('C02') || this.currentCard.card_name.startsWith('C03') || this.currentCard.card_name.startsWith('C06')) {
+					if (!this.quantity || Number(this.quantity) === 0) {
+						return uni.showToast({
+							title: '请选择正确的台数！',
+							icon: 'error'
+						})
+					}
+				}
+			}
 			ConfirmCard({
 				game_id: getApp().globalData.gameId,
-				game_user_id: this.cardMsg[0],
-				card_id: String(this.cardMsg[1])
+				game_user_id: getApp().globalData.gameUserId,
+				card_id: String(this.cardMsg[1]),
+				buy_number: Number(this.quantity)
 			})
 				.then((res) => {
 					// console.log(res)
@@ -141,7 +315,7 @@ export default {
 	// height: 65vmin;
 	margin: 0 auto;
 }
-.button {
-	margin-top: 35rpx;
-}
+// .button {
+// 	margin-top: 35rpx;
+// }
 </style>

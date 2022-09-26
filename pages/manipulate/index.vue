@@ -11,7 +11,7 @@
 						<view class=""> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" @change="changeCountTo"></CountTo> </view>
 					</view>
 					<view class="tn-flex-9">
-						<HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup" @notice="globalNotice"></HeadNavigationBar>
+						<HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar>
 					</view>
 				</view>
 				<!-- 顶层结束 -->
@@ -105,13 +105,13 @@
 				@click="clickBtn"
 			>
 				<view v-if="popup_significance === 'next'">
-					<Next @cancel="clickBtn" @submit="clickBtn"></Next>
+					<DuplicateCom sign="next" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
 				</view>
 				<view v-else-if="popup_significance === 'wasteMoney'">
 					<WasteMoney @cancel="clickBtn" @submit="clickBtn"></WasteMoney>
 				</view>
 				<view v-else-if="popup_significance === 'payOff'">
-					<PayOff @cancel="clickBtn" @submit="clickBtn"></PayOff>
+					<DuplicateCom sign="payOff" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
 				</view>
 				<view v-else-if="popup_significance === 'deductMoney'">
 					<DeductMoney @cancel="clickBtn" @submit="clickBtn"></DeductMoney>
@@ -123,16 +123,16 @@
 					<DebitCard text="免费抽卡" :is-free="0" icon="add" @cancel="clickBtn" @submit="clickBtn"></DebitCard>
 				</view>
 				<view v-else-if="popup_significance === 'freeEnergy'">
-					<FreeEnergy @cancel="clickBtn" @submit="clickBtn"></FreeEnergy>
+					<DuplicateCom sign="freeEnergy" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
 				</view>
 				<view v-else-if="popup_significance === 'anniversary'">
-					<Anniversary @cancel="clickBtn" @submit="clickBtn"></Anniversary>
+					<DuplicateCom sign="anniversary" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
 				</view>
 				<view v-else-if="popup_significance === 'givesBirth'">
-					<GivesBirth @cancel="clickBtn" @submit="clickBtn"></GivesBirth>
+					<DuplicateCom sign="givesBirth" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
 				</view>
 				<view v-else-if="popup_significance === 'heartbreak'">
-					<Heartbreak @cancel="clickBtn" @submit="clickBtn"></Heartbreak>
+					<DuplicateCom sign="heartbreak" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
 				</view>
 			</tn-modal>
 
@@ -179,15 +179,16 @@ import TableDataes from '@/components/table/table-dataes.vue'
 import Bottom from '@/components/table/bottom.vue'
 
 // 封装的模态框的自定义内容的组件(主动)
-import Next from './admin-child/next.vue'
+import DuplicateCom from './admin-child/duplicate-com.vue'
+// import Next from './admin-child/next.vue'
 import WasteMoney from './admin-child/waste-money.vue'
-import PayOff from './admin-child/pay-off.vue'
+// import PayOff from './admin-child/pay-off.vue'
 import DeductMoney from './admin-child/deduct-money.vue'
 import DebitCard from './admin-child/debit-card.vue' // 二合一
-import FreeEnergy from './admin-child/free-energy.vue'
-import Anniversary from './admin-child/anniversary.vue'
-import GivesBirth from './admin-child/gives-birth.vue'
-import Heartbreak from './admin-child/heartbreak.vue'
+// import FreeEnergy from './admin-child/free-energy.vue'
+// import Anniversary from './admin-child/anniversary.vue'
+// import GivesBirth from './admin-child/gives-birth.vue'
+// import Heartbreak from './admin-child/heartbreak.vue'
 
 // 封装的模态框的自定义内容的组件(被动)
 import DrawCard from '@/components/draw-card/draw-card.vue'
@@ -199,11 +200,12 @@ import { GetCardCategoryList, GetUserInfo } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, Next, WasteMoney, PayOff, DeductMoney, DebitCard, FreeEnergy, Anniversary, GivesBirth, Heartbreak, DrawCard },
+	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, DuplicateCom, WasteMoney, DeductMoney, DebitCard, DrawCard },
 	data() {
 		return {
 			// load_role: '',
 			count_text: '等待下一轮',
+			turn_info: '',
 
 			// 按钮列表
 			button_right: [
@@ -240,6 +242,9 @@ export default {
 				}, {
 					name: '逆流层失业',
 					meaning: 'unemployment'
+				}, {
+					name: '破产',
+					meaning: 'fall'
 				}, {
 					name: '顺流层破产',
 					meaning: 'bankruptcy'
@@ -342,6 +347,9 @@ export default {
 	onUnload() {
 		console.log('卸载manipulate组件')
 		getApp().globalData.manipulate = null
+	},
+	mounted() {
+		this.syncAvatarStyle()
 	},
 
 	methods: {
@@ -452,17 +460,26 @@ export default {
 		},
 
 		showPopup(name, id) {
-			GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
-				.then((res) => {
-					const data = res[1].data.data
-					setRecord(data, 'Eject', this)
+			if (String(id) === getApp().globalData.round[0]) {
+				this.show_popup = true
+				this.popup_name = name
+				this.popup_id = id
+				this.$nextTick(() => {
+					setRecord(this.turn_info, 'Eject', this)
 				})
-				.catch((err) => {
-					console.log(err)
-				})
-			this.show_popup = true
-			this.popup_name = name
-			this.popup_id = id
+			} else {
+				GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
+					.then((res) => {
+						const data = res[1].data.data
+						setRecord(data, 'Eject', this)
+					})
+					.catch((err) => {
+						console.log(err)
+					})
+				this.show_popup = true
+				this.popup_name = name
+				this.popup_id = id
+			}
 		},
 		globalNotice(title, content, icon, significance) {
 			this.$refs.toast.show({
@@ -507,6 +524,17 @@ export default {
 					uni.redirectTo({ url: '/pages/index/index' })
 				}
 			}
+		},
+		syncInfo() {
+			GetUserInfo({ game_user_id: getApp().globalData.round[0], game_id: getApp().globalData.gameId })
+				.then((res) => {
+					const data = res[1].data.data
+					this.turn_info = data
+					this.show_popup && this.showPopup(this.popup_name, this.popup_id)
+				})
+				.catch((err) => {
+					console.log(err)
+				})
 		}
 
 	}
