@@ -83,11 +83,11 @@
 				:z-index="6"
 				@click="clickBtn"
 			>
-				<view v-if="popup_significance === 'loan'"> <Loan @cancel="clickBtn" @submit="clickBtn"></Loan> </view>
-				<view v-else-if="popup_significance === 'repayment'"> <Repayment @cancel="clickBtn" @submit="clickBtn"></Repayment> </view>
-				<view v-else-if="popup_significance === 'giveMoney'"> <GiveMoney @cancel="clickBtn" @submit="clickBtn"></GiveMoney> </view>
-				<view v-else-if="popup_significance === 'litigate'"> <Litigate @cancel="clickBtn" @submit="clickBtn"></Litigate> </view>
-				<view v-else-if="popup_significance === 'hunting'"> <Hunting @cancel="clickBtn" @submit="clickBtn"></Hunting> </view>
+				<view v-if="popup_significance === 'loan'"> <Loan :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></Loan> </view>
+				<view v-else-if="popup_significance === 'repayment'"> <Repayment :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></Repayment> </view>
+				<view v-else-if="popup_significance === 'giveMoney'"> <GiveMoney :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></GiveMoney> </view>
+				<view v-else-if="popup_significance === 'litigate'"> <JobRelated :personal="my_info" sign="litigate" @cancel="clickBtn" @submit="clickBtn"></JobRelated> </view>
+				<view v-else-if="popup_significance === 'hunting'"> <JobRelated :personal="my_info" sign="hunting" @cancel="clickBtn" @submit="clickBtn"></JobRelated> </view>
 			</tn-modal>
 
 			<!-- 被动收到的模态框 -->
@@ -109,10 +109,12 @@
 				:z-index="2"
 				@click="clickPaBtn"
 			>
-				<view v-if="popup_significance_pa === 'drawCard'"> <DrawCard :personal="my_info" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard> </view>
-				<!-- <view v-else-if="popup_significance_pa === 'wasteMoney'">
-					<WasteMoney @cancel="clickPaBtn" @submit="clickPaBtn"></WasteMoney>
-				</view> -->
+				<view v-if="popup_significance_pa === 'drawCard'">
+					<DrawCard :personal="my_info" classification="drawCard" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+				</view>
+				<view v-else-if="popup_significance_pa === 'receiveAuction'">
+					<DrawCard :personal="my_info" classification="receiveAuction" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+				</view>
 			</tn-modal>
 		</view>
 	</view>
@@ -134,8 +136,9 @@ import Bottom from '@/components/table/bottom.vue'
 import Loan from './user-child/loan.vue'
 import Repayment from './user-child/repayment.vue'
 import GiveMoney from './user-child/give-money.vue'
-import Litigate from './user-child/litigate.vue'
-import Hunting from './user-child/hunting.vue'
+// import Litigate from './user-child/litigate.vue'
+// import Hunting from './user-child/hunting.vue'
+import JobRelated from './user-child/job-related.vue'
 
 // 封装的模态框的自定义内容的组件(被动)
 import DrawCard from '@/components/draw-card/draw-card.vue'
@@ -147,7 +150,7 @@ import { GetUserInfo } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, userButton, DrawCard, Loan, Repayment, GiveMoney, Litigate, Hunting },
+	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, userButton, DrawCard, Loan, Repayment, GiveMoney, JobRelated },
 	data() {
 		return {
 			// load_role: '',
@@ -291,15 +294,23 @@ export default {
 		// 被动收到的模态框
 		handleManage(significance) {
 			this.is_show_model_pa = false
-			this.$nextTick(() => {
-				if (significance === 'drawCard') {
-					this.popup_significance_pa = 'drawCard'
-					this.close_btn_pa = false
-					this.mask_closeable_pa = false
-					this.custom_pa = true
-					this.is_show_model_pa = true
-				}
-			})
+			if (significance) {
+				this.$nextTick(() => {
+					if (significance === 'drawCard') {
+						this.popup_significance_pa = 'drawCard'
+						this.close_btn_pa = false
+						this.mask_closeable_pa = false
+						this.custom_pa = true
+						this.is_show_model_pa = true
+					} else if (significance === 'receiveAuction') {
+						this.popup_significance_pa = 'receiveAuction'
+						this.close_btn_pa = false
+						this.mask_closeable_pa = false
+						this.custom_pa = true
+						this.is_show_model_pa = true
+					}
+				})
+			}
 		},
 
 		showPopup(name, id) {
@@ -337,7 +348,7 @@ export default {
 				content,
 				icon,
 				image: '',
-				duration: 1500
+				duration: 2500
 			})
 			if (significance) this.toast_significance = significance
 		},
@@ -371,17 +382,30 @@ export default {
 			}
 		},
 		syncInfo(meaning) {
+			if (meaning === 'myTurn') {
+				if (this.is_show_model_pa && (this.popup_significance_pa === 'drawCard' || this.popup_significance_pa === 'receiveAuction')) {
+					this.clickPaBtn()
+				}
+				if (this.is_show_model && (this.popup_significance === 'lookForJob' || this.popup_significance === 'litigate')) {
+					this.clickBtn()
+				}
+			}
+			// if (meaning === 'closeAc' && this.is_show_model && (this.popup_significance === 'loan' || this.popup_significance === 'repayment' || this.popup_significance === 'giveMoney')) this.is_show_model = false
 			GetUserInfo({ game_user_id: getApp().globalData.gameUserId, game_id: getApp().globalData.gameId })
 				.then((res) => {
 					const data = res[1].data.data
 					setRecord(data, 'Main', this)
 					this.my_info = data
 					this.show_popup && this.showPopup(this.popup_name, this.popup_id)
+					if (meaning === 'drawCard') {
+						this.handleManage('drawCard')
+					} else if (meaning === 'receiveAuction') {
+						this.handleManage('receiveAuction')
+					}
 				})
 				.catch((err) => {
 					console.log(err)
 				})
-			if (meaning === 'myTurn' && this.is_show_model_pa && this.popup_significance_pa === 'drawCard') this.is_show_model_pa = false
 		}
 
 	}

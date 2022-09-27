@@ -81,7 +81,7 @@ export default {
 					icon: 'error'
 				})
 			}
-			if (!this.money || this.money.startsWith('0')) {
+			if (!this.money || this.money.startsWith('0') || this.money.startsWith('-') || this.money.includes('.')) {
 				return uni.showToast({
 					title: '请输入正确的金钱数值！',
 					icon: 'error'

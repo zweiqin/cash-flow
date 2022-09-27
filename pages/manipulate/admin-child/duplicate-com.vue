@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { NextUser, Payroll, EnergizeRest, EnergizeNormal, HaveBaby, HeartBreak } from 'config/api.js'
+import * as com from 'config/api.js'
 
 export default {
 	props: {
@@ -34,51 +34,61 @@ export default {
 			// 左图标
 			leftIcon: '',
 			// 右图标
-			rightIcon: ''
+			rightIcon: '',
+
+			api: ''
 
 		}
 	},
 	created() {
+		// console.log(com)
 		const temp_id = getApp().globalData.round[0]
 		const temp_obj = getApp().globalData.appListId.find((item) => item.id === temp_id)
+		let flag = true
+		if (!temp_obj) {
+			this.title = '获取玩家信息失败，请重试！'
+			flag = false
+		}
 		if (this.sign === 'next') {
 			this.leftIcon = this.rightIcon = 'star'
 			this.title = '是否结束当前回合？'
+			this.api = 'NextUser'
 		} else if (this.sign === 'payOff') {
 			this.leftIcon = this.rightIcon = 'alipay'
-			if (temp_obj) {
-				this.title = `确定给 ${temp_obj.userName} 发工资吗？`
-			} else {
-				this.title = '获取玩家信息失败，请重试！'
-			}
+			this.api = 'Payroll'
+			if (flag)	this.title = `确定给 ${temp_obj.userName} 发工资吗？`
 		} else if (this.sign === 'freeEnergy') {
 			this.leftIcon = this.rightIcon = 'battery-mid'
-			if (temp_obj) {
-				this.title = `确定给 ${temp_obj.userName} 发 休息精力 吗？`
-			} else {
-				this.title = '获取玩家信息失败，请重试！'
-			}
+			this.api = 'EnergizeRest'
+			if (flag)	this.title = `确定给 ${temp_obj.userName} 发 休息精力 吗？`
 		} else if (this.sign === 'anniversary') {
 			this.leftIcon = this.rightIcon = 'caring'
-			if (temp_obj) {
-				this.title = `确定给 ${temp_obj.userName} 进行 纪念日/结算日 的精力补充吗？`
-			} else {
-				this.title = '获取玩家信息失败，请重试！'
-			}
+			this.api = 'EnergizeNormal'
+			if (flag)	this.title = `确定给 ${temp_obj.userName} 进行 纪念日/结算日 的精力补充吗？`
 		} else if (this.sign === 'givesBirth') {
 			this.leftIcon = this.rightIcon = 'baby-fill'
-			if (temp_obj) {
-				this.title = `确定让 ${temp_obj.userName} 生孩子吗？`
-			} else {
-				this.title = '获取玩家信息失败，请重试！'
-			}
+			this.api = 'HaveBaby'
+			if (flag)	this.title = `确定让 ${temp_obj.userName} 生孩子吗？`
 		} else if (this.sign === 'heartbreak') {
 			this.leftIcon = this.rightIcon = 'like-break'
-			if (temp_obj) {
-				this.title = `确定让 ${temp_obj.userName} 心碎吗？`
-			} else {
-				this.title = '获取玩家信息失败，请重试！'
-			}
+			this.api = 'HeartBreak'
+			if (flag)	this.title = `确定让 ${temp_obj.userName} 心碎吗？`
+		} else if (this.sign === 'unemployment') {
+			this.leftIcon = this.rightIcon = 'job'
+			this.api = 'Unemployment'
+			if (flag)	this.title = `确定让 ${temp_obj.userName} 在逆流层失业吗？`
+		} else if (this.sign === 'fall') {
+			this.leftIcon = this.rightIcon = 'empty-permission'
+			this.api = 'Bankrupt'
+			if (flag)	this.title = `确定让 ${temp_obj.userName} 破产吗？`
+		} else if (this.sign === 'bankruptcy') {
+			this.leftIcon = this.rightIcon = '待做待做待做待做待做待做待做待做待做待做'
+			this.api = '待做待做待做待做待做待做待做待做待做待做'
+			if (flag)	this.title = `确定让 ${temp_obj.userName} 待做待做待做待做待做待做待做待做？`
+		} else if (this.sign === 'charitable') {
+			this.leftIcon = this.rightIcon = 'praise'
+			this.api = 'DoCharity'
+			if (flag)	this.title = `确定让 ${temp_obj.userName} 做平流层的慈善吗？`
 		}
 	},
 
@@ -90,169 +100,35 @@ export default {
 		},
 		confirm() {
 			const round = getApp().globalData.round
-			if (this.sign === 'next') {
-				NextUser({
-					game_id: Number(getApp().globalData.gameId),
-					game_user_id: Number(round[0])
-				})
-					.then((res) => {
-					// console.log(res)
-					// console.log(res[1].data.data)
-						if (res[1].data.status === 200) {
-							uni.showToast({
-								title: '操作成功',
-								icon: 'success'
-							})
-							this.$emit('submit', 1) // 只有1代表接口的操作是成功的
-						} else {
-						// this.$emit('submit', 2)
-						}
-					})
-					.catch((err) => {
-						console.log(err)
-					// this.$emit('submit', 3)
-					})
-			} else if (this.sign === 'payOff') {
+			if (this.api !== 'NextUser') {
 				if (round[0] === '0') {
 					return uni.showToast({
 						title: '获取玩家信息失败！',
 						icon: 'error'
 					})
 				}
-				Payroll({
-					game_id: Number(getApp().globalData.gameId),
-					game_user_id: Number(round[0])
-				})
-					.then((res) => {
-					// console.log(res)
-					// console.log(res[1].data.data)
-						if (res[1].data.status === 200) {
-							uni.showToast({
-								title: '操作成功',
-								icon: 'success'
-							})
-							this.$emit('submit', 1) // 只有1代表接口的操作是成功的
-						} else {
-						// this.$emit('submit', 2)
-						}
-					})
-					.catch((err) => {
-						console.log(err)
-					// this.$emit('submit', 3)
-					})
-			} else if (this.sign === 'freeEnergy') {
-				if (round[0] === '0') {
-					return uni.showToast({
-						title: '获取玩家信息失败！',
-						icon: 'error'
-					})
-				}
-				EnergizeRest({
-					game_id: Number(getApp().globalData.gameId),
-					game_user_id: Number(round[0])
-				})
-					.then((res) => {
-						// console.log(res)
-						// console.log(res[1].data.data)
-						if (res[1].data.status === 200) {
-							uni.showToast({
-								title: '操作成功',
-								icon: 'success'
-							})
-							this.$emit('submit', 1) // 只有1代表接口的操作是成功的
-						} else {
-							// this.$emit('submit', 2)
-						}
-					})
-					.catch((err) => {
-						console.log(err)
-						// this.$emit('submit', 3)
-					})
-			} else if (this.sign === 'anniversary') {
-				if (round[0] === '0') {
-					return uni.showToast({
-						title: '获取玩家信息失败！',
-						icon: 'error'
-					})
-				}
-				EnergizeNormal({
-					game_id: Number(getApp().globalData.gameId),
-					game_user_id: Number(round[0])
-				})
-					.then((res) => {
-					// console.log(res)
-					// console.log(res[1].data.data)
-						if (res[1].data.status === 200) {
-							uni.showToast({
-								title: '操作成功',
-								icon: 'success'
-							})
-							this.$emit('submit', 1) // 只有1代表接口的操作是成功的
-						} else {
-						// this.$emit('submit', 2)
-						}
-					})
-					.catch((err) => {
-						console.log(err)
-					// this.$emit('submit', 3)
-					})
-			} else if (this.sign === 'anniversary') {
-				if (round[0] === '0') {
-					return uni.showToast({
-						title: '获取玩家信息失败！',
-						icon: 'error'
-					})
-				}
-				HaveBaby({
-					game_id: Number(getApp().globalData.gameId),
-					game_user_id: Number(round[0])
-				})
-					.then((res) => {
-					// console.log(res)
-					// console.log(res[1].data.data)
-						if (res[1].data.status === 200) {
-							uni.showToast({
-								title: '操作成功',
-								icon: 'success'
-							})
-							this.$emit('submit', 1) // 只有1代表接口的操作是成功的
-						} else {
-						// this.$emit('submit', 2)
-						}
-					})
-					.catch((err) => {
-						console.log(err)
-					// this.$emit('submit', 3)
-					})
-			} else if (this.sign === 'anniversary') {
-				if (round[0] === '0') {
-					return uni.showToast({
-						title: '获取玩家信息失败！',
-						icon: 'error'
-					})
-				}
-				HeartBreak({
-					game_id: Number(getApp().globalData.gameId),
-					game_user_id: Number(round[0])
-				})
-					.then((res) => {
-					// console.log(res)
-					// console.log(res[1].data.data)
-						if (res[1].data.status === 200) {
-							uni.showToast({
-								title: '操作成功',
-								icon: 'success'
-							})
-							this.$emit('submit', 1) // 只有1代表接口的操作是成功的
-						} else {
-						// this.$emit('submit', 2)
-						}
-					})
-					.catch((err) => {
-						console.log(err)
-					// this.$emit('submit', 3)
-					})
 			}
+			com[this.api]({
+				game_id: Number(getApp().globalData.gameId),
+				game_user_id: Number(round[0])
+			})
+				.then((res) => {
+					// console.log(res)
+					// console.log(res[1].data.data)
+					if (res[1].data.status === 200) {
+						uni.showToast({
+							title: '操作成功',
+							icon: 'success'
+						})
+						this.$emit('submit', 1) // 只有1代表接口的操作是成功的
+					} else {
+						// this.$emit('submit', 2)
+					}
+				})
+				.catch((err) => {
+					console.log(err)
+					// this.$emit('submit', 3)
+				})
 		}
 
 	}

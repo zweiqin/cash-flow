@@ -129,9 +129,119 @@ export const HeartBreak = (data) => uni.request({
 	}
 })
 
+// banker给当前轮的玩家进行顺流层失业
+export const Unemployment = (data) => uni.request({
+	url: '/game_user/Unemployment', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给当前轮的玩家进行破产
+export const Bankrupt = (data) => uni.request({
+	url: '/game_user/Bankrupt', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给当前轮的玩家做平流层的慈善
+export const DoCharity = (data) => uni.request({
+	url: '/game_user/DoCharity', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker选择是否成功找到工作
+export const ConfirmJob = (data) => uni.request({
+	url: '/game_user/ConfirmJob', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker选择打官司是否成功
+export const ConfirmLitigate = (data) => uni.request({
+	url: '/game_user/ConfirmLitigate', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
 // user被抽到卡后，确认卡牌
 export const ConfirmCard = (data) => uni.request({
 	url: '/card/ConfirmCard', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// user向银行家贷款
+export const BankerLoan = (data) => uni.request({
+	url: '/game_user/BankerLoan', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// user向银行家还款
+export const Repayment = (data) => uni.request({
+	url: '/game_user/Repayment', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// user向其他user送钱
+export const GivingMoney = (data) => uni.request({
+	url: '/game_user/GivingMoney', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// user被抽到卡后，转让卡牌
+export const TransferCard = (data) => uni.request({
+	url: '/game_user/TransferCard', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// user被辞退后，打官司
+export const Litigate = (data) => uni.request({
+	url: '/game_user/Litigate', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// user失业后，找工作
+export const LookForJob = (data) => uni.request({
+	url: '/game_user/LookForJob', // 仅为示例，并非真实接口地址。
 	method: 'POST',
 	data,
 	custom: {

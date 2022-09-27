@@ -120,7 +120,7 @@
 					<DebitCard text="扣费抽卡" :is-free="0" @cancel="clickBtn" @submit="clickBtn"></DebitCard>
 				</view>
 				<view v-else-if="popup_significance === 'drawCard'">
-					<DebitCard text="免费抽卡" :is-free="0" icon="add" @cancel="clickBtn" @submit="clickBtn"></DebitCard>
+					<DebitCard text="免费抽卡" :is-free="1" icon="add" @cancel="clickBtn" @submit="clickBtn"></DebitCard>
 				</view>
 				<view v-else-if="popup_significance === 'freeEnergy'">
 					<DuplicateCom sign="freeEnergy" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
@@ -133,6 +133,18 @@
 				</view>
 				<view v-else-if="popup_significance === 'heartbreak'">
 					<DuplicateCom sign="heartbreak" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
+				</view>
+				<view v-else-if="popup_significance === 'unemployment'">
+					<DuplicateCom sign="unemployment" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
+				</view>
+				<view v-else-if="popup_significance === 'fall'">
+					<DuplicateCom sign="fall" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
+				</view>
+				<view v-else-if="popup_significance === 'bankruptcy'">
+					<DuplicateCom sign="bankruptcy" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
+				</view>
+				<view v-else-if="popup_significance === 'charitable'">
+					<DuplicateCom sign="charitable" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
 				</view>
 			</tn-modal>
 
@@ -156,11 +168,17 @@
 				@click="clickPaBtn"
 			>
 				<view v-if="popup_significance_pa === 'drawCard'">
-					<DrawCard @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+					<DrawCard classification="drawCard" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
 				</view>
-				<!-- <view v-else-if="popup_significance_pa === 'wasteMoney'">
-					<WasteMoney @cancel="clickPaBtn" @submit="clickPaBtn"></WasteMoney>
-				</view> -->
+				<view v-else-if="popup_significance_pa === 'receiveAuction'">
+					<DrawCard classification="receiveAuction" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+				</view>
+				<view v-else-if="popup_significance_pa === 'lookForJob'">
+					<ConfirmPoints classification="lookForJob" @submit="clickPaBtn"></ConfirmPoints>
+				</view>
+				<view v-else-if="popup_significance_pa === 'litigate'">
+					<ConfirmPoints classification="litigate" @submit="clickPaBtn"></ConfirmPoints>
+				</view>
 			</tn-modal>
 
 		</view>
@@ -192,6 +210,7 @@ import DebitCard from './admin-child/debit-card.vue' // 二合一
 
 // 封装的模态框的自定义内容的组件(被动)
 import DrawCard from '@/components/draw-card/draw-card.vue'
+import ConfirmPoints from './admin-child/confirm-points.vue'
 
 // 接口
 import { GetCardCategoryList, GetUserInfo } from 'config/api.js'
@@ -200,7 +219,7 @@ import { GetCardCategoryList, GetUserInfo } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, DuplicateCom, WasteMoney, DeductMoney, DebitCard, DrawCard },
+	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, DuplicateCom, WasteMoney, DeductMoney, DebitCard, DrawCard, ConfirmPoints },
 	data() {
 		return {
 			// load_role: '',
@@ -249,7 +268,7 @@ export default {
 					name: '顺流层破产',
 					meaning: 'bankruptcy'
 				}, {
-					name: '用户做慈善',
+					name: '用户做平流慈善',
 					meaning: 'charitable'
 				}
 			],
@@ -443,20 +462,64 @@ export default {
 				this.mask_closeable = false
 				this.custom = true
 				this.is_show_model = true
+			} else if (significance === 'unemployment') {
+				this.popup_significance = 'unemployment'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'fall') {
+				this.popup_significance = 'fall'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'bankruptcy') {
+				this.popup_significance = 'bankruptcy'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'charitable') {
+				this.popup_significance = 'charitable'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
 			}
 		},
 		// 被动收到的模态框
 		handleManage(significance) {
 			this.is_show_model_pa = false
-			this.$nextTick(() => {
-				if (significance === 'drawCard') {
-					this.popup_significance_pa = 'drawCard'
-					this.close_btn_pa = false
-					this.mask_closeable_pa = false
-					this.custom_pa = true
-					this.is_show_model_pa = true
-				}
-			})
+			if (significance) {
+				this.$nextTick(() => {
+					if (significance === 'drawCard') {
+						this.popup_significance_pa = 'drawCard'
+						this.close_btn_pa = false
+						this.mask_closeable_pa = false
+						this.custom_pa = true
+						this.is_show_model_pa = true
+					} else if (significance === 'receiveAuction') {
+						this.popup_significance_pa = 'receiveAuction'
+						this.close_btn_pa = false
+						this.mask_closeable_pa = false
+						this.custom_pa = true
+						this.is_show_model_pa = true
+					} else if (significance === 'lookForJob') {
+						this.popup_significance_pa = 'lookForJob'
+						this.close_btn_pa = false
+						this.mask_closeable_pa = false
+						this.custom_pa = true
+						this.is_show_model_pa = true
+					} else if (significance === 'litigate') {
+						this.popup_significance_pa = 'litigate'
+						this.close_btn_pa = false
+						this.mask_closeable_pa = false
+						this.custom_pa = true
+						this.is_show_model_pa = true
+					}
+				})
+			}
 		},
 
 		showPopup(name, id) {
@@ -487,7 +550,7 @@ export default {
 				content,
 				icon,
 				image: '',
-				duration: 1500
+				duration: 2500
 			})
 			if (significance) this.toast_significance = significance
 		},
@@ -525,16 +588,28 @@ export default {
 				}
 			}
 		},
-		syncInfo() {
-			GetUserInfo({ game_user_id: getApp().globalData.round[0], game_id: getApp().globalData.gameId })
-				.then((res) => {
-					const data = res[1].data.data
-					this.turn_info = data
-					this.show_popup && this.showPopup(this.popup_name, this.popup_id)
-				})
-				.catch((err) => {
-					console.log(err)
-				})
+		syncInfo(meaning) {
+			if (meaning === 'lookForJob') {
+				this.handleManage('lookForJob')
+			} else if (meaning === 'litigate') {
+				this.handleManage('litigate')
+			}
+			if (getApp().globalData.round[0] !== '0') {
+				GetUserInfo({ game_user_id: getApp().globalData.round[0], game_id: getApp().globalData.gameId })
+					.then((res) => {
+						const data = res[1].data.data
+						this.turn_info = data
+						this.show_popup && this.showPopup(this.popup_name, this.popup_id)
+						if (meaning === 'drawCard') {
+							this.handleManage('drawCard')
+						} else if (meaning === 'receiveAuction') {
+							this.handleManage('receiveAuction')
+						}
+					})
+					.catch((err) => {
+						console.log(err)
+					})
+			}
 		}
 
 	}

@@ -37,9 +37,15 @@
 </template>
 
 <script>
-import { GetUserInfo, xxx } from 'config/api.js'
+import { GetUserInfo, BankerLoan } from 'config/api.js'
 
 export default {
+	props: {
+		personal: {
+			type: Object,
+			required: true
+		}
+	},
 	data() {
 		return {
 			// 标题
@@ -49,7 +55,7 @@ export default {
 			// 右图标
 			rightIcon: 'count-fill',
 
-			in_salary: 0,
+			cash_flow: 0,
 			available_credit: 0,
 			available_amount: 0,
 			min: 1,
@@ -59,40 +65,95 @@ export default {
 	},
 
 	computed: {
+		// 计算属性的方式
+		// cash_flow() {
+		// 	if (this.personal.basic_info.cash_flow > 0) {
+		// 		return this.personal.basic_info.cash_flow
+		// 	}
+		// 	return 0
+		// },
+		// available_credit() {
+		// 	const temp_available_credit = this.cash_flow * 10 - this.personal.basic_info.debt_bank_loan
+		// 	if (temp_available_credit > 0) {
+		// 		return temp_available_credit
+		// 	}
+		// 	return 0
+		// },
+		// available_amount() {
+		// 	return this.max * this.cash_flow
+		// },
+		// min() {
+		// 	if (this.available_credit === 0) {
+		// 		this.value = 0
+		// 		return 0
+		// 	}
+		// 	return 1
+		// },
+		// max() {
+		// 	return Math.floor((this.available_credit / this.cash_flow) || 0)
+		// },
 		selected_loan() {
-			return this.value * this.in_salary
+			return this.value * this.cash_flow
+		}
+	},
+
+	watch: {
+		// 侦听器的方式
+		personal(newVal, oldVal) {
+			// console.log('personal', newVal)
+			this.calculate(newVal)
 		}
 	},
 
 	created() {
-		GetUserInfo({ game_user_id: getApp().globalData.gameUserId, game_id: getApp().globalData.gameId })
-			.then((res) => {
-				if (res[1].data.status === 200) {
-					// console.log(res[1].data.data)
-					this.in_salary = res[1].data.data.basic_info.in_salary
-					this.available_credit = this.in_salary * 10 - res[1].data.data.basic_info.debt_bank_loan
-					this.max = Math.floor(this.available_credit / this.in_salary)
-					this.available_amount = this.max * this.in_salary
-				} else {
-				}
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		// 侦听器的方式
+		this.calculate(this.personal)
+
+		// 重新获取数据的方式
+		// GetUserInfo({ game_user_id: getApp().globalData.gameUserId, game_id: getApp().globalData.gameId })
+		// 	.then((res) => {
+		// 		if (res[1].data.status === 200) {
+		// 			// console.log(res[1].data.data)
+		// 			// if (res[1].data.data.basic_info.cash_flow > 0) this.cash_flow = res[1].data.data.basic_info.cash_flow
+		// 			// const temp_available_credit = this.cash_flow * 10 - res[1].data.data.basic_info.debt_bank_loan
+		// 			// if (temp_available_credit > 0) this.available_credit = temp_available_credit
+		// 			// if (this.available_credit === 0) this.min = this.value = 0
+		// 			// this.max = Math.floor((this.available_credit / this.cash_flow) || 0)
+		// 			// this.available_amount = this.max * this.cash_flow
+		// 		} else {
+		// 		}
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err)
+		// 	})
 	},
 
 	onReady() {},
 	methods: {
+		calculate(newVal) {
+			this.cash_flow = newVal.basic_info.cash_flow > 0 ? newVal.basic_info.cash_flow : 0
+			const temp_available_credit = this.cash_flow * 10 - newVal.basic_info.debt_bank_loan
+			this.available_credit = temp_available_credit > 0 ? temp_available_credit : 0
+			if (this.available_credit === 0) this.min = this.value = 0
+			this.max = Math.floor((this.available_credit / this.cash_flow) || 0)
+			this.available_amount = this.max * this.cash_flow
+		},
 		cancel() {
 			this.$emit('cancel')
 		},
 		confirm() {
-			// console.log(this.money)
-			const round = getApp().globalData.round
-			xxx({
+			// console.log(this.selected_loan)
+			// 因为有步进选择器，都是整数，所以不用考虑小数点的情况。但要考虑借的钱为0的情况
+			if (this.selected_loan === 0) {
+				return uni.showToast({
+					title: '请正确地贷款！',
+					icon: 'error'
+				})
+			}
+			BankerLoan({
 				game_id: Number(getApp().globalData.gameId),
-				game_user_id: Number(round[0]),
-				money_number: Number(this.money)
+				game_user_id: Number(getApp().globalData.gameUserId),
+				money_number: this.selected_loan
 			})
 				.then((res) => {
 					// console.log(res)

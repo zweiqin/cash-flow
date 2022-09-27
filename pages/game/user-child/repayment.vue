@@ -23,9 +23,15 @@
 </template>
 
 <script>
-import { GetUserInfo, xxx } from 'config/api.js'
+import { GetUserInfo, Repayment } from 'config/api.js'
 
 export default {
+	props: {
+		personal: {
+			type: Object,
+			required: true
+		}
+	},
 	data() {
 		return {
 			// 标题
@@ -35,8 +41,8 @@ export default {
 			// 右图标
 			rightIcon: 'trust',
 
-			cash_on_hand: '',
-			debt_bank_loan: '',
+			cash_on_hand: 0,
+			debt_bank_loan: 0,
 
 			money: '' // 通过下面的watch，则这个money肯定是小于等于欠款数额的
 		}
@@ -53,33 +59,46 @@ export default {
 					this.money = String(this.debt_bank_loan)
 				})
 			}
+		},
+		// 侦听器的方式
+		personal(newVal, oldVal) {
+			// console.log('personal', newVal)
+			this.calculate(newVal)
 		}
 	},
 
 	created() {
-		GetUserInfo({ game_user_id: getApp().globalData.gameUserId, game_id: getApp().globalData.gameId })
-			.then((res) => {
-				if (res[1].data.status === 200) {
-					// console.log(res[1].data.data)
-					this.cash_on_hand = res[1].data.data.basic_info.cash_on_hand
-					this.debt_bank_loan = res[1].data.data.basic_info.debt_bank_loan
-				} else {
-				}
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		// 侦听器的方式
+		this.calculate(this.personal)
+
+		// 重新获取数据的方式
+		// GetUserInfo({ game_user_id: getApp().globalData.gameUserId, game_id: getApp().globalData.gameId })
+		// 	.then((res) => {
+		// 		if (res[1].data.status === 200) {
+		// 			// console.log(res[1].data.data)
+		// 			this.cash_on_hand = res[1].data.data.basic_info.cash_on_hand
+		// 			this.debt_bank_loan = res[1].data.data.basic_info.debt_bank_loan
+		// 		} else {
+		// 		}
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err)
+		// 	})
 	},
 
 	onReady() {},
 	methods: {
+		calculate(newVal) {
+			this.cash_on_hand = newVal.basic_info.cash_on_hand
+			this.debt_bank_loan = newVal.basic_info.debt_bank_loan
+		},
 		cancel() {
 			this.$emit('cancel')
 		},
 		confirm() {
 			// console.log(this.money)
 			// 应为上面的type已经限定为number，所以不用考虑NaN的情况
-			if (Number(this.money) <= 0) {
+			if (Number(this.money) <= 0 || !Number.isInteger(Number(this.money))) {
 				return uni.showToast({
 					title: '请输入正确的数值！',
 					icon: 'error'
@@ -90,10 +109,9 @@ export default {
 					icon: 'error'
 				})
 			}
-			const round = getApp().globalData.round
-			xxx({
+			Repayment({
 				game_id: Number(getApp().globalData.gameId),
-				game_user_id: Number(round[0]),
+				game_user_id: Number(getApp().globalData.gameUserId),
 				money_number: Number(this.money)
 			})
 				.then((res) => {

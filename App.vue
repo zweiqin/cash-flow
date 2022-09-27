@@ -265,7 +265,7 @@ export default {
 			}
 
 			if (data.event === 'deductMoney') {
-				// data: "banker发工资2500元给玩家去"，game_user_id: "xxx"（统一为那个收到钱的那个人） is_all: true
+				// banker_action: false,data: "banker扣除逼玩家200元",event: "deductMoney",game_id: "166",game_user_id: "292",is_all: true
 				if (_this.gameUserId === data.game_user_id) {
 					_this.game && _this.game.globalNotice('坏消息', `banker扣了您${data.data.replace(/[^\d]/g, ' ')}元钱！`, 'reduce-circle')
 				} else {
@@ -280,10 +280,20 @@ export default {
 				_this.cardMsg = [data.game_user_id, data.data.id]
 				// _this.currentCard = _this.cardList.find((item) => item.id === _this.cardMsg[1])
 				_this.currentCard = _this.cardList.find((item) => item.id === data.data.id)
-				_this.game && _this.game.handleManage('drawCard')
-				_this.manipulate && _this.manipulate.handleManage('drawCard')
-				_this.game && _this.game.syncInfo()
-				_this.manipulate && _this.manipulate.syncInfo()
+				// _this.game && _this.game.handleManage('drawCard')
+				// _this.manipulate && _this.manipulate.handleManage('drawCard')
+				_this.game && _this.game.syncInfo('drawCard')
+				_this.manipulate && _this.manipulate.syncInfo('drawCard')
+			}
+
+			if (data.event === 'receiveAuction') {
+				// banker_action: false,data: {id: 21, category_id: 4, card_name: 'P02副业-办软件公司', type: 0, is_all: 0, …},event: "receiveAuction",game_id: "176",game_user_id: "311",is_all: false
+				_this.cardMsg = [data.game_user_id, data.data.id]
+				_this.currentCard = _this.cardList.find((item) => item.id === data.data.id)
+				// _this.game && _this.game.handleManage('receiveAuction')
+				// _this.manipulate && _this.manipulate.handleManage('receiveAuction')
+				_this.game && _this.game.syncInfo('receiveAuction')
+				_this.manipulate && _this.manipulate.syncInfo('receiveAuction')
 			}
 
 			if (data.event === 'confirmCard') {
@@ -334,6 +344,123 @@ export default {
 				}
 				_this.game && _this.game.syncInfo()
 				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
+			if (data.event === 'unemployment') {
+				// banker_action: false,data: "玩家牛失业",event: "unemployment",game_id: "244",game_user_id: "433",is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('坏消息', data.data.replace(/^.{3}/, '您'), 'job')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
+				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
+			if (data.event === 'bankrupt') {
+				// banker_action: false,data: "玩家牛破产,下一轮重新开始沙盘推演",event: "bankrupt",game_id: "244",game_user_id: "433",is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('坏消息', data.data.replace(/^.{3}/, '您'), 'empty-permission')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
+				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
+			if (data.event === 'doCharity') {
+				// banker_action: false,data: "玩家牛做慈善，捐赠1500元",event: "doCharity",game_id: "164",game_user_id: "289",is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{3}/, '您'), 'praise')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
+				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
+			if (data.event === 'bankerLoan') {
+				// banker_action: false,data: "玩家牛向银行贷款4200元",event: "bankerLoan",game_id: "165",game_user_id: "290",is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{3}/, '您'), 'count-fill')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
+				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
+			if (data.event === 'repayment') {
+				// banker_action: false，data: "玩家牛向银行还款1元"，event: "repayment"，game_id: "166"，game_user_id: "291"，is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{3}/, '您'), 'trust')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
+				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
+			if (data.event === 'givingMoney') {
+				// banker_action: false，data: "玩家牛向玩家逼送钱100元"，event: "givingMoney"，game_id: "172"，game_user_id: "302"，is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{3}/, '您'), 'lucky-money-fill')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
+				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
+			if (data.event === 'lookForJob') {
+				// banker_action: true，data: "请掷骰子,如点数大于3即可恢复工作"，event: "lookForJob"，game_id: "183"，game_user_id: "323"，is_all: false
+				// banker_action: false,data: "玩家牛恢复工作",event: "lookForJob",game_id: "184",game_user_id: "325",is_all: true
+				if (data.banker_action) {
+					if (_this.gameUserId === data.game_user_id) {
+						_this.game && _this.game.globalNotice('消息提醒', data.data, 'con-leo')
+					} else {
+						_this.game && _this.game.globalNotice('提示', `玩家${_this.appListId.find((item) => item.id === data.game_user_id).userName}触发了找工作，正在等待该玩家掷骰子`, 'creative')
+						_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+					}
+					_this.manipulate && _this.manipulate.syncInfo('lookForJob')
+				} else {
+					if (_this.gameUserId === data.game_user_id) {
+						_this.game && _this.game.globalNotice('好消息', data.data.replace(/^.{3}/, '您'), 'con-leo')
+					} else {
+						_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+						_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+					}
+					_this.manipulate && _this.manipulate.syncInfo()
+				}
+				_this.game && _this.game.syncInfo()
+			}
+
+			if (data.event === 'litigate') {
+				// banker_action: true，data: "请掷骰子,如点数大于3即可一次性获得原工资5倍现金收入"，event: "litigate"，game_id: "186"，game_user_id: "329"，is_all: false
+				if (data.banker_action) {
+					if (_this.gameUserId === data.game_user_id) {
+						_this.game && _this.game.globalNotice('消息提醒', data.data, 'server')
+					} else {
+						_this.game && _this.game.globalNotice('提示', `玩家${_this.appListId.find((item) => item.id === data.game_user_id).userName}触发了打官司，正在等待该玩家掷骰子`, 'creative')
+						_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+					}
+					_this.manipulate && _this.manipulate.syncInfo('litigate')
+				} else {
+					if (_this.gameUserId === data.game_user_id) {
+						_this.game && _this.game.globalNotice('好消息', data.data.replace(/^.{3}/, '您'), 'server')
+					} else {
+						_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+						_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+					}
+					_this.manipulate && _this.manipulate.syncInfo()
+				}
+				_this.game && _this.game.syncInfo()
 			}
 		},
 

@@ -54,7 +54,7 @@ export default {
 		},
 		confirm() {
 			// console.log(this.money)
-			if (!this.money || this.money.startsWith('0') || this.money.startsWith('-')) {
+			if (!this.money || this.money.startsWith('0') || this.money.startsWith('-') || this.money.includes('.')) {
 				return uni.showToast({
 					title: '请输入正确的数值！',
 					icon: 'error'

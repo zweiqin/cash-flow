@@ -61,8 +61,8 @@ function setRecord(data, refFragment, vm) {
 		cash_on_hand: data.basic_info.cash_on_hand,
 		energy: data.basic_info.energy,
 		basics_in: data.basic_info.basics_in,
-		basics_out: data.basic_info.basics_out
-		// charitable: data.basic_info.charitable
+		basics_out: data.basic_info.basics_out,
+		charitable: data.basic_info.charity_count
 	})
 	// console.log(this.$refs.RefTableMain)
 	// console.log(this.$refs.RefBottomMain)

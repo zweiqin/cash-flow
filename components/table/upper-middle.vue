@@ -8,8 +8,8 @@
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">权益</view>
 				</view>
 				<view v-for="item in asset1" :key="item.id" class="tn-flex pad-top">
-					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black tn-flex tn-flex-col-bottom tn-flex-row-right">{{ item.card_name }}</view>
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">未知</view>
+					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black tn-flex tn-flex-col-bottom tn-flex-row-center">{{ item.card_name }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-center">未知</view>
 				</view>
 			</view>
 			<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
