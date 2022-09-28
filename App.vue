@@ -229,7 +229,7 @@ export default {
 				// _this.round = [_this.appListId[data.data.index - 1].id, data.data.index]
 				// 这里的game_user_id是指当前轮的玩家的用户id（统一都是）
 				_this.round = [data.game_user_id, data.data.index]
-				// 同步头像样式 并且 同步倒计时信息
+				// 同步头像样式 并且 同步倒计时信息 并且 同步按钮按钮信息
 				_this.game && _this.game.syncAvatarStyle()
 				_this.manipulate && _this.manipulate.syncAvatarStyle()
 				if (_this.round[0] === getApp().globalData.gameUserId) {
@@ -298,6 +298,7 @@ export default {
 
 			if (data.event === 'confirmCard') {
 				// banker_action: false,data: "玩家牛确认卡片房产投资-3室2厅1卫(3-2-1)成功",event: "confirmCard",game_id: "173",game_user_id: "311",is_all: true
+				// banker_action: false,data: "玩家牛确认卡片个人逆流成功",event: "confirmCard",game_id: "198",game_user_id: "353",is_all: true
 				if (_this.gameUserId === data.game_user_id) {
 					_this.game && _this.game.globalNotice('提示', data.data.replace(/^.{3}/, '您'), 'bankcard-fill')
 				} else {
@@ -426,7 +427,7 @@ export default {
 						_this.game && _this.game.globalNotice('消息提醒', data.data, 'con-leo')
 					} else {
 						_this.game && _this.game.globalNotice('提示', `玩家${_this.appListId.find((item) => item.id === data.game_user_id).userName}触发了找工作，正在等待该玩家掷骰子`, 'creative')
-						_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+						_this.manipulate && _this.manipulate.globalNotice('提示', `玩家${_this.appListId.find((item) => item.id === data.game_user_id).userName}触发了找工作，正在等待该玩家掷骰子`, 'creative')
 					}
 					_this.manipulate && _this.manipulate.syncInfo('lookForJob')
 				} else {
@@ -442,13 +443,14 @@ export default {
 			}
 
 			if (data.event === 'litigate') {
-				// banker_action: true，data: "请掷骰子,如点数大于3即可一次性获得原工资5倍现金收入"，event: "litigate"，game_id: "186"，game_user_id: "329"，is_all: false
+				// banker_action: true,data: "请掷骰子,如点数大于3即可一次性获得原工资5倍现金收入",event: "litigate",game_id: "196",game_user_id: "349",is_all: false
+				// banker_action: false,data: "玩家牛打官司成功,获得30000元现金",event: "lookForJob",game_id: "196",game_user_id: "349",is_all: true
 				if (data.banker_action) {
 					if (_this.gameUserId === data.game_user_id) {
 						_this.game && _this.game.globalNotice('消息提醒', data.data, 'server')
 					} else {
 						_this.game && _this.game.globalNotice('提示', `玩家${_this.appListId.find((item) => item.id === data.game_user_id).userName}触发了打官司，正在等待该玩家掷骰子`, 'creative')
-						_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+						_this.manipulate && _this.manipulate.globalNotice('提示', `玩家${_this.appListId.find((item) => item.id === data.game_user_id).userName}触发了打官司，正在等待该玩家掷骰子`, 'creative')
 					}
 					_this.manipulate && _this.manipulate.syncInfo('litigate')
 				} else {

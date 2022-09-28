@@ -20,14 +20,14 @@
 				</view>
 				<view v-for="item in asset2" :key="item.id" class="tn-flex pad-top">
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">{{ item.card_name }}</view>
-					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.num) }}</view>
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.value) }}</view>
+					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.value) }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.num) }}</view>
 				</view>
 			</view>
 			<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
 				<view class="tn-flex pad-top">
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">房地产代码</view>
-					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">每月收入</view>
+					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">首付</view>
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">价值</view>
 				</view>
 				<view v-for="item in asset3" :key="item.id" class="tn-flex pad-top">

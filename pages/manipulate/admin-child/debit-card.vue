@@ -10,12 +10,26 @@
 		<tn-form ref="form" :model="model" :error-type="errorType" :label-position="labelPosition" :label-width="labelWidth" :label-align="labelAlign">
 
 			<tn-form-item label="卡种类：" prop="payType" :label-position="labelPosition" :label-align="labelAlign">
-				<tn-radio-group v-model="model.payType" :size="25" :width="radioWidth" :wrap="radioWrap" @change="radioGroupChange">
-					<tn-radio v-for="(item, index) in radioList" :key="index" :name="String(item.id)" :disabled="false" :label-size="38">{{ item.category_name }}</tn-radio>
-				</tn-radio-group>
+				<view v-if="isFree">
+					<tn-radio-group v-model="model.payType" :size="25" :width="radioWidth" :wrap="radioWrap" @change="radioGroupChange">
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='行情').id)" :disabled="false" :label-size="38">行情卡</tn-radio>
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='觉察').id)" :disabled="false" :label-size="38">觉察卡</tn-radio>
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='相亲卡').id)" :disabled="false" :label-size="38">相亲卡</tn-radio>
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='逆流').id)" :disabled="false" :label-size="38">逆流卡</tn-radio>
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='项目').id)" :disabled="false" :label-size="38">项目卡</tn-radio>
+					</tn-radio-group>
+				</view>
+				<view v-else>
+					<tn-radio-group v-model="model.payType" :size="25" :width="radioWidth" :wrap="radioWrap" @change="radioGroupChange">
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='副业').id)" :disabled="false" :label-size="38">（小机会）副业</tn-radio>
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='金融').id)" :disabled="false" :label-size="38">（小机会）金融</tn-radio>
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='房地产').id)" :disabled="false" :label-size="38">（大机会）地产</tn-radio>
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='企业').id)" :disabled="false" :label-size="38">（大机会）企业</tn-radio>
+					</tn-radio-group>
+				</view>
 			</tn-form-item>
-
 		</tn-form>
+
 		<view class="tn-flex tn-flex-row-around button">
 			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
 			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="submit()">提交</tn-button>
@@ -101,7 +115,6 @@ export default {
 		submit() {
 			this.$refs.form.validate((valid) => {
 				if (valid) {
-					// 这里的验证有问题
 					// 验证通过
 					// this.$t.message.toast('请勾选协议')
 					// console.log(this.model.payType)

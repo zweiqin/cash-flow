@@ -23,7 +23,7 @@
 						<!-- 四个表格e -->
 						<view class="tn-flex-1 tn-padding-xs innermost-3">
 							<!-- 右s -->
-							<userButton @clickBtn="handleProcessing"></userButton>
+							<userButton ref="RefUserButton" @clickBtn="handleProcessing"></userButton>
 							<!-- 右e -->
 						</view>
 					</view>
@@ -348,7 +348,7 @@ export default {
 				content,
 				icon,
 				image: '',
-				duration: 2500
+				duration: 2000
 			})
 			if (significance) this.toast_significance = significance
 		},
@@ -363,6 +363,7 @@ export default {
 					this.count_text = `${temp_obj.userName}的回合`
 				}
 			}
+			this.$refs.RefUserButton.syncButton()
 		},
 		clickPaBtn(event) {
 			this.is_show_model_pa = false
@@ -383,10 +384,12 @@ export default {
 		},
 		syncInfo(meaning) {
 			if (meaning === 'myTurn') {
+				// 下一回合时，所有用户都不能看到抽卡或转让卡的那个被动的模态框了
 				if (this.is_show_model_pa && (this.popup_significance_pa === 'drawCard' || this.popup_significance_pa === 'receiveAuction')) {
 					this.clickPaBtn()
 				}
-				if (this.is_show_model && (this.popup_significance === 'lookForJob' || this.popup_significance === 'litigate')) {
+				// 下一回合时，所有（或上一回合）用户不能看到 打官司和找工作 的那个主动的模态框了
+				if (this.is_show_model && (this.popup_significance === 'litigate') || this.popup_significance === 'hunting') {
 					this.clickBtn()
 				}
 			}

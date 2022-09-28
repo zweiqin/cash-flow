@@ -14,12 +14,12 @@
 			<text style="">送钱</text>
 		</tn-button> </view>
 		<view class="tn-shadow-blur" style="z-index: 4;">
-			<tn-button :shadow="true" width="95%" height="auto" background-color="tn-cool-bg-color-2" padding="2vw 10rpx" margin="10rpx 0" @click="handleProcessing('litigate')">
+			<tn-button :disabled="!is_turn" :shadow="true" width="95%" height="auto" background-color="tn-cool-bg-color-2" padding="2vw 10rpx" margin="10rpx 0" @click="handleProcessing('litigate')">
 				<text style="">被辞退：打官司</text>
 			</tn-button>
 		</view>
 		<view class="tn-shadow-blur" style="z-index: 4;">
-			<tn-button :shadow="true" width="95%" height="auto" background-color="tn-cool-bg-color-2" padding="2vw 10rpx" margin="10rpx 0" @click="handleProcessing('hunting')">
+			<tn-button :disabled="!is_turn" :shadow="true" width="95%" height="auto" background-color="tn-cool-bg-color-2" padding="2vw 10rpx" margin="10rpx 0" @click="handleProcessing('hunting')">
 				<text style="">失业后：找工作</text>
 			</tn-button>
 		</view>
@@ -31,12 +31,17 @@
 export default {
 	data() {
 		return {
+			// 是否轮到本人
+			is_turn: getApp().globalData.gameUserId === getApp().globalData.round[0]
 		}
 	},
 
 	methods: {
 		handleProcessing(significance) {
 			this.$emit('clickBtn', significance)
+		},
+		syncButton() {
+			this.is_turn = getApp().globalData.gameUserId === getApp().globalData.round[0]
 		}
 	}
 }

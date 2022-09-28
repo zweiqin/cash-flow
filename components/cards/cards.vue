@@ -8,7 +8,15 @@
 		<view class="container-top tn-text-md">
 			<view>{{ card_name_top }}</view> <view>{{ card_name_bottom }}</view>
 		</view>
-		<view class="container-among">{{ desc }}</view>
+		<view class="container-among">
+			<view v-if="is_quotation">
+				<view v-for="(item,index) in line" :key="index" class="tn-flex line">
+					<view class="tn-flex-1">{{ item.match(/([^ ]*) (.*)/)[1] }}</view>
+					<view class="tn-flex-2">{{ item.match(/([^ ]*) (.*)/)[2] }}</view>
+				</view>
+			</view>
+			<view v-else>{{ desc }}</view>
+		</view>
 		<view class="container-middle">
 			<hr />
 			<!-- ☆○●★ -->
@@ -41,7 +49,9 @@ export default {
 			card_name_bottom: '',
 			card_name_text: false,
 			card_info: [],
-			desc: ''
+			desc: '',
+			is_quotation: false,
+			line: []
 		}
 	},
 
@@ -91,15 +101,19 @@ export default {
 		}
 
 		this.card_name_text = temp_arr[1] || false
+
 		let temp_info = this.card.describe.match(/\[(.+?)\]/g)
 		if (temp_info) {
 			temp_info = temp_info[0].substring(1, temp_info[0].length - 1)
 			this.card_info = temp_info.split(' ')
-			// console.log(temp_info, this.card_info)
-			const temp_desc = this.card.describe.match(/(\S*)\[/)
-			// if (temp_desc) {
-			this.desc = this.card.describe.match(/(\S*)\[/)[1]
-			// }
+			// this.desc = this.card.describe.match(/(\S*)\[/)[1] // 这种方法不行，因为遇到空格会断开
+			this.desc = this.card.describe.match(/([^[]+)\[/)[1]
+			if (this.card.category_id === 11 && this.card.card_name.endsWith('行情')) {
+				this.is_quotation = true
+				this.line = this.desc.split('\\') // 实际上是以\来分割
+				console.log(this.line)
+			} else {
+			}
 		} else {
 			this.desc = this.card.describe
 		}
@@ -137,6 +151,9 @@ export default {
 	}
 	.container-among {
 		padding: 0 6vmin;
+		.line {
+			padding-top: 1vmin;
+		}
 	}
 	.container-middle {
 		margin: 3vmin 0;
@@ -154,6 +171,7 @@ export default {
 	}
 	.container-bottom {
 		padding-bottom: 3vmin;
+		font-style: oblique;
 	}
 }
 

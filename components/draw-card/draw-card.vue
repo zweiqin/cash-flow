@@ -103,7 +103,40 @@
 				<view v-else>
 					<view>
 						<view v-if="currentCard.card_name.startsWith('股票交易')">
-							<tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" />
+							<view>
+								<tn-subsection :list="['买', '卖']" mode="button" :border-radius="50" animation-type="cubic-bezier" @change="handleBusiness"></tn-subsection>
+							</view>
+							<view class="tn-margin-top">
+								<view v-if="is_sell">
+									<view class="tn-margin-bottom">
+										<tn-list-view :card="true" title="持有的金融产品列表" background-color="#EFEFEF">
+											<tn-radio-group v-model="sell_id">
+												<block v-if="marketable_shares.length!==0">
+													<tn-list-cell v-for="(item,index) in marketable_shares" :key="item.id" :arrow="false" :arrow-right="false" :unlined="false" :line-left="true" :line-right="true">
+														<view>
+															<tn-radio :name="String(item.id)">
+																<text>批次{{ index+1 }}：</text>
+																{{ `${item.card_name}(每股成本：${item.value})(股数：${item.num})` }}
+															</tn-radio>
+														</view>
+													</tn-list-cell>
+												</block>
+												<block v-else>
+													<tn-list-cell :arrow="false" :arrow-right="false" :unlined="false" :line-left="true" :line-right="true">
+														<view>
+															<text>无</text>
+														</view>
+													</tn-list-cell>
+												</block>
+											</tn-radio-group>
+										</tn-list-view>
+									</view>
+									<tn-input v-model="sell_number" type="number" placeholder="在此输入卖出股数" :focus="true" :border="true" />
+								</view>
+								<view v-else>
+									<tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" />
+								</view>
+							</view>
 						</view>
 						<view v-else-if="currentCard.card_name.startsWith('银行') || currentCard.card_name.startsWith('基金交易') || currentCard.card_name.startsWith('互联网')">
 							<tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" />
@@ -115,7 +148,7 @@
 					<view>
 						<view class="tn-flex tn-flex-row-around tn-margin-top">
 							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
-							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{ is_transfer === '1' ? '确定' : '购买' }}</tn-button>
+							<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{ is_transfer === '1' ? '确定' : is_sell === 1 ? '卖出' : '购买' }}</tn-button>
 						</view>
 					</view>
 				</view>
@@ -211,7 +244,10 @@ export default {
 			// 不同卡的不同的要填的内容，表单
 			is_transfer: '0',
 			person_transfer: '',
+			is_sell: 0,
 			quantity: '',
+			sell_number: '',
+			sell_id: '',
 
 			// 左图标
 			leftIcon: 'bankcard-fill',
@@ -242,6 +278,9 @@ export default {
 				}
 			}
 			return '获取玩家信息失败，请重试！'
+		},
+		marketable_shares() {
+			return this.personal.assets.filter((item) => item.card_name === this.currentCard.card_name)
 		}
 	},
 
@@ -252,9 +291,18 @@ export default {
 		}
 		// console.log(this.currentCard)
 	},
+	mounted() {
+		if (this.currentCard.category_id === 9 || this.currentCard.category_id === 7 || (this.currentCard.category_id === 11 && (this.currentCard.card_name.startsWith('房屋拆迁') || this.currentCard.card_name.startsWith('股市黑天鹅') || this.currentCard.card_name.startsWith('基金业绩') || this.currentCard.card_name.startsWith('贷款利率') || this.currentCard.card_name.startsWith('互联网借贷')))) {
+			this.is_drew && this.confirm()
+		}
+	},
 	onReady() {},
 
 	methods: {
+		handleBusiness(e) {
+			// console.log(e)
+			this.is_sell = e.index
+		},
 		cancel() {
 			this.$emit('cancel')
 		},
@@ -286,7 +334,8 @@ export default {
 						if (res[1].data.status === 200) {
 							uni.showToast({
 								title: '操作成功！',
-								icon: 'success'
+								icon: 'success',
+								duration: 450
 							})
 							this.$emit('submit', 1) // 只有1代表接口的操作是成功的
 						} else {
@@ -298,35 +347,60 @@ export default {
 						// this.$emit('submit', 3)
 					})
 			} else {
+				let temp_buy_number, temp_sell_number, temp_sell_id
 				if (this.currentCard.category_id === 4) {
+					temp_buy_number = temp_sell_number = temp_sell_id = ''
 				} else if (this.currentCard.category_id === 5) {
-					if (Number(this.quantity) <= 0 || !Number.isInteger(Number(this.quantity))) {
-						return uni.showToast({
-							title: '请输入正确的数值！',
-							icon: 'error'
-						})
-					}
-					if (this.currentCard.card_name.includes('新股上市') && (Number(this.quantity) < 100 || Number(this.quantity) > 1000)) {
-						return uni.showToast({
-							title: '购买范围为100~1000股！',
-							icon: 'error'
-						})
-					}
-					if (
-						(this.currentCard.card_name.includes('新股上市') ||
-							this.currentCard.card_name.startsWith('股票交易') ||
-							// this.currentCard.card_name.startsWith('银行') ||
-							// this.currentCard.card_name.startsWith('基金交易') ||
-							// this.currentCard.card_name.startsWith('互联网') ||
-							this.currentCard.card_name.startsWith('投资黄金')) &&
-						Number(this.quantity) % 100 !== 0
-					) {
-						return uni.showToast({
-							title: '请购买100的整数倍！',
-							icon: 'error'
-						})
+					// 除了不需要有input框来填的
+					if (!this.currentCard.card_name.startsWith('外汇交易') && !this.currentCard.card_name.startsWith('大病医疗保险')) {
+						if (this.is_sell) {
+							if (Number(this.sell_number) <= 0 || !Number.isInteger(Number(this.sell_number))) {
+								return uni.showToast({
+									title: '请输入正确的数值！',
+									icon: 'error'
+								})
+							}
+							if (this.currentCard.card_name.startsWith('股票交易') && Number(this.sell_number) % 100 !== 0) {
+								return uni.showToast({
+									title: '请卖出100的整数倍！',
+									icon: 'error'
+								})
+							}
+							temp_sell_number = Number(this.sell_number)
+							temp_sell_id = this.sell_id
+							temp_buy_number = ''
+						} else {
+							if (Number(this.quantity) <= 0 || !Number.isInteger(Number(this.quantity))) {
+								return uni.showToast({
+									title: '请输入正确的数值！',
+									icon: 'error'
+								})
+							}
+							if (this.currentCard.card_name.includes('新股上市') && (Number(this.quantity) < 100 || Number(this.quantity) > 1000)) {
+								return uni.showToast({
+									title: '购买范围为100~1000股！',
+									icon: 'error'
+								})
+							}
+							if ((this.currentCard.card_name.includes('新股上市') ||
+								this.currentCard.card_name.startsWith('股票交易') ||
+								// this.currentCard.card_name.startsWith('银行') ||
+								// this.currentCard.card_name.startsWith('基金交易') ||
+								// this.currentCard.card_name.startsWith('互联网') ||
+								this.currentCard.card_name.startsWith('投资黄金')) &&
+							Number(this.quantity) % 100 !== 0
+							) {
+								return uni.showToast({
+									title: '请购买100的整数倍！',
+									icon: 'error'
+								})
+							}
+							temp_buy_number = this.quantity
+							temp_sell_number = temp_sell_id = ''
+						}
 					}
 				} else if (this.currentCard.category_id === 6) {
+					temp_buy_number = temp_sell_number = temp_sell_id = ''
 				} else if (this.currentCard.category_id === 8) {
 					if (this.currentCard.card_name.startsWith('C01') || this.currentCard.card_name.startsWith('C02') || this.currentCard.card_name.startsWith('C03') || this.currentCard.card_name.startsWith('C06')) {
 						if (!this.quantity || Number(this.quantity) === 0) {
@@ -336,27 +410,43 @@ export default {
 							})
 						}
 					}
+					temp_buy_number = this.quantity
+					temp_sell_number = temp_sell_id = ''
 				} else if (this.currentCard.category_id === 11) {
+
 				} else if (this.currentCard.category_id === 12) {
 				} else if (this.currentCard.category_id === 9) {
+					temp_buy_number = temp_sell_number = temp_sell_id = ''
 				} else if (this.currentCard.category_id === 7) {
+					temp_buy_number = temp_sell_number = temp_sell_id = ''
 				} else if (this.currentCard.category_id === 10) {
+					temp_buy_number = temp_sell_number = temp_sell_id = ''
 				}
 				ConfirmCard({
 					game_id: getApp().globalData.gameId,
 					game_user_id: getApp().globalData.gameUserId,
 					card_id: String(this.cardMsg[1]),
-					buy_number: Number(this.quantity)
+					buy_number: temp_buy_number,
+					sell_number: temp_sell_number,
+					sell_id: temp_sell_id
 				})
 					.then((res) => {
 						// console.log(res)
 						// console.log(res[1].data.data)
 						if (res[1].data.status === 200) {
-							uni.showToast({
-								title: '操作成功！',
-								icon: 'success'
-							})
-							this.$emit('submit', 1) // 只有1代表接口的操作是成功的
+							// 先判断是否是强制性的卡牌，不是就有操作成功提示框
+							if (!(this.currentCard.category_id === 9 || this.currentCard.category_id === 7 || (this.currentCard.category_id === 11 && (this.currentCard.card_name.startsWith('房屋拆迁') || this.currentCard.card_name.startsWith('股市黑天鹅') || this.currentCard.card_name.startsWith('基金业绩') || this.currentCard.card_name.startsWith('贷款利率') || this.currentCard.card_name.startsWith('互联网借贷'))))) {
+								uni.showToast({
+									title: '操作成功！',
+									icon: 'success',
+									duration: 450
+								})
+								// 再判断是否是可以重复执行的卡牌，不是则那个模态框只显示一次
+								// if (!(this.currentCard.category_id === 5 && !this.currentCard.card_name.includes('新股上市') && (this.currentCard.card_name.startsWith('股票交易') || this.currentCard.card_name.startsWith('银行') || this.currentCard.card_name.startsWith('基金交易') || this.currentCard.card_name.startsWith('互联网')))) {
+								if (!(this.currentCard.category_id === 5 && !this.currentCard.card_name.startsWith('外汇交易') && !this.currentCard.card_name.startsWith('大病医疗保险'))) {
+									this.$emit('submit', 1) // 只有1代表接口的操作是成功的
+								}
+							}
 						} else {
 							// this.$emit('submit', 2)
 						}

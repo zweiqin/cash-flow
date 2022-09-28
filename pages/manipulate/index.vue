@@ -550,7 +550,7 @@ export default {
 				content,
 				icon,
 				image: '',
-				duration: 2500
+				duration: 2000
 			})
 			if (significance) this.toast_significance = significance
 		},
