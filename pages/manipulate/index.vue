@@ -8,7 +8,7 @@
 					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-flex-1 tn-bg-white tn-text-center tn-padding-xs tn-radius">
 						<view class="tn-border-solid-bottom tn-bold-border"> <Timer @timing="changeTimer"></Timer> </view>
 						<!-- <tn-count-to :start-val="90" :end-val="0" :duration="90000" :use-easing="false"></tn-count-to> -->
-						<view class=""> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" @change="changeCountTo"></CountTo> </view>
+						<view class="" style="max-width: 12vh;"> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" @change="changeCountTo"></CountTo> </view>
 					</view>
 					<view class="tn-flex-9">
 						<HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar>
@@ -213,7 +213,7 @@ import DrawCard from '@/components/draw-card/draw-card.vue'
 import ConfirmPoints from './admin-child/confirm-points.vue'
 
 // 接口
-import { GetCardCategoryList, GetUserInfo } from 'config/api.js'
+import { GetUserInfo } from 'config/api.js'
 
 // 公共的方法
 import setRecord from 'utils/render-table/render-table.js'
@@ -347,13 +347,12 @@ export default {
 		// this.load_role = options.role
 		// 应对管理员或用户 在当前页面进行刷新，判断应该跳回到用户登录页还是管理员登录页
 		if (getApp().globalData.wsHandle === '') {
-			// if (this.load_role === 'admin') {
+		// if (this.load_role === 'admin') {
 			uni.redirectTo({ url: '/pages/login-admin/index' })
-			// } else {
-			// uni.redirectTo({ url: '/pages/index/index' })
-			// }
+		// } else {
+		// uni.redirectTo({ url: '/pages/index/index' })
+		// }
 		} else {
-			this.getCardCategoryList()
 		}
 	},
 	onShow() {
@@ -379,17 +378,6 @@ export default {
 		// changeCountTo(e) {
 		// 	// console.log(e)
 		// },
-
-		getCardCategoryList() {
-			GetCardCategoryList({})
-				.then((res) => {
-					// console.log(res[1].data.data)
-					getApp().globalData.cardCategoryList = res[1].data.data
-				})
-				.catch((err) => {
-					console.log(err)
-				})
-		},
 
 		// 主动
 		handleProcessing(significance) {

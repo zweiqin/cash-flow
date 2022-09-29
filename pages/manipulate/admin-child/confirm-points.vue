@@ -88,8 +88,8 @@ export default {
 					if (res[1].data.status === 200) {
 						uni.showToast({
 							title: '操作成功',
-							icon: 'success',
-							duration: 450
+							icon: 'success'
+							// duration: 450
 						})
 						this.$emit('submit', 1) // 只有1代表接口的操作是成功的
 					} else {

@@ -6,13 +6,19 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "用户"
+				"navigationBarTitleText": "用户",
+				"app-plus": {
+					"titleNView": false
+				} //去掉
 			}
 		},
 		{
 			"path": "pages/login-admin/index",
 			"style": {
-				"navigationBarTitleText": "管理员"
+				"navigationBarTitleText": "管理员",
+				"app-plus": {
+					"titleNView": false
+				} //去掉
 			}
 		},
 		{

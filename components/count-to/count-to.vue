@@ -235,9 +235,13 @@ export default {
 
   .tn-count-num {
     /* #ifndef APP-NVUE */
-    display: inline-flex;
+    // display: inline-flex;
     /* #endif */
     text-align: center;
     line-height: 1;
+
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
   }
 </style>

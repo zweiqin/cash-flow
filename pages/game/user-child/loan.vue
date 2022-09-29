@@ -132,7 +132,14 @@ export default {
 	methods: {
 		calculate(newVal) {
 			this.cash_flow = newVal.basic_info.cash_flow > 0 ? newVal.basic_info.cash_flow : 0
-			const temp_available_credit = this.cash_flow * 10 - newVal.basic_info.debt_bank_loan
+
+			let temp_available_credit
+			if (this.personal.assets.findIndex((item) => item.card_name.startsWith('个人觉察') && item.card_name.includes('人脉')) === -1) {
+				temp_available_credit = this.cash_flow * 10 - newVal.basic_info.debt_bank_loan
+			} else {
+				temp_available_credit = this.cash_flow * 40 - newVal.basic_info.debt_bank_loan
+			}
+
 			this.available_credit = temp_available_credit > 0 ? temp_available_credit : 0
 			if (this.available_credit === 0) this.min = this.value = 0
 			this.max = Math.floor((this.available_credit / this.cash_flow) || 0)
@@ -161,8 +168,8 @@ export default {
 					if (res[1].data.status === 200) {
 						uni.showToast({
 							title: '操作成功',
-							icon: 'success',
-							duration: 450
+							icon: 'success'
+							// duration: 450
 						})
 						this.$emit('submit', 1) // 只有1代表接口的操作是成功的
 					} else {

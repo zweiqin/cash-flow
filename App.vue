@@ -1,9 +1,10 @@
 <script>
 // 接口
-import { GetCardList } from 'config/api.js'
+import { GetCardList, GetCardCategoryList } from 'config/api.js'
 
 export default {
 	globalData: {
+		isReconnect: false,
 		cardList: [],
 		appListData: [
 			// 拖拽页面的用户列表用到这个appListData数据
@@ -70,7 +71,7 @@ export default {
 		gameId: '', // 管理员为数字字符串，用户为数字字符串
 		gameUserId: '', // 管理员为空字符串，用户为数字字符串
 		// vm: null,
-		app: '',
+		// app: '',
 		admin: null,
 		users: null,
 		drag: null,
@@ -83,6 +84,8 @@ export default {
 			this.wsHandle.onopen = this.onOpen
 			// 服务端发送回来的其他消息
 			this.wsHandle.onmessage = this.onMessage
+			// 当Browser接收到WebSocketServer端发送的关闭连接请求时，就会触发onclose消息。如果连接失败，发送、接收数据失败或者处理数据出现错误，browser会触发onerror消息;
+			this.wsHandle.onclose = this.onClose
 			this.wsHandle.onerror = this.onError
 			this.action = actionMsg
 			// 判断是 管理员 还是用户 还是其它情况
@@ -194,11 +197,20 @@ export default {
 				}))
 				// 还没开始游戏，实时同步 拖拽列表
 				_this.drag && _this.drag.syncUserList()
-				// // 这里以后可能需要（appListData），现在采用的是appListId
-				// // 场景：开始游戏后，断线重连，其它用户能看到，实时同步 上面的头像列表
-				// _this.game && _this.game.syncUserList()
-				// // 场景：开始游戏后，断线重连，管理员能看到，实时同步 上面的头像列表
-				// _this.manipulate && _this.manipulate.syncUserList()
+				// // // 这里以后可能需要（appListData），现在采用的是appListId
+				// // // 场景：开始游戏后，断线重连，其它用户能看到，实时同步 上面的头像列表
+				// // _this.game && _this.game.syncUserList()
+				// // // 场景：开始游戏后，断线重连，管理员能看到，实时同步 上面的头像列表
+				// // _this.manipulate && _this.manipulate.syncUserList()
+				if (_this.isReconnect) {
+					// 在拖拽页面 断线重连的逻辑
+					if (_this.drag) {
+						_this.role = 'user' && uni.reLaunch({ url: '/pages/drag/index' })
+						_this.role = 'admin' && uni.reLaunch({ url: '/pages/drag/index?role=admin' })
+					}
+					_this.isReconnect = false
+					uni.hideLoading()
+				}
 			}
 
 			if (data.event === 'stopGame') {
@@ -206,11 +218,17 @@ export default {
 				_this.drag && _this.drag.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
 				_this.game && _this.game.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
 				_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'home-vertical', 'stopGame')
-				_this.currentCard = ''
-				_this.appListData = []
 				_this.appListId = []
+				_this.appListData = []
 				_this.round = ['0', '0']
 				_this.cardMsg = ['0', 0]
+				_this.currentCard = ''
+				_this.action = null
+				_this.role = ''
+				_this.gameKey = ''
+				_this.userName = ''
+				_this.gameId = ''
+				_this.gameUserId = ''
 			}
 
 			if (data.event === 'syncInfo') {
@@ -223,6 +241,13 @@ export default {
 				// 游戏已经开始，管理员或有用户 断线重连，（在登录页面(两个都是)）只发给断线重连的那个人，data.data,[当前房间里的所有用户的数据，没有管理员，{},{},{}]。 // 注意，这里的toGame或toManipulate，因为toast框关闭之后的操作toInterface是异步的，在关闭toast之前会覆盖掉toDrag（toast_significance）。注意是先syncUserList，再syncInfo
 				_this.users && _this.users.globalNotice('toPlay')
 				_this.admin && _this.admin.globalNotice('toPlay')
+				if (_this.isReconnect) {
+					// 在两个游戏页面 断线重连的逻辑
+					_this.game && uni.reLaunch({ url: '/pages/game/index' })
+					_this.manipulate && uni.reLaunch({ url: '/pages/manipulate/index?role=admin' })
+					_this.isReconnect = false
+					uni.hideLoading()
+				}
 			}
 
 			if (data.event === 'myTurn') {
@@ -419,6 +444,18 @@ export default {
 				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
+			if (data.event === 'quitPartTime') {
+				// banker_action: false,data: "玩家牛取消副业P17副业-翻译",event: "quitPartTime",game_id: "216",game_user_id: "388",is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{3}/, '您'), 'empty-favor')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
+				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
 			if (data.event === 'lookForJob') {
 				// banker_action: true，data: "请掷骰子,如点数大于3即可恢复工作"，event: "lookForJob"，game_id: "183"，game_user_id: "323"，is_all: false
 				// banker_action: false,data: "玩家牛恢复工作",event: "lookForJob",game_id: "184",game_user_id: "325",is_all: true
@@ -468,6 +505,27 @@ export default {
 
 		onError() {
 			console.log('出错了')
+			const _this = getApp().globalData
+			uni.showLoading({
+				title: '断线了，正在重新连接......',
+				mask: true
+			})
+			_this.isReconnect = true
+			if (_this.action.method === 'createGame') {
+				// console.log('发送')
+				_this.action.method = 'rejoinGame'
+				_this.init(_this.action)
+			}
+			if (_this.action.method === 'joinGame') {
+				_this.init(_this.action)
+			}
+			if (_this.action.method === 'rejoinGame') {
+				_this.init(_this.action)
+			}
+		},
+
+		onClose() {
+			console.log('关闭了')
 		},
 
 		send(sendMsg) {
@@ -523,6 +581,20 @@ export default {
 		// 		console.log(res.data)
 		// 	}
 		// })
+
+		GetCardCategoryList({})
+			.then((res) => {
+				if (res[1].data.status === 200) {
+					// console.log(res[1].data.data)
+					this.globalData.cardCategoryList = res[1].data.data
+				} else {
+					this.globalData.users && this.globalData.users.globalNotice('提示', '获取游戏资源失败，请重试！', 'warning-fill')
+					this.globalData.admin && this.globalData.admin.globalNotice('提示', '获取游戏资源失败，请重试！', 'warning-fill')
+				}
+			})
+			.catch((err) => {
+				console.log(err)
+			})
 	},
 	onShow() {
 		console.log('App Show')

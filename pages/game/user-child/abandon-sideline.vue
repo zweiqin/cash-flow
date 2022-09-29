@@ -8,23 +8,20 @@
 		</view>
 
 		<view>
-			<view class="tn-margin-top-sm tn-margin-bottom tn-text-lg">
-				<text>您的手头现金：<text class="tn-text-bold" v-html="cash_on_hand + '&nbsp;'"></text>元</text>
-			</view>
-			<view class="tn-margin-top tn-margin-bottom">
+			<view class="tn-padding-top tn-padding-bottom">
 				<tn-list-view
 					:card="true"
-					title="其 他/她 玩家列表"
+					title="副业列表"
 					background-color="#EFEFEF"
 				>
-					<tn-radio-group v-model="value" @change="radioGroupChange">
+					<tn-radio-group v-model="value">
 
-						<block v-if="appListId.length!==0">
-							<tn-list-cell v-for="(item,index) in appListId" :key="item.id" :arrow="false" :arrow-right="false" :unlined="false" :line-left="true" :line-right="true">
+						<block v-if="sideline_list.length!==0">
+							<tn-list-cell v-for="(item,index) in sideline_list" :key="item.id" :arrow="false" :arrow-right="false" :unlined="false" :line-left="true" :line-right="true">
 								<view>
-									<tn-radio :name="item.id">
-										<text>用户{{ index+1 }}：</text>
-										{{ `${item.userName}(${item.roleName})` }}
+									<tn-radio :name="String(item.id)">
+										<text>副业{{ index+1 }}：</text>
+										{{ `${item.card_name}(收入：${item.value} 元/月)(可获得精力：${Math.abs(item.energy)})` }}
 									</tn-radio>
 								</view>
 							</tn-list-cell>
@@ -43,11 +40,11 @@
 			</view>
 		</view>
 
-		<view>
+		<!-- <view>
 			<tn-input v-model="money" type="number" placeholder="请输入金钱数量" :focus="true" :border="true" />
-		</view>
+		</view> -->
 
-		<view class="tn-flex tn-flex-row-around button">
+		<view class="tn-flex tn-flex-row-around tn-padding-top">
 			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
 			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">确定</tn-button>
 		</view>
@@ -55,7 +52,7 @@
 </template>
 
 <script>
-import { GivingMoney } from 'config/api.js'
+import { QuitPartTime } from 'config/api.js'
 
 export default {
 	props: {
@@ -67,58 +64,32 @@ export default {
 	data() {
 		return {
 			// 左图标
-			leftIcon: 'lucky-money-fill',
+			leftIcon: 'empty-favor',
 			// 右图标
-			rightIcon: 'lucky-money-fill',
+			rightIcon: 'empty-favor',
 
-			content: '正在给某玩家送钱：',
+			content: '正在放弃某副业：',
 
-			cash_on_hand: 0,
+			value: ''
 
-			appListId: getApp().globalData.appListId.filter((item) => item.id !== getApp().globalData.gameUserId),
-			value: '',
-
-			money: ''
+			// money: ''
 		}
 	},
 
 	computed: {
-	},
-
-	watch: {
-		// 侦听器的方式
-		personal(newVal, oldVal) {
-			// console.log('personal', newVal)
-			this.calculate(newVal)
+		sideline_list() {
+			return this.personal.income.filter((item) => item.class === 5)
 		}
 	},
 
-	created() {
-		// 侦听器的方式
-		this.calculate(this.personal)
+	watch: {
+	},
 
-		// 重新获取数据的方式
-		// GetUserInfo({ game_user_id: getApp().globalData.gameUserId, game_id: getApp().globalData.gameId })
-		// 	.then((res) => {
-		// 		if (res[1].data.status === 200) {
-		// 			// console.log(res[1].data.data)
-		// 			this.cash_on_hand = res[1].data.data.basic_info.cash_on_hand
-		// 		} else {
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		console.log(err)
-		// 	})
+	created() {
 	},
 
 	onReady() {},
 	methods: {
-		calculate(newVal) {
-			this.cash_on_hand = newVal.basic_info.cash_on_hand
-		},
-		radioGroupChange(name) {
-			// console.log(name)
-		},
 		cancel() {
 			this.$emit('cancel')
 		},
@@ -126,27 +97,26 @@ export default {
 			// console.log(this.money)
 			if (!this.value) {
 				return uni.showToast({
-					title: '请选择玩家！',
+					title: '请选择副业！',
 					icon: 'error'
 				})
 			}
-			if (Number(this.money) <= 0 || !Number.isInteger(Number(this.money))) {
-				return uni.showToast({
-					title: '请输入正确的金钱数值！',
-					icon: 'error'
-				})
-			}
-			if (Number(this.money) > this.cash_on_hand) {
-				return uni.showToast({
-					title: '现金不足！',
-					icon: 'error'
-				})
-			}
-			GivingMoney({
+			// if (Number(this.money) <= 0 || !Number.isInteger(Number(this.money))) {
+			// 	return uni.showToast({
+			// 		title: '请输入正确的金钱数值！',
+			// 		icon: 'error'
+			// 	})
+			// }
+			// if (Number(this.money) > this.cash_on_hand) {
+			// 	return uni.showToast({
+			// 		title: '现金不足！',
+			// 		icon: 'error'
+			// 	})
+			// }
+			QuitPartTime({
 				game_id: Number(getApp().globalData.gameId),
 				game_user_id: Number(getApp().globalData.gameUserId),
-				receiver_id: Number(this.value),
-				money_number: Number(this.money)
+				part_time_id: Number(this.value)
 			})
 				.then((res) => {
 					// console.log(res)
@@ -189,8 +159,5 @@ export default {
 	&__icon {
 		font-size: 34rpx;
 	}
-}
-.button {
-	margin-top: 35rpx;
 }
 </style>

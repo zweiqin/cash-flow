@@ -150,6 +150,7 @@ export default {
     position: fixed;
     left: 50%;
     top: 48%;
+    top: 60%;
     transform: translate(-50%, -50%);
     transition: 0.3 ease-in-out;
     transition-property: opacity, visibility;

@@ -36,7 +36,7 @@ function setRecord(data, refFragment, vm) {
 		out_healthy: data.basic_info.out_healthy,
 		out_bank_loan_interest: data.basic_info.out_bank_loan_interest
 	})
-	const asset1 = data.assets.filter((item) => item.class === 4).map((item) => ({ id: item.id, card_name: item.card_name }))
+	const asset1 = data.assets.filter((item) => item.class === 4).map((item) => ({ id: item.id, card_name: item.card_name, card_id: item.card_id }))
 	const asset2 = data.assets.filter((item) => item.class === 2).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
 	const asset3 = data.assets.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
 	vm.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[0].$children[0].setAssets({

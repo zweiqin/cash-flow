@@ -219,6 +219,16 @@ export const GivingMoney = (data) => uni.request({
 	}
 })
 
+// user放弃某副业（取消副业）
+export const QuitPartTime = (data) => uni.request({
+	url: '/game_user/QuitPartTime', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
 // user被抽到卡后，转让卡牌
 export const TransferCard = (data) => uni.request({
 	url: '/game_user/TransferCard', // 仅为示例，并非真实接口地址。

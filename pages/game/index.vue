@@ -8,7 +8,7 @@
 					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-flex-1 tn-bg-white tn-text-center tn-padding-xs tn-radius">
 						<view class="tn-border-solid-bottom tn-bold-border"> <Timer @timing="changeTimer"></Timer> </view>
 						<!-- <tn-count-to :start-val="90" :end-val="0" :duration="90000" :use-easing="false"></tn-count-to> -->
-						<view class="">
+						<view class="" style="max-width: 12vh;">
 							<CountTo :font-size="2" font-unit="vh" :start-val="count_text" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo>
 						</view>
 					</view>
@@ -86,6 +86,8 @@
 				<view v-if="popup_significance === 'loan'"> <Loan :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></Loan> </view>
 				<view v-else-if="popup_significance === 'repayment'"> <Repayment :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></Repayment> </view>
 				<view v-else-if="popup_significance === 'giveMoney'"> <GiveMoney :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></GiveMoney> </view>
+				<view v-else-if="popup_significance === 'redeem'"> <Redeem :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></Redeem> </view>
+				<view v-else-if="popup_significance === 'abandonSideline'"> <AbandonSideline :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></AbandonSideline> </view>
 				<view v-else-if="popup_significance === 'litigate'"> <JobRelated :personal="my_info" sign="litigate" @cancel="clickBtn" @submit="clickBtn"></JobRelated> </view>
 				<view v-else-if="popup_significance === 'hunting'"> <JobRelated :personal="my_info" sign="hunting" @cancel="clickBtn" @submit="clickBtn"></JobRelated> </view>
 			</tn-modal>
@@ -136,6 +138,8 @@ import Bottom from '@/components/table/bottom.vue'
 import Loan from './user-child/loan.vue'
 import Repayment from './user-child/repayment.vue'
 import GiveMoney from './user-child/give-money.vue'
+import Redeem from './user-child/redeem.vue'
+import AbandonSideline from './user-child/abandon-sideline.vue'
 // import Litigate from './user-child/litigate.vue'
 // import Hunting from './user-child/hunting.vue'
 import JobRelated from './user-child/job-related.vue'
@@ -150,7 +154,7 @@ import { GetUserInfo } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, userButton, DrawCard, Loan, Repayment, GiveMoney, JobRelated },
+	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, userButton, DrawCard, Loan, Repayment, GiveMoney, JobRelated, Redeem, AbandonSideline },
 	data() {
 		return {
 			// load_role: '',
@@ -277,6 +281,18 @@ export default {
 				this.mask_closeable = false
 				this.custom = true
 				this.is_show_model = true
+			} else if (significance === 'redeem') {
+				this.popup_significance = 'redeem'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'abandonSideline') {
+				this.popup_significance = 'abandonSideline'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
 			} else if (significance === 'litigate') {
 				this.popup_significance = 'litigate'
 				this.close_btn = false
@@ -388,8 +404,8 @@ export default {
 				if (this.is_show_model_pa && (this.popup_significance_pa === 'drawCard' || this.popup_significance_pa === 'receiveAuction')) {
 					this.clickPaBtn()
 				}
-				// 下一回合时，所有（或上一回合）用户不能看到 打官司和找工作 的那个主动的模态框了
-				if (this.is_show_model && (this.popup_significance === 'litigate') || this.popup_significance === 'hunting') {
+				// 下一回合时，所有（或上一回合）用户不能看到 打官司和找工作和放弃某副业 的那个主动的模态框了
+				if (this.is_show_model && (this.popup_significance === 'litigate' || this.popup_significance === 'hunting' || this.popup_significance === 'abandonSideline')) {
 					this.clickBtn()
 				}
 			}
@@ -460,6 +476,7 @@ export default {
 				flex: 1;
 				// height: 20vh;
 				overflow: auto;
+				// white-space: nowrap;
 			}
 			.middle {
 				flex: 10;

@@ -21,10 +21,10 @@
 				</view>
 				<view v-else>
 					<tn-radio-group v-model="model.payType" :size="25" :width="radioWidth" :wrap="radioWrap" @change="radioGroupChange">
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='副业').id)" :disabled="false" :label-size="38">（小机会）副业</tn-radio>
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='金融').id)" :disabled="false" :label-size="38">（小机会）金融</tn-radio>
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='房地产').id)" :disabled="false" :label-size="38">（大机会）地产</tn-radio>
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='企业').id)" :disabled="false" :label-size="38">（大机会）企业</tn-radio>
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='副业').id)" :disabled="false" :label-size="38">【小机会】副业</tn-radio>
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='金融').id)" :disabled="false" :label-size="38">【小机会】金融</tn-radio>
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='房地产').id)" :disabled="false" :label-size="38">【大机会】地产</tn-radio>
+						<tn-radio :name="String(radioList.find((item)=>item.category_name==='企业').id)" :disabled="false" :label-size="38">【大机会】企业</tn-radio>
 					</tn-radio-group>
 				</view>
 			</tn-form-item>

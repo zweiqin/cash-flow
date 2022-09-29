@@ -48,7 +48,7 @@
 
 							<view class="tn-flex login__info__item__input__content">
 
-								<view class="tn-text-lg tn-color-white tn-text-bold" style="padding-right: 5px;;letter-spacing: 2px;">{{ today }}</view> <input v-model="game_key" type="number" maxlength="4" placeholder-class="input-placeholder" placeholder="请输入房间号码后四位" />
+								<view class="tn-text-lg tn-color-white tn-text-bold" style="padding-right: 5px;letter-spacing: 2px;">{{ today }}</view> <input v-model="game_key" type="number" maxlength="4" placeholder-class="input-placeholder" placeholder="请输入房间号码后四位" />
 
 							</view>
 
@@ -148,6 +148,7 @@ export default {
 		joinGame() {
 			if (this.game_key.length !== 4) return this.globalNotice('提示', '请输入房间号后四位', 'tip-fill')
 			if (!/^[\u4E00-\u9FA5]+$/.test(this.user_name)) return this.globalNotice('提示', '请输入中文名称', 'tip-fill')
+			if (this.user_name >= 9) return this.globalNotice('提示', '名称长度最大为9位', 'tip-fill')
 			getApp().globalData.init({
 				method: 'joinGame',
 				data: { username: this.user_name, game_key: this.today + this.game_key } // 房间秘钥

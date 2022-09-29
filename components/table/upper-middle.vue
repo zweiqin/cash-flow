@@ -8,8 +8,8 @@
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">权益</view>
 				</view>
 				<view v-for="item in asset1" :key="item.id" class="tn-flex pad-top">
-					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black tn-flex tn-flex-col-bottom tn-flex-row-center">{{ item.card_name }}</view>
-					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-center">未知</view>
+					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black tn-flex tn-flex-col-center tn-flex-row-center">{{ item.card_name }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-center tn-flex-row-center">{{ getEquity(item.card_id) }}</view>
 				</view>
 			</view>
 			<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
@@ -27,7 +27,7 @@
 			<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
 				<view class="tn-flex pad-top">
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">房地产代码</view>
-					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">首付</view>
+					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">数量</view>
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">价值</view>
 				</view>
 				<view v-for="item in asset3" :key="item.id" class="tn-flex pad-top">
@@ -47,7 +47,8 @@ export default {
 		return {
 			asset1: [ {
 				id: 1,
-				card_name: '无'
+				card_name: '无',
+				card_id: 0
 			} ],
 			asset2: [ {
 				id: 1,
@@ -60,7 +61,8 @@ export default {
 				card_name: '无',
 				num: 0,
 				value: 0
-			} ]
+			} ],
+			cardList: getApp().globalData.cardList
 		}
 	},
 	mounted() {
@@ -71,6 +73,12 @@ export default {
 			obj.asset1.length && (this.asset1 = obj.asset1)
 			obj.asset2.length && (this.asset2 = obj.asset2)
 			obj.asset3.length && (this.asset3 = obj.asset3)
+			this.cardList = getApp().globalData.cardList
+		},
+		getEquity(id) {
+			const temp_obj = this.cardList.find((item) => item.id === id)
+			// console.log(this.asset1, temp_obj) // .substring(1, temp_info[0].length - 1)
+			return temp_obj ? temp_obj.describe.match(/\[(.+?)\]/g)[0] : '未知'
 		}
 	}
 }

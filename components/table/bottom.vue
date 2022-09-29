@@ -10,7 +10,7 @@
 					background-color="rgba(1, 190, 255, 0.8)"
 					:font-size="1.7"
 					font-unit="vw"
-					font-color="tn-color-white"
+					:font-color="cash_flow < 0 ? 'tn-color-red' : 'tn-color-white'"
 					margin="2rpx 2rpx"
 				>
 					<text>月现金流：</text><text>{{ cutApart(cash_flow) }}</text>
@@ -24,7 +24,7 @@
 					background-color="rgba(1, 190, 255, 0.8)"
 					:font-size="1.7"
 					font-unit="vw"
-					font-color="tn-color-white"
+					:font-color="passive_in < 0 ? 'tn-color-red' : 'tn-color-white'"
 					margin="2rpx 2rpx"
 				>
 					<text>被动收入：</text><text>{{ cutApart(passive_in) }}</text>
@@ -41,10 +41,9 @@
 					background-color="rgba(1, 190, 255, 0.8)"
 					:font-size="1.7"
 					font-unit="vw"
-					font-color="tn-color-white"
+					:font-color="cash_on_hand < 0 ? 'tn-color-red' : 'tn-color-white'"
 					margin="2rpx 2rpx"
 				>
-					<!-- 主管说要把存储改为现金 -->
 					<text>现金：</text><text>{{ cutApart(cash_on_hand) }}</text>
 				</tn-tag>
 			</view>
@@ -56,7 +55,7 @@
 					background-color="rgba(1, 190, 255, 0.8)"
 					:font-size="1.7"
 					font-unit="vw"
-					font-color="tn-color-white"
+					:font-color="energy < 0 ? 'tn-color-red' : 'tn-color-white'"
 					margin="2rpx 2rpx"
 				>
 					<text>精力：</text><text>{{ cutApart(energy) }}</text>
@@ -73,7 +72,7 @@
 					background-color="rgba(1, 190, 255, 0.8)"
 					:font-size="1.7"
 					font-unit="vw"
-					font-color="tn-color-white"
+					:font-color="basics_in < 0 ? 'tn-color-red' : 'tn-color-white'"
 					margin="2rpx 2rpx"
 				>
 					<text>总收入：</text><text>{{ cutApart(basics_in) }}</text>
@@ -87,7 +86,7 @@
 					background-color="rgba(1, 190, 255, 0.8)"
 					:font-size="1.7"
 					font-unit="vw"
-					font-color="tn-color-white"
+					:font-color="basics_out < 0 ? 'tn-color-red' : 'tn-color-white'"
 					margin="2rpx 2rpx"
 				>
 					<text>总支出：</text><text>{{ cutApart(basics_out) }}</text>
@@ -104,7 +103,7 @@
 					background-color="rgba(1, 190, 255, 0.8)"
 					:font-size="1.7"
 					font-unit="vw"
-					font-color="tn-color-white"
+					:font-color="charitable < 0 ? 'tn-color-red' : 'tn-color-white'"
 					margin="2rpx 2rpx"
 				>
 					<text>慈善：</text><text>{{ cutApart(charitable) }}</text>
@@ -140,8 +139,7 @@ export default {
 			charitable: 99
 		}
 	},
-	mounted() {
-	},
+	mounted() {},
 	methods: {
 		cutApart,
 		setButtom(obj) {
@@ -158,30 +156,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	.layer-3 {
-		height: 100%;
-		font-family: SimHei, sans-serif, monospace;
-		background-color: rgba(68, 68, 68, 0.4);
-		border-radius: 36rpx;
-		// opacity: 0.5;
-		.justify-content-item {
-			display: flex;
-			flex-direction: column;
-			& > view {
-				flex: 1;
-			}
-			.tn-tag {
-				justify-content: space-between;
-				font-weight: 700;
-			}
+.layer-3 {
+	height: 100%;
+	font-family: SimHei, sans-serif, monospace;
+	background-color: rgba(68, 68, 68, 0.4);
+	border-radius: 36rpx;
+	// opacity: 0.5;
+	.justify-content-item {
+		display: flex;
+		flex-direction: column;
+		& > view {
+			flex: 1;
 		}
-		& > .justify-content-item:last-child > view:last-child {
-			// display: none;
-			opacity: 0;
-			// flex: 0.5;
-			// margin-bottom: -10px;
+		.tn-tag {
+			justify-content: space-between;
+			font-weight: 700;
 		}
 	}
+	& > .justify-content-item:last-child > view:last-child {
+		// display: none;
+		opacity: 0;
+		// flex: 0.5;
+		// margin-bottom: -10px;
+	}
+}
 
 .layer-3 .bg-flex-shadow {
 	// background-color: #ffb3ff;

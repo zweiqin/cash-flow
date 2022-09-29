@@ -43,7 +43,9 @@
 
 			<view>
 				<view class="tn-flex tn-border-solid-bottom tn-border-black tn-padding-top-sm">
-					<view class="tn-flex-2 tn-text-left">银行贷款（月息10%）</view>
+					<!-- 月息因为 人脉的觉察卡 会发生变化，这里先不显示 -->
+					<!-- <view class="tn-flex-2 tn-text-left">银行贷款（月息10%）</view> -->
+					<view class="tn-flex-2 tn-text-left">银行贷款</view>
 					<view class="tn-flex-3 tn-text-right tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(debt_bank_loan) }}</view>
 				</view>
 			</view>

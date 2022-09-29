@@ -111,7 +111,7 @@ export default {
 			if (this.card.category_id === 11 && this.card.card_name.endsWith('行情')) {
 				this.is_quotation = true
 				this.line = this.desc.split('\\') // 实际上是以\来分割
-				console.log(this.line)
+				// console.log(this.line)
 			} else {
 			}
 		} else {
