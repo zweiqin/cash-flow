@@ -164,7 +164,7 @@ export default {
 			this.charitable = obj.charitable
 			this.is_unemploy = obj.is_unemploy
 			this.rest_num = obj.rest_num
-			console.log(this.employ, this.rest)
+			// console.log(this.employ, this.rest)
 		}
 	}
 }
