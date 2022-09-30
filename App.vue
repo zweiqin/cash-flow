@@ -334,7 +334,7 @@ export default {
 				// banker_action: false,data: "玩家牛确认卡片房产投资-3室2厅1卫(3-2-1)成功",event: "confirmCard",game_id: "173",game_user_id: "311",is_all: true
 				// banker_action: false,data: "玩家牛确认卡片个人逆流成功",event: "confirmCard",game_id: "198",game_user_id: "353",is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('提示', data.data.replace(/^.{3}/, '您'), 'bankcard-fill')
+					_this.game && _this.game.globalNotice('提示', data.data.replace(/^.{2}/, '（您）→'), 'bankcard-fill')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -348,7 +348,7 @@ export default {
 				// banker_action: false，data: "玩家牛补充2点精力，扣除一个月的总支出"，event: "energize"，game_id: "153"，game_user_id: "
 				// banker_action: false，data: "玩家牛补充2点精力，从现金中扣除10%的总收入800元"，event: "energize"，game_id: "154"，game_user_id: ""，is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('提示', data.data.replace(/^.{3}/, '您'), 'battery-mid')
+					_this.game && _this.game.globalNotice('提示', data.data.replace(/^.{2}/, '（您）→'), 'battery-mid')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -360,7 +360,7 @@ export default {
 			if (data.event === 'haveBaby') {
 				// banker_action: false，data: "玩家牛生了一个孩子"，event: "haveBaby"，game_id: "156"，game_user_id: ""，is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('恭喜', data.data.replace(/^.{3}/, '您'), 'battery-mid')
+					_this.game && _this.game.globalNotice('恭喜', data.data.replace(/^.{2}/, '（您）→'), 'battery-mid')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -372,7 +372,7 @@ export default {
 			if (data.event === 'heartBreak') {
 				// banker_action: false，data: "玩家牛失恋了,消耗2点精力"，event: "heartBreak"，game_id: "184"，game_user_id: ""，is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('坏消息', data.data.replace(/^.{3}/, '您'), 'like-break')
+					_this.game && _this.game.globalNotice('坏消息', data.data.replace(/^.{2}/, '（您）→'), 'like-break')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -384,7 +384,7 @@ export default {
 			if (data.event === 'unemployment') {
 				// banker_action: false,data: "玩家牛失业",event: "unemployment",game_id: "244",game_user_id: "433",is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('坏消息', data.data.replace(/^.{3}/, '您'), 'job')
+					_this.game && _this.game.globalNotice('坏消息', data.data.replace(/^.{2}/, '（您）→'), 'job')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -396,7 +396,7 @@ export default {
 			if (data.event === 'bankrupt') {
 				// banker_action: false,data: "玩家牛破产,下一轮重新开始沙盘推演",event: "bankrupt",game_id: "244",game_user_id: "433",is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('坏消息', data.data.replace(/^.{3}/, '您'), 'empty-permission')
+					_this.game && _this.game.globalNotice('坏消息', data.data.replace(/^.{2}/, '（您）→'), 'empty-permission')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -408,7 +408,7 @@ export default {
 			if (data.event === 'doCharity') {
 				// banker_action: false,data: "玩家牛做慈善，捐赠1500元",event: "doCharity",game_id: "164",game_user_id: "289",is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{3}/, '您'), 'praise')
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{2}/, '（您）→'), 'praise')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -420,7 +420,7 @@ export default {
 			if (data.event === 'bankerLoan') {
 				// banker_action: false,data: "玩家牛向银行贷款4200元",event: "bankerLoan",game_id: "165",game_user_id: "290",is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{3}/, '您'), 'count-fill')
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{2}/, '（您）→'), 'count-fill')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -432,7 +432,7 @@ export default {
 			if (data.event === 'repayment') {
 				// banker_action: false，data: "玩家牛向银行还款1元"，event: "repayment"，game_id: "166"，game_user_id: "291"，is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{3}/, '您'), 'trust')
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{2}/, '（您）→'), 'trust')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -444,7 +444,7 @@ export default {
 			if (data.event === 'givingMoney') {
 				// banker_action: false，data: "玩家牛向玩家逼送钱100元"，event: "givingMoney"，game_id: "172"，game_user_id: "302"，is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{3}/, '您'), 'lucky-money-fill')
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{2}/, '（您）→'), 'lucky-money-fill')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -456,7 +456,7 @@ export default {
 			if (data.event === 'quitPartTime') {
 				// banker_action: false,data: "玩家牛取消副业P17副业-翻译",event: "quitPartTime",game_id: "216",game_user_id: "388",is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{3}/, '您'), 'empty-favor')
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(/^.{2}/, '（您）→'), 'empty-favor')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -478,7 +478,7 @@ export default {
 					_this.manipulate && _this.manipulate.syncInfo('lookForJob')
 				} else {
 					if (_this.gameUserId === data.game_user_id) {
-						_this.game && _this.game.globalNotice('好消息', data.data.replace(/^.{3}/, '您'), 'con-leo')
+						_this.game && _this.game.globalNotice('好消息', data.data.replace(/^.{2}/, '（您）→'), 'con-leo')
 					} else {
 						_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 						_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
@@ -501,7 +501,7 @@ export default {
 					_this.manipulate && _this.manipulate.syncInfo('litigate')
 				} else {
 					if (_this.gameUserId === data.game_user_id) {
-						_this.game && _this.game.globalNotice('好消息', data.data.replace(/^.{3}/, '您'), 'server')
+						_this.game && _this.game.globalNotice('好消息', data.data.replace(/^.{2}/, '（您）→'), 'server')
 					} else {
 						_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 						_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
