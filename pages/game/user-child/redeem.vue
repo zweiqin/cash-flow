@@ -40,9 +40,9 @@
 			</view>
 		</view>
 
-		<view>
+		<!-- <view>
 			<tn-input v-model="money" type="number" placeholder="请输入份额" :focus="true" :border="true" />
-		</view>
+		</view> -->
 
 		<view class="tn-flex tn-flex-row-around tn-padding-top">
 			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { xxx } from 'config/api.js'
+import { GetBackFinance } from 'config/api.js'
 
 export default {
 	props: {
@@ -97,27 +97,27 @@ export default {
 			// console.log(this.money)
 			if (!this.value) {
 				return uni.showToast({
-					title: '请选择副业！',
+					title: '请选择要赎回的产品！',
 					icon: 'error'
 				})
 			}
-			if (Number(this.money) <= 0 || !Number.isInteger(Number(this.money))) {
-				return uni.showToast({
-					title: '请输入正确的份额！',
-					icon: 'error'
-				})
-			}
+			// if (Number(this.money) <= 0 || !Number.isInteger(Number(this.money))) {
+			// 	return uni.showToast({
+			// 		title: '请输入正确的份额！',
+			// 		icon: 'error'
+			// 	})
+			// }
 			// if (Number(this.money) > this.cash_on_hand) {
 			// 	return uni.showToast({
 			// 		title: '现金不足！',
 			// 		icon: 'error'
 			// 	})
 			// }
-			xxx({
+			GetBackFinance({
 				game_id: Number(getApp().globalData.gameId),
 				game_user_id: Number(getApp().globalData.gameUserId),
-				xxx_id: Number(this.value),
-				xxxx: Number(this.money)
+				finance_id: Number(this.value),
+				back_number: Number(this.money)
 			})
 				.then((res) => {
 					// console.log(res)

@@ -17,6 +17,7 @@
 		</view>
 
 		<view class="tn-flex tn-flex-direction-column tn-padding-xl container">
+			<view class="waiting">{{ notification }}</view>
 			<view class="waiting">{{ welcome }}</view>
 			<view v-if="appListData.length > 0" class="around-list"> <AppChange :list-data="appListData" @listChange="listChange"></AppChange></view>
 			<view v-if="appListData.length === 0" class="waiting">正在等待玩家进入房间…</view>
@@ -140,6 +141,12 @@ export default {
 	},
 
 	computed: {
+		notification() {
+			if (getApp().globalData.role === 'user') {
+				return `房间号：${getApp().globalData.gameKey}`
+			}
+			return ''
+		},
 		welcome() {
 			if (getApp().globalData.role === 'admin') {
 				return `您好，管理员！房间号为 ${getApp().globalData.gameKey}`

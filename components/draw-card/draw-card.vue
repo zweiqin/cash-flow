@@ -19,14 +19,14 @@
 						<view v-if="is_drew" class="card-container">
 							<view>
 								<text>是否转让：</text>
-								<tn-radio-group v-model="is_transfer" :size="36" width="auto" :wrap="false">
+								<tn-radio-group v-model="is_transfer" :size="36" width="auto" :wrap="true">
 									<tn-radio :name="'0'" :label-size="38">不转让</tn-radio>
 									<tn-radio :name="'1'" :label-size="38">转让</tn-radio>
 								</tn-radio-group>
 							</view>
 							<view v-if="is_transfer === '1'">
 								<text>转让给：</text>
-								<tn-radio-group v-model="person_transfer" :size="36" width="auto" :wrap="false">
+								<tn-radio-group v-model="person_transfer" :size="36" width="auto" :wrap="true">
 									<tn-radio v-for="item in appListId" :key="item.id" :name="item.id" :label-size="38">{{ `${item.userName}(${item.roleName})` }}</tn-radio>
 								</tn-radio-group>
 							</view>
@@ -77,7 +77,7 @@
 					<view v-if="is_drew" class="card-container">
 						<view>
 							<text>是否转让：</text>
-							<tn-radio-group v-model="is_transfer" :size="36" width="auto" :wrap="false">
+							<tn-radio-group v-model="is_transfer" :size="36" width="auto" :wrap="true">
 								<tn-radio :name="'0'" :label-size="38">不转让</tn-radio>
 								<tn-radio :name="'1'" :label-size="38">转让</tn-radio>
 							</tn-radio-group>
@@ -85,7 +85,7 @@
 						<view v-if="is_transfer === '0'"> <tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" /> </view>
 						<view v-else>
 							<text>转让给：</text>
-							<tn-radio-group v-model="person_transfer" :size="36" width="auto" :wrap="false">
+							<tn-radio-group v-model="person_transfer" :size="36" width="auto" :wrap="true">
 								<tn-radio v-for="item in appListId" :key="item.id" :name="item.id" :label-size="38">{{ `${item.userName}(${item.roleName})` }}</tn-radio>
 							</tn-radio-group>
 						</view>
@@ -134,7 +134,9 @@
 											</tn-radio-group>
 										</tn-list-view>
 									</view>
-									<tn-input v-model="sell_number" type="number" placeholder="在此输入卖出股数" :focus="true" :border="true" />
+									<view v-if="marketable_shares.length!==0">
+										<tn-input v-model="sell_number" type="number" placeholder="在此输入卖出股数" :focus="true" :border="true" />
+									</view>
 								</view>
 								<view v-else>
 									<tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" />
@@ -217,7 +219,7 @@
 						<view class="card-container">
 							<view v-if="currentCard.describe.includes('免费抽取一张机会卡')">
 								<text>（免费）选择一种机会卡：</text>
-								<tn-radio-group v-model="cards_obtained" :size="25" width="auto" :wrap="false">
+								<tn-radio-group v-model="cards_obtained" :size="25" width="auto" :wrap="true">
 									<tn-radio v-for="item in opportunity_list" :key="item" :name="item" :disabled="false" :label-size="38">
 										{{ ((item==='副业' || item==='金融') ? '【小机会】':'【大机会】') + item }}
 									</tn-radio>
@@ -235,7 +237,7 @@
 							<view v-else-if="currentCard.describe.includes('购买一张机会卡') || currentCard.describe.includes('抽取一张相亲卡送给场上')">
 								<view v-if="currentCard.describe.includes('购买一张机会卡')" class="tn-padding-bottom">
 									<text>选择购买一种机会卡：</text>
-									<tn-radio-group v-model="cards_obtained" :size="25" width="auto" :wrap="false">
+									<tn-radio-group v-model="cards_obtained" :size="25" width="auto" :wrap="true">
 										<tn-radio v-for="item in opportunity_list" :key="item" :name="item" :disabled="false" :label-size="38">
 											{{ ((item==='副业' || item==='金融') ? '【小机会】':'【大机会】') + item }}
 										</tn-radio>
@@ -432,6 +434,7 @@ export default {
 	},
 	mounted() {
 		if (this.currentCard.category_id === 9 || this.currentCard.category_id === 7 || (this.currentCard.category_id === 11 && (this.currentCard.card_name.startsWith('房屋拆迁') || this.currentCard.card_name.startsWith('股市黑天鹅') || this.currentCard.card_name.startsWith('基金业绩') || this.currentCard.card_name.startsWith('贷款利率') || this.currentCard.card_name.startsWith('互联网借贷') || this.currentCard.card_name.startsWith('租房行情')))) {
+			// (this.role === 'user') && this.is_drew && this.confirm()
 			this.is_drew && this.confirm()
 		}
 	},

@@ -47,10 +47,10 @@ function setRecord(data, refFragment, vm) {
 	const debt1 = data.debts.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
 	const debt2 = data.debts.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
 	vm.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[1].$children[0].setLiabilities({
-		debt_self_housing: data.basic_info.child_num,
-		debt_car_loan: data.basic_info.child_num,
-		debt_credit_card: data.basic_info.child_num,
-		debt_additional_liabilities: data.basic_info.child_num,
+		debt_self_housing: data.basic_info.debt_self_housing,
+		debt_car_loan: data.basic_info.debt_car_loan,
+		debt_credit_card: data.basic_info.debt_credit_card,
+		debt_additional_liabilities: data.basic_info.debt_additional_liabilities,
 		debt1,
 		debt2,
 		debt_bank_loan: data.basic_info.debt_bank_loan
@@ -62,7 +62,9 @@ function setRecord(data, refFragment, vm) {
 		energy: data.basic_info.energy,
 		basics_in: data.basic_info.basics_in,
 		basics_out: data.basic_info.basics_out,
-		charitable: data.basic_info.charity_count
+		charitable: data.basic_info.charity_count,
+		is_unemploy: data.basic_info.is_unemploy,
+		rest_num: data.basic_info.rest_num
 	})
 	// console.log(this.$refs.RefTableMain)
 	// console.log(this.$refs.RefBottomMain)

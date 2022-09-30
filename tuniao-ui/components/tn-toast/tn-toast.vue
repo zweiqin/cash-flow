@@ -149,8 +149,8 @@ export default {
     opacity: 0;
     position: fixed;
     left: 50%;
-    top: 48%;
-    top: 60%;
+    // top: 48%;
+    top: 33%;
     transform: translate(-50%, -50%);
     transition: 0.3 ease-in-out;
     transition-property: opacity, visibility;
@@ -169,7 +169,8 @@ export default {
       }
 
       &.tn-toast--unicon {
-        padding: 20rpx 20rpx 20rpx 20rpx !important;
+        // padding: 20rpx 20rpx 20rpx 20rpx !important;
+        padding: 40rpx 40rpx 40rpx 40rpx !important;
       }
     }
 
@@ -180,8 +181,10 @@ export default {
     }
 
     &__text {
-      font-size: 28rpx;
-      line-height: 28rpx;
+      // font-size: 28rpx;
+      font-size: 56rpx;
+      // line-height: 28rpx;
+      line-height: 56rpx;
       color: #ffffff;
       text-align: center;
     }
@@ -193,7 +196,8 @@ export default {
 
     &__content {
       padding-top: 10rpx;
-      font-size: 24rpx !important;
+      // font-size: 24rpx !important;
+      font-size: 48rpx !important;
     }
 
     &--unicon {

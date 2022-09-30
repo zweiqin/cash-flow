@@ -80,7 +80,7 @@ export default {
 		// 用户加入游戏，管理员创建游戏和重新加入游戏。这三种情况
 		init(actionMsg = null) {
 			// console.log(this.ws)
-			this.wsHandle = new WebSocket('ws://192.168.0.74:19999/v1/socket/Socket')
+			this.wsHandle = new WebSocket('ws://192.168.0.13:19999/v1/socket/Socket')
 			this.wsHandle.onopen = this.onOpen
 			// 服务端发送回来的其他消息
 			this.wsHandle.onmessage = this.onMessage
@@ -224,7 +224,7 @@ export default {
 				_this.cardMsg = ['0', 0]
 				_this.currentCard = ''
 				_this.action = null
-				_this.role = ''
+				// _this.role = '' // 这个不能重置，因为退回到登录页会用到
 				_this.gameKey = ''
 				_this.userName = ''
 				_this.gameId = ''
@@ -258,7 +258,11 @@ export default {
 				_this.game && _this.game.syncAvatarStyle()
 				_this.manipulate && _this.manipulate.syncAvatarStyle()
 				if (_this.round[0] === getApp().globalData.gameUserId) {
-					_this.game && _this.game.globalNotice('提示', '轮到您了！', 'creative')
+					if (data.data.err_msg) {
+						_this.game && _this.game.globalNotice('哎呀！', data.data.err_msg, 'fire-fill')
+					} else {
+						_this.game && _this.game.globalNotice('提示', '轮到您了！', 'creative')
+					}
 				} else {
 					_this.game && _this.game.globalNotice('提示', '下一回合！', 'creative')
 				}
@@ -280,8 +284,13 @@ export default {
 
 			if (data.event === 'payroll') {
 				// data: "banker发工资2500元给玩家去"，game_user_id: "xxx"（统一为那个收到钱的那个人） is_all: true
+				// banker_action: false,data: "banker扣除玩家那你呢-3500元",event: "payroll",game_id: "242",game_user_id: "443",is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('好消息', `banker发工资${data.data.replace(/[^\d]/g, ' ')}元给您啦！`, 'alipay')
+					if (data.data.includes('扣除')) {
+						_this.game && _this.game.globalNotice('坏消息', `banker扣除了您${data.data.replace(/[^\d]/g, ' ')}元！`, 'alipay')
+					} else {
+						_this.game && _this.game.globalNotice('好消息', `banker发工资${data.data.replace(/[^\d]/g, ' ')}元给您啦！`, 'alipay')
+					}
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
 				}

@@ -35,7 +35,7 @@
 					<view class="tn-flex-2 tn-text-left">企业负债</view>
 					<view class="tn-flex-3 tn-text-right"></view>
 				</view>
-				<view v-for="item in debt1" :key="item.id" class="tn-flex pad-top">
+				<view v-for="item in debt2" :key="item.id" class="tn-flex pad-top">
 					<view class="tn-flex-2 tn-text-left tn-border-solid-bottom tn-border-black">{{ item.card_name }}</view>
 					<view class="tn-flex-3 tn-text-right tn-margin-left-sm tn-border-solid-bottom tn-border-black tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.value) }}</view>
 				</view>

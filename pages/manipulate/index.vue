@@ -13,6 +13,7 @@
 					<view class="tn-flex-9">
 						<HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar>
 					</view>
+					<view class="tn-flex-1 tn-bg-orangeyellow tn-flex tn-flex-direction-column tn-flex-row-center" style="align-items: center;"><text>{{ game_key }}</text></view>
 				</view>
 				<!-- 顶层结束 -->
 				<!-- 中间层开始 -->
@@ -222,6 +223,7 @@ export default {
 	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, DuplicateCom, WasteMoney, DeductMoney, DebitCard, DrawCard, ConfirmPoints },
 	data() {
 		return {
+			game_key: getApp().globalData.gameKey.substring(6),
 			// load_role: '',
 			count_text: '等待下一轮',
 			turn_info: '',
@@ -538,7 +540,7 @@ export default {
 				content,
 				icon,
 				image: '',
-				duration: 2000
+				duration: 3200
 			})
 			if (significance) this.toast_significance = significance
 		},
