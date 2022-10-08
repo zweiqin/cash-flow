@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { GetUserInfo, Repayment } from 'config/api.js'
+import { Repayment } from 'config/api.js'
 
 export default {
 	props: {

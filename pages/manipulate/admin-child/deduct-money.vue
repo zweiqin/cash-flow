@@ -18,7 +18,8 @@
 
 						<tn-list-cell v-for="(item,index) in appListId" :key="item.id" :arrow="false" :arrow-right="false" :unlined="false" :line-left="true" :line-right="true">
 							<view>
-								<tn-radio :name="item.id">
+								<tn-radio :name="item.id" :disabled="item.isDead!=='0'">
+									<text v-if="item.isDead!=='0'">（猝死）</text>
 									<text>用户{{ index+1 }}：</text>
 									{{ `${item.userName}(${item.roleName})` }}
 								</tn-radio>

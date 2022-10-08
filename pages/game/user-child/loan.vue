@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { GetUserInfo, BankerLoan } from 'config/api.js'
+import { BankerLoan } from 'config/api.js'
 
 export default {
 	props: {

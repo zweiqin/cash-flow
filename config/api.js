@@ -159,6 +159,26 @@ export const DoCharity = (data) => uni.request({
 	}
 })
 
+// banker给当前轮的玩家做顺流层的慈善
+export const TODO1 = (data) => uni.request({
+	url: '/game_user/TODO1', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给当前轮的玩家做信托投资
+export const TODO = (data) => uni.request({
+	url: '/game_user/TODO', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
 // banker选择是否成功找到工作
 export const ConfirmJob = (data) => uni.request({
 	url: '/game_user/ConfirmJob', // 仅为示例，并非真实接口地址。
@@ -262,6 +282,16 @@ export const Litigate = (data) => uni.request({
 // user失业后，找工作
 export const LookForJob = (data) => uni.request({
 	url: '/game_user/LookForJob', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// 在每次GetUserInfo的时候，判断是否满足进入顺流层的条件，是则发送请求，告知后端
+export const RichCircle = (data) => uni.request({
+	url: '/game_user/RichCircle', // 仅为示例，并非真实接口地址。
 	method: 'POST',
 	data,
 	custom: {

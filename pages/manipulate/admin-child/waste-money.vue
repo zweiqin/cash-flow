@@ -67,6 +67,13 @@ export default {
 					icon: 'error'
 				})
 			}
+			if (getApp().globalData.appListId.find((item) => item.id === round[0]).isDead !== '0') {
+				uni.showToast({
+					title: '当前玩家已猝死！',
+					icon: 'error'
+				})
+				return this.cancel()
+			}
 			SendMoney({
 				game_id: Number(getApp().globalData.gameId),
 				game_user_id: Number(round[0]),

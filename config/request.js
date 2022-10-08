@@ -37,6 +37,7 @@ module.exports = (vm) => {
 			// console.log(args)
 			// request 触发前拼接 url 
 			args.url = 'http://192.168.0.74:19999/v1' + args.url
+			// args.url = 'http://192.168.0.13:19999/v1' + args.url
 			try {
 				args.data = args.data || {}
 				if (args?.custom?.auth) {

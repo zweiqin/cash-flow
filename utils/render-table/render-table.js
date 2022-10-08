@@ -39,10 +39,14 @@ function setRecord(data, refFragment, vm) {
 	const asset1 = data.assets.filter((item) => item.class === 4).map((item) => ({ id: item.id, card_name: item.card_name, card_id: item.card_id }))
 	const asset2 = data.assets.filter((item) => item.class === 2).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
 	const asset3 = data.assets.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, num: item.num, value: item.value }))
+	const asset4_temp = data.income.filter((item) => item.class === 11)
+	const asset4 = data.assets.filter((item) => item.class === 11).map((item) => ({ id: item.id, card_name: item.card_name, num: asset4_temp.find((part) => part.card_id === item.card_id).value, value: item.value }))
 	vm.$refs[`RefTable${refFragment}`].$children[0].$children[1].$children[0].$children[0].setAssets({
 		asset1,
 		asset2,
-		asset3
+		asset3,
+		asset4,
+		trust_price: data.basic_info.trust_price
 	})
 	const debt1 = data.debts.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
 	const debt2 = data.debts.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))

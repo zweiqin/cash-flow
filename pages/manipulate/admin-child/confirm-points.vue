@@ -69,14 +69,20 @@ export default {
 		},
 		confirm(num) {
 			const round = getApp().globalData.round
-			if (this.api !== 'NextUser') {
-				if (round[0] === '0') {
-					return uni.showToast({
-						title: '获取玩家信息失败！',
-						icon: 'error'
-					})
-				}
+			if (round[0] === '0') {
+				return uni.showToast({
+					title: '获取玩家信息失败！',
+					icon: 'error'
+				})
 			}
+			if (getApp().globalData.appListId.find((item) => item.id === round[0]).isDead !== '0') {
+				uni.showToast({
+					title: '当前玩家已猝死！',
+					icon: 'error'
+				})
+				return this.cancel()
+			}
+
 			com[this.api]({
 				game_id: Number(getApp().globalData.gameId),
 				game_user_id: Number(round[0]),

@@ -147,6 +147,12 @@
 				<view v-else-if="popup_significance === 'charitable'">
 					<DuplicateCom sign="charitable" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
 				</view>
+				<view v-else-if="popup_significance === 'charity'">
+					<DuplicateCom sign="charity" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
+				</view>
+				<view v-else-if="popup_significance === 'trustPrice'">
+					<TrustPrice :personal="turn_info" @cancel="clickBtn" @submit="clickBtn"></TrustPrice>
+				</view>
 			</tn-modal>
 
 			<!-- 被动收到的模态框 -->
@@ -169,10 +175,10 @@
 				@click="clickPaBtn"
 			>
 				<view v-if="popup_significance_pa === 'drawCard'">
-					<DrawCard classification="drawCard" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+					<DrawCard ref="RefDrawCard" classification="drawCard" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
 				</view>
 				<view v-else-if="popup_significance_pa === 'receiveAuction'">
-					<DrawCard classification="receiveAuction" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+					<DrawCard ref="RefDrawCard" classification="receiveAuction" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
 				</view>
 				<view v-else-if="popup_significance_pa === 'lookForJob'">
 					<ConfirmPoints classification="lookForJob" @submit="clickPaBtn"></ConfirmPoints>
@@ -208,19 +214,20 @@ import DebitCard from './admin-child/debit-card.vue' // 二合一
 // import Anniversary from './admin-child/anniversary.vue'
 // import GivesBirth from './admin-child/gives-birth.vue'
 // import Heartbreak from './admin-child/heartbreak.vue'
+import TrustPrice from './admin-child/trust-price.vue'
 
 // 封装的模态框的自定义内容的组件(被动)
 import DrawCard from '@/components/draw-card/draw-card.vue'
 import ConfirmPoints from './admin-child/confirm-points.vue'
 
 // 接口
-import { GetUserInfo } from 'config/api.js'
+import { GetUserInfo, NextUser } from 'config/api.js'
 
 // 公共的方法
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, DuplicateCom, WasteMoney, DeductMoney, DebitCard, DrawCard, ConfirmPoints },
+	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, DuplicateCom, WasteMoney, DeductMoney, DebitCard, TrustPrice, DrawCard, ConfirmPoints },
 	data() {
 		return {
 			game_key: getApp().globalData.gameKey.substring(6),
@@ -270,8 +277,11 @@ export default {
 					name: '顺流层破产',
 					meaning: 'bankruptcy'
 				}, {
-					name: '用户做平流慈善',
+					name: '玩家做平流慈善',
 					meaning: 'charitable'
+				}, {
+					name: '玩家做信托',
+					meaning: 'trustPrice'
 				}
 			],
 
@@ -476,6 +486,18 @@ export default {
 				this.mask_closeable = false
 				this.custom = true
 				this.is_show_model = true
+			} else if (significance === 'charity') {
+				this.popup_significance = 'charity'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'trustPrice') {
+				this.popup_significance = 'trustPrice'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
 			}
 		},
 		// 被动收到的模态框
@@ -546,6 +568,7 @@ export default {
 		},
 		syncAvatarStyle() {
 			this.$refs.RefHeadNav.syncAvatarStyle()
+			this.$refs.RefDrawCard && this.$refs.RefDrawCard.syncAvatarStyle()
 			const temp_id = getApp().globalData.round[0]
 			const temp_obj = getApp().globalData.appListId.find((item) => item.id === temp_id)
 			if (temp_obj) {
@@ -583,6 +606,21 @@ export default {
 				this.handleManage('lookForJob')
 			} else if (meaning === 'litigate') {
 				this.handleManage('litigate')
+			} else if (meaning === 'NextUser') {
+				return NextUser({
+					game_id: Number(getApp().globalData.gameId),
+					game_user_id: Number(getApp().globalData.round[0])
+				})
+					.then((res) => {
+						if (res[1].data.status === 200) {
+						} else {
+						}
+					})
+					.catch((err) => {
+						console.log(err)
+					})
+			} else if (meaning === 'deadUser') {
+				this.clickBtn()
 			}
 			if (getApp().globalData.round[0] !== '0') {
 				GetUserInfo({ game_user_id: getApp().globalData.round[0], game_id: getApp().globalData.gameId })

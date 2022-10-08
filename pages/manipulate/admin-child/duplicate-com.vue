@@ -89,6 +89,10 @@ export default {
 			this.leftIcon = this.rightIcon = 'praise'
 			this.api = 'DoCharity'
 			if (flag)	this.title = `确定让 ${temp_obj.userName} 做平流层的慈善吗？`
+		} else if (this.sign === 'charity') {
+			this.leftIcon = this.rightIcon = 'praise-fill'
+			this.api = 'TODO'
+			if (flag)	this.title = `确定让 ${temp_obj.userName} 做顺流层的慈善吗？`
 		}
 	},
 
@@ -107,6 +111,18 @@ export default {
 						icon: 'error'
 					})
 				}
+				if (getApp().globalData.appListId.find((item) => item.id === round[0]).isDead !== '0') {
+					uni.showToast({
+						title: '当前玩家已猝死！',
+						icon: 'error'
+					})
+					return this.cancel()
+				}
+			} else {
+				uni.showLoading({
+					title: '请稍等...',
+					mask: true
+				})
 			}
 			com[this.api]({
 				game_id: Number(getApp().globalData.gameId),

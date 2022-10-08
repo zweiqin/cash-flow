@@ -36,6 +36,28 @@
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.value) }}</view>
 				</view>
 			</view>
+			<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
+				<view class="tn-flex pad-top">
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">项目代码</view>
+					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm">投资金额</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">被动收入</view>
+				</view>
+				<view v-for="item in asset4" :key="item.id" class="tn-flex pad-top">
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black">{{ item.card_name }}</view>
+					<view class="tn-flex-4 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.value) }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(item.num) }}</view>
+				</view>
+			</view>
+			<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
+				<view class="tn-flex pad-top">
+					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black">信托投资</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">信托被动收入</view>
+				</view>
+				<view v-for="item in asset1" :key="item.id" class="tn-flex pad-top">
+					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black tn-flex tn-flex-col-center tn-flex-row-center">{{ trust_price }}</view>
+					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-center tn-flex-row-center">{{ cutApart(trust_price * 0.01) }}</view>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -62,17 +84,25 @@ export default {
 				num: 0,
 				value: 0
 			} ],
+			asset4: [ {
+				id: 1,
+				card_name: '无',
+				num: 0,
+				value: 0
+			} ],
+			trust_price: 0,
 			cardList: getApp().globalData.cardList
 		}
 	},
-	mounted() {
-	},
+	mounted() {},
 	methods: {
 		cutApart,
 		setAssets(obj) {
 			obj.asset1.length && (this.asset1 = obj.asset1)
 			obj.asset2.length && (this.asset2 = obj.asset2)
 			obj.asset3.length && (this.asset3 = obj.asset3)
+			obj.asset4.length && (this.asset4 = obj.asset4)
+			this.trust_price = obj.trust_price
 			this.cardList = getApp().globalData.cardList
 		},
 		getEquity(id) {

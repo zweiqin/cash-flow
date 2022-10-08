@@ -113,10 +113,10 @@
 				@click="clickPaBtn"
 			>
 				<view v-if="popup_significance_pa === 'drawCard'">
-					<DrawCard :personal="my_info" classification="drawCard" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+					<DrawCard ref="RefDrawCard" :personal="my_info" classification="drawCard" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
 				</view>
 				<view v-else-if="popup_significance_pa === 'receiveAuction'">
-					<DrawCard :personal="my_info" classification="receiveAuction" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+					<DrawCard ref="RefDrawCard" :personal="my_info" classification="receiveAuction" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
 				</view>
 			</tn-modal>
 		</view>
@@ -149,7 +149,7 @@ import JobRelated from './user-child/job-related.vue'
 import DrawCard from '@/components/draw-card/draw-card.vue'
 
 // 接口
-import { GetUserInfo } from 'config/api.js'
+import { GetUserInfo, RichCircle } from 'config/api.js'
 
 // 公共的方法
 import setRecord from 'utils/render-table/render-table.js'
@@ -372,6 +372,7 @@ export default {
 		},
 		syncAvatarStyle() {
 			this.$refs.RefHeadNav.syncAvatarStyle()
+			this.$refs.RefDrawCard && this.$refs.RefDrawCard.syncAvatarStyle()
 			const temp_id = getApp().globalData.round[0]
 			const temp_obj = getApp().globalData.appListId.find((item) => item.id === temp_id)
 			if (temp_obj) {
@@ -418,7 +419,20 @@ export default {
 					setRecord(data, 'Main', this)
 					this.my_info = data
 					this.show_popup && this.showPopup(this.popup_name, this.popup_id)
-					if (meaning === 'drawCard') {
+					if (!data.basic_info.is_rich_circle && (data.basic_info.passive_in > data.basic_info.basics_out)) {
+						RichCircle({
+							game_id: Number(getApp().globalData.gameId),
+							game_user_id: Number(getApp().globalData.gameUserId)
+						})
+							.then((res) => {
+								if (res[1].data.status === 200) {
+								} else {
+								}
+							})
+							.catch((err) => {
+								console.log(err)
+							})
+					} else if (meaning === 'drawCard') {
 						this.handleManage('drawCard')
 					} else if (meaning === 'receiveAuction') {
 						this.handleManage('receiveAuction')

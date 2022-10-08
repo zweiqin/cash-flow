@@ -150,7 +150,7 @@ export default {
     position: fixed;
     left: 50%;
     // top: 48%;
-    top: 33%;
+    top: 36%;
     transform: translate(-50%, -50%);
     transition: 0.3 ease-in-out;
     transition-property: opacity, visibility;
@@ -169,8 +169,8 @@ export default {
       }
 
       &.tn-toast--unicon {
-        // padding: 20rpx 20rpx 20rpx 20rpx !important;
-        padding: 40rpx 40rpx 40rpx 40rpx !important;
+        padding: 20rpx 20rpx 20rpx 20rpx !important;
+        // padding: 40rpx 40rpx 40rpx 40rpx !important;
       }
     }
 
@@ -191,7 +191,8 @@ export default {
 
     &__icon {
       color: #FFFFFF;
-      font-size: 64rpx;
+      // font-size: 64rpx;
+      font-size: 96rpx;
     }
 
     &__content {
