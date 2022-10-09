@@ -142,6 +142,12 @@ export default {
 					icon: 'error'
 				})
 			}
+			if (this.personal.basic_info.is_rich_circle) {
+				return uni.showToast({
+					title: '您已进入顺流层，无法送钱！',
+					icon: 'error'
+				})
+			}
 			GivingMoney({
 				game_id: Number(getApp().globalData.gameId),
 				game_user_id: Number(getApp().globalData.gameUserId),

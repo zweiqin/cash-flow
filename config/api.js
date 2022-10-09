@@ -18,6 +18,16 @@ export const GetCardCategoryList = (data) => uni.request({
 	}
 })
 
+// 获取（梦想表）所有梦想的列表信息
+export const GetDreamList = (data) => uni.request({
+	url: '/dream/GetDreamList', // 仅为示例，并非真实接口地址。
+	method: 'GET',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
 // 获取具体某人的游戏资料信息
 export const GetUserInfo = (data) => uni.request({
 	url: '/game_user/GetUserInfo', // 仅为示例，并非真实接口地址。
@@ -139,7 +149,7 @@ export const Unemployment = (data) => uni.request({
 	}
 })
 
-// banker给当前轮的玩家进行破产
+// banker给当前轮的玩家进行平流层的结算破产
 export const Bankrupt = (data) => uni.request({
 	url: '/game_user/Bankrupt', // 仅为示例，并非真实接口地址。
 	method: 'POST',
@@ -160,8 +170,8 @@ export const DoCharity = (data) => uni.request({
 })
 
 // banker给当前轮的玩家做顺流层的慈善
-export const TODO1 = (data) => uni.request({
-	url: '/game_user/TODO1', // 仅为示例，并非真实接口地址。
+export const RichCircleCharity = (data) => uni.request({
+	url: '/game_user/RichCircleCharity', // 仅为示例，并非真实接口地址。
 	method: 'POST',
 	data,
 	custom: {
@@ -170,8 +180,38 @@ export const TODO1 = (data) => uni.request({
 })
 
 // banker给当前轮的玩家做信托投资
-export const TODO = (data) => uni.request({
-	url: '/game_user/TODO', // 仅为示例，并非真实接口地址。
+export const BuyTrustPrice = (data) => uni.request({
+	url: '/game_user/BuyTrustPrice', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给当前轮的玩家做风险投资
+export const BuyVentureCapital = (data) => uni.request({
+	url: '/game_user/BuyVentureCapital', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给当前轮的玩家做风险投资回报
+export const ConfirmVentureCapital = (data) => uni.request({
+	url: '/game_user/ConfirmVentureCapital', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// banker给当前轮的玩家买下梦想
+export const BuyDream = (data) => uni.request({
+	url: '/game_user/BuyDream', // 仅为示例，并非真实接口地址。
 	method: 'POST',
 	data,
 	custom: {
@@ -292,6 +332,16 @@ export const LookForJob = (data) => uni.request({
 // 在每次GetUserInfo的时候，判断是否满足进入顺流层的条件，是则发送请求，告知后端
 export const RichCircle = (data) => uni.request({
 	url: '/game_user/RichCircle', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// 在每次GetUserInfo的时候，判断是否满足现金减银行贷款之后大于1亿，是则发送请求，告知后端
+export const ConfirmBillionaire = (data) => uni.request({
+	url: '/game_user/ConfirmBillionaire', // 仅为示例，并非真实接口地址。
 	method: 'POST',
 	data,
 	custom: {

@@ -46,7 +46,8 @@ function setRecord(data, refFragment, vm) {
 		asset2,
 		asset3,
 		asset4,
-		trust_price: data.basic_info.trust_price
+		trust_price: data.basic_info.trust_price,
+		venture_capital: data.basic_info.venture_capital
 	})
 	const debt1 = data.debts.filter((item) => item.class === 1).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))
 	const debt2 = data.debts.filter((item) => item.class === 3).map((item) => ({ id: item.id, card_name: item.card_name, value: item.value }))

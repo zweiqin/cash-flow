@@ -206,7 +206,7 @@
 									</tn-radio-group>
 								</tn-list-view>
 							</view>
-							<view v-if="product_list.length!==0">
+							<view v-if="!currentCard.card_name.startsWith('房产行情') && product_list.length!==0">
 								<tn-input v-model="sell_number" type="number" placeholder="在此输入卖出数量" :focus="true" :border="true" />
 							</view>
 							<view>
@@ -456,6 +456,8 @@ export default {
 	},
 
 	created() {
+		// console.log(this.currentCard)
+		// console.log(this.cardMsg[0], getApp().globalData.gameUserId, this.is_drew)
 		this.is_drew = this.cardMsg[0] === getApp().globalData.gameUserId
 		if (this.currentCard.card_name.startsWith('C01') || this.currentCard.card_name.startsWith('C02') || this.currentCard.card_name.startsWith('C03') || this.currentCard.card_name.startsWith('C06')) {
 			this.quantity = 0
@@ -594,19 +596,35 @@ export default {
 					if (this.product_list === null) {
 						temp_buy_number = temp_sell_number = temp_sell_id = temp_category_id = temp_receiver_id = ''
 					} else {
-						if (Number(this.sell_number) <= 0 || !Number.isInteger(Number(this.sell_number))) {
-							return uni.showToast({
-								title: '请检查输入是否正确！',
-								icon: 'error'
-							})
+						// if (Number(this.sell_number) <= 0 || !Number.isInteger(Number(this.sell_number))) {
+						// 	return uni.showToast({
+						// 		title: '请检查输入是否正确！',
+						// 		icon: 'error'
+						// 	})
+						// }
+						// if (!this.currentCard.card_name.startsWith('房产行情') && Number(this.sell_number) % 100 !== 0) {
+						// 	return uni.showToast({
+						// 		title: '请卖出100的整数倍！',
+						// 		icon: 'error'
+						// 	})
+						// }
+						// 因为卖房产时，定为不需要传数量，故作修改
+						if (!this.currentCard.card_name.startsWith('房产行情')) {
+							if (Number(this.sell_number) <= 0 || !Number.isInteger(Number(this.sell_number))) {
+								return uni.showToast({
+									title: '请检查输入是否正确！',
+									icon: 'error'
+								})
+							} else if (Number(this.sell_number) % 100 !== 0) {
+								return uni.showToast({
+									title: '请卖出100的整数倍！',
+									icon: 'error'
+								})
+							}
+							temp_sell_number = Number(this.sell_number)
+						} else {
+							temp_sell_number = ''
 						}
-						if (!this.currentCard.card_name.startsWith('房产行情') && Number(this.sell_number) % 100 !== 0) {
-							return uni.showToast({
-								title: '请卖出100的整数倍！',
-								icon: 'error'
-							})
-						}
-						temp_sell_number = Number(this.sell_number)
 						temp_sell_id = this.sell_id
 						temp_buy_number = ''
 					}

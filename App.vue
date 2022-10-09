@@ -1,6 +1,6 @@
 <script>
 // 接口
-import { GetCardList, GetCardCategoryList } from 'config/api.js'
+import { GetCardList, GetCardCategoryList, GetDreamList } from 'config/api.js'
 
 export default {
 	globalData: {
@@ -63,6 +63,14 @@ export default {
 			//     "price": 200,
 			//     "create_time": "2022-09-04 18:50:50"
 			// },
+		],
+		dreamList: [
+			// {
+			// 	id: 0,
+			// 	dream_cost: 0,
+			// 	dream_energy: 0,
+			// 	dream_name: 'xxx'
+			// }
 		],
 		wsHandle: '',
 		// 用户加入游戏，管理员创建游戏和重新加入游戏。这三种情况的action
@@ -401,6 +409,7 @@ export default {
 
 			if (data.event === 'bankrupt') {
 				// banker_action: false,data: "玩家牛破产,下一轮重新开始沙盘推演",event: "bankrupt",game_id: "244",game_user_id: "433",is_all: true
+				// banker_action: false,data: "玩家你你你破产,下一轮重新开始沙盘推演",event: "bankrupt",game_id: "42",game_user_id: "56",is_all: true
 				if (_this.gameUserId === data.game_user_id) {
 					_this.game && _this.game.globalNotice('坏消息', data.data.replace(new RegExp('^.{' + (2 + _this.userName.length) + '}'), '您'), 'empty-permission')
 				} else {
@@ -413,6 +422,7 @@ export default {
 
 			if (data.event === 'doCharity') {
 				// banker_action: false,data: "玩家牛做慈善，捐赠1500元",event: "doCharity",game_id: "164",game_user_id: "289",is_all: true
+				// banker_action: false,data: "玩家你你你做慈善！",event: "doCharity",game_id: "42",game_user_id: "56",is_all: true
 				if (_this.gameUserId === data.game_user_id) {
 					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(new RegExp('^.{' + (2 + _this.userName.length) + '}'), '您'), 'praise')
 				} else {
@@ -555,8 +565,32 @@ export default {
 				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
-			if (data.event === 'TODO信托') {
-				// TODO
+			if (data.event === 'buyVentureCapital') {
+				// banker_action: false,data: "玩家扭扭捏捏购买风投",event: "buyVentureCapital",game_id: "43",game_user_id: "57",is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(new RegExp('^.{' + (2 + _this.userName.length) + '}'), '您'), 'statistics')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
+				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
+			if (data.event === 'getVentureCapital') {
+				// banker_action: false,data: "玩家你你你获得风投回报3000000",event: "getVentureCapital",game_id: "44",game_user_id: "58",is_all: true
+				if (_this.gameUserId === data.game_user_id) {
+					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(new RegExp('^.{' + (2 + _this.userName.length) + '}'), '您'), 'statistics')
+				} else {
+					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+				}
+				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
+			if (data.event === 'trustPrice') {
+				// banker_action: false，data: "玩家扭扭捏捏购买资产信托"，event: "trustPrice"，game_id: "46"，game_user_id: "60"，is_all: true
 				if (_this.gameUserId === data.game_user_id) {
 					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(new RegExp('^.{' + (2 + _this.userName.length) + '}'), '您'), 'trust')
 				} else {
@@ -567,16 +601,16 @@ export default {
 				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
-			if (data.event === 'TODO顺流层慈善') {
-				// TODO
+			if (data.event === 'victory') {
+				// banker_action: false，data: "玩家你你你胜利！"，event: "victory"，game_id: "44"，game_user_id: "58"，is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('消息提醒', data.data.replace(new RegExp('^.{' + (2 + _this.userName.length) + '}'), '您'), 'praise')
+					_this.game && _this.game.globalNotice('祝贺您', data.data.replace(new RegExp('^.{' + (2 + _this.userName.length) + '}'), '您'), 'praise-fill')
 				} else {
-					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
-					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
+					_this.game && _this.game.globalNotice('游戏结束', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('游戏结束', data.data, 'creative')
 				}
-				_this.game && _this.game.syncInfo()
-				_this.manipulate && _this.manipulate.syncInfo()
+				_this.game && _this.game.syncInfo('victory')
+				_this.manipulate && _this.manipulate.syncInfo('victory')
 			}
 		},
 
@@ -664,6 +698,20 @@ export default {
 				if (res[1].data.status === 200) {
 					// console.log(res[1].data.data)
 					this.globalData.cardCategoryList = res[1].data.data
+				} else {
+					this.globalData.users && this.globalData.users.globalNotice('提示', '获取游戏资源失败，请重试！', 'warning-fill')
+					this.globalData.admin && this.globalData.admin.globalNotice('提示', '获取游戏资源失败，请重试！', 'warning-fill')
+				}
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+
+		GetDreamList({})
+			.then((res) => {
+				if (res[1].data.status === 200) {
+					// console.log(res[1].data)
+					this.globalData.dreamList = res[1].data.data.items
 				} else {
 					this.globalData.users && this.globalData.users.globalNotice('提示', '获取游戏资源失败，请重试！', 'warning-fill')
 					this.globalData.admin && this.globalData.admin.globalNotice('提示', '获取游戏资源失败，请重试！', 'warning-fill')

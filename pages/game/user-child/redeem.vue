@@ -101,6 +101,12 @@ export default {
 					icon: 'error'
 				})
 			}
+			if (this.personal.basic_info.is_rich_circle) {
+				return uni.showToast({
+					title: '您已进入顺流层，无法赎回！',
+					icon: 'error'
+				})
+			}
 			// if (Number(this.money) <= 0 || !Number.isInteger(Number(this.money))) {
 			// 	return uni.showToast({
 			// 		title: '请输入正确的份额！',

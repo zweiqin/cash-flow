@@ -8,7 +8,7 @@
 			<view class="pad-top tn-text-bold tn-color-brown" style="font-size: 1.6vh;">{{ item.roleName }}</view>
 			<view v-if="item.isDead === '1'" style="position: absolute;bottom: 0;left: 50%;transform: translateX(-50%);width: auto;height: 3.4vh;">
 				<tn-badge background-color="#f92c37" font-color="#FFFFFF" :font-size="1.5" font-unit="vh" :absolute="false" :translate-center="false">
-					<view class="" style="max-width: 6vh;white-space: nowrap;" v-html="'下局<br />再战！'"></view>
+					<view class="" style="max-width: 6vh;white-space: nowrap;" v-html="'下局<br />再战'"></view>
 				</tn-badge>
 			</view>
 		</view>

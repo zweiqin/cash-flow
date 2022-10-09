@@ -10,42 +10,16 @@
 						<!-- <tn-count-to :start-val="90" :end-val="0" :duration="90000" :use-easing="false"></tn-count-to> -->
 						<view class="" style="max-width: 12vh;"> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" @change="changeCountTo"></CountTo> </view>
 					</view>
-					<view class="tn-flex-9">
-						<HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar>
-					</view>
+					<view class="tn-flex-9"> <HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar> </view>
 					<view class="tn-flex-1 tn-bg-orangeyellow tn-flex tn-flex-direction-column tn-flex-row-center" style="align-items: center;"><text>{{ game_key }}</text></view>
 				</view>
 				<!-- 顶层结束 -->
 				<!-- 中间层开始 -->
 				<view class="tn-padding-xs tn-margin-xs tn-radius bg-flex-shadow middle">
-					<view class="tn-flex layer-2">
-						<view class="tn-flex-1 innermost-3">
+					<view class="layer-2">
+						<view class="innermost-3">
 							<!-- 右s -->
-							<!-- 弹出被动收到的模态框时，动态改变align-content，关闭房间按钮的height，其它按钮的width -->
-							<view class="tn-flex tn-flex-direction-column tn-flex-wrap tn-padding-xs tn-radius bg-flex-shadow middle-r1" :style="{alignContent: align_content_btn}">
-								<!-- 按钮s -->
-								<view :style="{height: close_btn_height}">
-									<tn-button
-										:shadow="true"
-										width="15vw"
-										height="auto"
-										background-color="tn-cool-bg-color-16"
-										:font-size="40"
-										:font-bold="true"
-										padding="2vw 10rpx"
-										margin="10rpx 0"
-										@click="handleProcessing('关闭房间')"
-									>
-										<text>关闭房间</text>
-									</tn-button>
-								</view>
-								<view v-for="(item, index) in button_right" :key="index" class="tn-shadow-blur" style="z-index: 4;">
-									<tn-button :shadow="true" :width="rest_btn_width" height="auto" background-color="tn-cool-bg-color-2" :font-size="28" padding="2vw 10rpx" margin="10rpx 0" @click="handleProcessing(item.meaning)">
-										<text>{{ item.name }}</text>
-									</tn-button>
-								</view>
-								<!-- 按钮e -->
-							</view>
+							<AdminButton :is-show-model-pa="is_show_model_pa" @clickBtn="handleProcessing"></AdminButton>
 							<!-- 右e -->
 						</view>
 					</view>
@@ -105,54 +79,24 @@
 				:z-index="6"
 				@click="clickBtn"
 			>
-				<view v-if="popup_significance === 'next'">
-					<DuplicateCom sign="next" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
-				</view>
-				<view v-else-if="popup_significance === 'wasteMoney'">
-					<WasteMoney @cancel="clickBtn" @submit="clickBtn"></WasteMoney>
-				</view>
-				<view v-else-if="popup_significance === 'payOff'">
-					<DuplicateCom sign="payOff" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
-				</view>
-				<view v-else-if="popup_significance === 'deductMoney'">
-					<DeductMoney @cancel="clickBtn" @submit="clickBtn"></DeductMoney>
-				</view>
-				<view v-else-if="popup_significance === 'debitCard'">
-					<DebitCard text="扣费抽卡" :is-free="0" @cancel="clickBtn" @submit="clickBtn"></DebitCard>
-				</view>
-				<view v-else-if="popup_significance === 'drawCard'">
-					<DebitCard text="免费抽卡" :is-free="1" icon="add" @cancel="clickBtn" @submit="clickBtn"></DebitCard>
-				</view>
-				<view v-else-if="popup_significance === 'freeEnergy'">
-					<DuplicateCom sign="freeEnergy" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
-				</view>
-				<view v-else-if="popup_significance === 'anniversary'">
-					<DuplicateCom sign="anniversary" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
-				</view>
-				<view v-else-if="popup_significance === 'givesBirth'">
-					<DuplicateCom sign="givesBirth" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
-				</view>
-				<view v-else-if="popup_significance === 'heartbreak'">
-					<DuplicateCom sign="heartbreak" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
-				</view>
-				<view v-else-if="popup_significance === 'unemployment'">
-					<DuplicateCom sign="unemployment" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
-				</view>
-				<view v-else-if="popup_significance === 'fall'">
-					<DuplicateCom sign="fall" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
-				</view>
-				<view v-else-if="popup_significance === 'bankruptcy'">
-					<DuplicateCom sign="bankruptcy" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
-				</view>
-				<view v-else-if="popup_significance === 'charitable'">
-					<DuplicateCom sign="charitable" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
-				</view>
-				<view v-else-if="popup_significance === 'charity'">
-					<DuplicateCom sign="charity" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom>
-				</view>
-				<view v-else-if="popup_significance === 'trustPrice'">
-					<TrustPrice :personal="turn_info" @cancel="clickBtn" @submit="clickBtn"></TrustPrice>
-				</view>
+				<view v-if="popup_significance === 'next'"> <DuplicateCom sign="next" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
+				<view v-else-if="popup_significance === 'wasteMoney'"> <WasteMoney @cancel="clickBtn" @submit="clickBtn"></WasteMoney> </view>
+				<view v-else-if="popup_significance === 'payOff'"> <DuplicateCom sign="payOff" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
+				<view v-else-if="popup_significance === 'deductMoney'"> <DeductMoney @cancel="clickBtn" @submit="clickBtn"></DeductMoney> </view>
+				<view v-else-if="popup_significance === 'debitCard'"> <DebitCard text="扣费抽卡" :is-free="0" @cancel="clickBtn" @submit="clickBtn"></DebitCard> </view>
+				<view v-else-if="popup_significance === 'drawCard'"> <DebitCard text="免费抽卡" :is-free="1" icon="add" @cancel="clickBtn" @submit="clickBtn"></DebitCard> </view>
+				<view v-else-if="popup_significance === 'freeEnergy'"> <DuplicateCom sign="freeEnergy" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
+				<view v-else-if="popup_significance === 'anniversary'"> <DuplicateCom sign="anniversary" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
+				<view v-else-if="popup_significance === 'givesBirth'"> <DuplicateCom sign="givesBirth" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
+				<view v-else-if="popup_significance === 'heartbreak'"> <DuplicateCom sign="heartbreak" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
+				<view v-else-if="popup_significance === 'unemployment'"> <DuplicateCom sign="unemployment" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
+				<view v-else-if="popup_significance === 'fall'"> <DuplicateCom sign="fall" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
+				<view v-else-if="popup_significance === 'charitable'"> <DuplicateCom sign="charitable" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
+				<view v-else-if="popup_significance === 'charity'"> <DuplicateCom sign="charity" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
+				<view v-else-if="popup_significance === 'trustPrice'"> <TrustPrice :personal="turn_info" @cancel="clickBtn" @submit="clickBtn"></TrustPrice> </view>
+				<view v-else-if="popup_significance === 'riskInvestment'"> <RiskInvestment @cancel="clickBtn" @submit="clickBtn"></RiskInvestment> </view>
+				<view v-else-if="popup_significance === 'riskReturn'"> <RiskReturn @cancel="clickBtn" @submit="clickBtn"></RiskReturn> </view>
+				<view v-else-if="popup_significance === 'dreamer'"> <Dreamer @cancel="clickBtn" @submit="clickBtn"></Dreamer> </view>
 			</tn-modal>
 
 			<!-- 被动收到的模态框 -->
@@ -174,20 +118,13 @@
 				:z-index="2"
 				@click="clickPaBtn"
 			>
-				<view v-if="popup_significance_pa === 'drawCard'">
-					<DrawCard ref="RefDrawCard" classification="drawCard" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
-				</view>
+				<view v-if="popup_significance_pa === 'drawCard'"> <DrawCard ref="RefDrawCard" classification="drawCard" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard> </view>
 				<view v-else-if="popup_significance_pa === 'receiveAuction'">
 					<DrawCard ref="RefDrawCard" classification="receiveAuction" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
 				</view>
-				<view v-else-if="popup_significance_pa === 'lookForJob'">
-					<ConfirmPoints classification="lookForJob" @submit="clickPaBtn"></ConfirmPoints>
-				</view>
-				<view v-else-if="popup_significance_pa === 'litigate'">
-					<ConfirmPoints classification="litigate" @submit="clickPaBtn"></ConfirmPoints>
-				</view>
+				<view v-else-if="popup_significance_pa === 'lookForJob'"> <ConfirmPoints classification="lookForJob" @submit="clickPaBtn"></ConfirmPoints> </view>
+				<view v-else-if="popup_significance_pa === 'litigate'"> <ConfirmPoints classification="litigate" @submit="clickPaBtn"></ConfirmPoints> </view>
 			</tn-modal>
-
 		</view>
 	</view>
 </template>
@@ -201,6 +138,7 @@ import HeadNavigationBar from '@/components/head-navigation-bar/head-navigation-
 // import UpperMiddle from '../game/user-child/upper-middle.vue'
 // import LowerMiddle from '../game/user-child/lower-middle.vue'
 import TableDataes from '@/components/table/table-dataes.vue'
+import AdminButton from './admin-child/admin-button.vue'
 import Bottom from '@/components/table/bottom.vue'
 
 // 封装的模态框的自定义内容的组件(主动)
@@ -215,6 +153,9 @@ import DebitCard from './admin-child/debit-card.vue' // 二合一
 // import GivesBirth from './admin-child/gives-birth.vue'
 // import Heartbreak from './admin-child/heartbreak.vue'
 import TrustPrice from './admin-child/trust-price.vue'
+import RiskInvestment from './admin-child/risk-investment.vue'
+import RiskReturn from './admin-child/risk-return.vue'
+import Dreamer from './admin-child/dreamer.vue'
 
 // 封装的模态框的自定义内容的组件(被动)
 import DrawCard from '@/components/draw-card/draw-card.vue'
@@ -227,63 +168,30 @@ import { GetUserInfo, NextUser } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, DuplicateCom, WasteMoney, DeductMoney, DebitCard, TrustPrice, DrawCard, ConfirmPoints },
+	components: {
+		Timer,
+		CountTo,
+		HeadNavigationBar,
+		TableDataes,
+		AdminButton,
+		Bottom,
+		DuplicateCom,
+		WasteMoney,
+		DeductMoney,
+		DebitCard,
+		TrustPrice,
+		RiskInvestment,
+		RiskReturn,
+		Dreamer,
+		DrawCard,
+		ConfirmPoints
+	},
 	data() {
 		return {
 			game_key: getApp().globalData.gameKey.substring(6),
 			// load_role: '',
 			count_text: '等待下一轮',
 			turn_info: '',
-
-			// 按钮列表
-			button_right: [
-				{
-					name: '下一位',
-					meaning: 'next'
-				}, {
-					name: '送钱',
-					meaning: 'wasteMoney'
-				}, {
-					name: '发工资',
-					meaning: 'payOff'
-				}, {
-					name: '扣钱（触犯规则）',
-					meaning: 'deductMoney'
-				}, {
-					name: '扣费抽卡',
-					meaning: 'debitCard'
-				}, {
-					name: '免费抽卡',
-					meaning: 'drawCard'
-				}, {
-					name: '玩家休息精力补充',
-					meaning: 'freeEnergy'
-				}, {
-					name: '玩家选择结婚纪念（日）/结算日的精力补充',
-					meaning: 'anniversary'
-				}, {
-					name: '玩家生孩子',
-					meaning: 'givesBirth'
-				}, {
-					name: '心碎（逆流层失恋/逆流层离婚/顺流层离婚）',
-					meaning: 'heartbreak'
-				}, {
-					name: '逆流层失业',
-					meaning: 'unemployment'
-				}, {
-					name: '破产',
-					meaning: 'fall'
-				}, {
-					name: '顺流层破产',
-					meaning: 'bankruptcy'
-				}, {
-					name: '玩家做平流慈善',
-					meaning: 'charitable'
-				}, {
-					name: '玩家做信托',
-					meaning: 'trustPrice'
-				}
-			],
 
 			// 主动点击的模态框
 			popup_significance: '',
@@ -327,30 +235,11 @@ export default {
 			mask_closeable_pa: true,
 			custom_pa: false,
 
-			// 弹出被动收到的模态框时，动态改变的样式
-			align_content_btn: 'space-around',
-			close_btn_height: '100%',
-			rest_btn_width: '30vw',
-
 			toast_significance: '',
 
 			popup_name: '',
 			popup_id: '',
 			show_popup: false
-		}
-	},
-
-	watch: {
-		is_show_model_pa(newVal, oldVal) {
-			if (newVal) {
-				this.align_content_btn = 'space-between'
-				this.close_btn_height = 'auto'
-				this.rest_btn_width = '15vw'
-			} else {
-				this.align_content_btn = 'space-around'
-				this.close_btn_height = '100%'
-				this.rest_btn_width = '30vw'
-			}
 		}
 	},
 
@@ -363,7 +252,7 @@ export default {
 			uni.redirectTo({ url: '/pages/login-admin/index' })
 		// } else {
 		// uni.redirectTo({ url: '/pages/index/index' })
-		// }
+		//
 		} else {
 		}
 	},
@@ -474,12 +363,6 @@ export default {
 				this.mask_closeable = false
 				this.custom = true
 				this.is_show_model = true
-			} else if (significance === 'bankruptcy') {
-				this.popup_significance = 'bankruptcy'
-				this.close_btn = false
-				this.mask_closeable = false
-				this.custom = true
-				this.is_show_model = true
 			} else if (significance === 'charitable') {
 				this.popup_significance = 'charitable'
 				this.close_btn = false
@@ -494,6 +377,24 @@ export default {
 				this.is_show_model = true
 			} else if (significance === 'trustPrice') {
 				this.popup_significance = 'trustPrice'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'riskInvestment') {
+				this.popup_significance = 'riskInvestment'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'riskReturn') {
+				this.popup_significance = 'riskReturn'
+				this.close_btn = false
+				this.mask_closeable = false
+				this.custom = true
+				this.is_show_model = true
+			} else if (significance === 'dreamer') {
+				this.popup_significance = 'dreamer'
 				this.close_btn = false
 				this.mask_closeable = false
 				this.custom = true
@@ -639,7 +540,6 @@ export default {
 					})
 			}
 		}
-
 	}
 }
 </script>
@@ -698,10 +598,25 @@ export default {
 					.innermost-3 {
 						// display: flex;
 						// flex-direction: column;
-						.middle-r1 {
-							// flex: 1;
-							height: 100%;
-							// align-content: flex-end;
+						height: 100%;
+						overflow-y: auto;
+						&::-webkit-scrollbar {
+							/*滚动条整体样式*/
+							display: block;
+							width: 10rpx !important; /*高宽分别对应横竖滚动条的尺寸*/
+							height: 0rpx !important;
+							// border: 10rpx solid red;
+							// background-color: #666666;
+						}
+						&::-webkit-scrollbar-track {
+							/*滚动条里面轨道*/
+							background: #ededed;
+							border-radius: 10rpx;
+						}
+						&::-webkit-scrollbar-thumb {
+							/*滚动条里面小方块*/
+							border-radius: 10rpx;
+							background-color: #666666;
 						}
 					}
 

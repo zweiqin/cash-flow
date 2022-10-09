@@ -85,8 +85,8 @@ export default {
 			this.debt_car_loan = obj.debt_car_loan
 			this.debt_credit_card = obj.debt_credit_card
 			this.debt_additional_liabilities = obj.debt_additional_liabilities
-			obj.debt1.length && (this.debt1 = obj.debt1)
-			obj.debt2.length && (this.debt2 = obj.debt2)
+			this.debt1 = obj.debt1.length ? obj.debt1 : [ { id: 1, card_name: '房产', value: 0 } ]
+			this.debt2 = obj.debt2.length ? obj.debt2 : [ { id: 1, card_name: '企业', value: 0 } ]
 			this.debt_bank_loan = obj.debt_bank_loan
 		}
 	}

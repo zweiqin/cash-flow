@@ -81,17 +81,13 @@ export default {
 			this.leftIcon = this.rightIcon = 'empty-permission'
 			this.api = 'Bankrupt'
 			if (flag)	this.title = `确定让 ${temp_obj.userName} 破产吗？`
-		} else if (this.sign === 'bankruptcy') {
-			this.leftIcon = this.rightIcon = '待做待做待做待做待做待做待做待做待做待做'
-			this.api = '待做待做待做待做待做待做待做待做待做待做'
-			if (flag)	this.title = `确定让 ${temp_obj.userName} 待做待做待做待做待做待做待做待做？`
 		} else if (this.sign === 'charitable') {
 			this.leftIcon = this.rightIcon = 'praise'
 			this.api = 'DoCharity'
 			if (flag)	this.title = `确定让 ${temp_obj.userName} 做平流层的慈善吗？`
 		} else if (this.sign === 'charity') {
 			this.leftIcon = this.rightIcon = 'praise-fill'
-			this.api = 'TODO'
+			this.api = 'RichCircleCharity'
 			if (flag)	this.title = `确定让 ${temp_obj.userName} 做顺流层的慈善吗？`
 		}
 	},

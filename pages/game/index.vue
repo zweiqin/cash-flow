@@ -24,7 +24,7 @@
 						<!-- 四个表格e -->
 						<view class="tn-flex-1 tn-padding-xs innermost-3">
 							<!-- 右s -->
-							<userButton ref="RefUserButton" @clickBtn="handleProcessing"></userButton>
+							<UserButton ref="RefUserButton" @clickBtn="handleProcessing"></UserButton>
 							<!-- 右e -->
 						</view>
 					</view>
@@ -132,7 +132,7 @@ import HeadNavigationBar from '@/components/head-navigation-bar/head-navigation-
 // import UpperMiddle from '@/components/table/upper-middle.vue'
 // import LowerMiddle from '@/components/table/lower-middle.vue'
 import TableDataes from '@/components/table/table-dataes.vue'
-import userButton from './user-child/user-button.vue'
+import UserButton from './user-child/user-button.vue'
 import Bottom from '@/components/table/bottom.vue'
 
 // 封装的模态框的自定义内容的组件(主动)
@@ -149,13 +149,13 @@ import JobRelated from './user-child/job-related.vue'
 import DrawCard from '@/components/draw-card/draw-card.vue'
 
 // 接口
-import { GetUserInfo, RichCircle } from 'config/api.js'
+import { GetUserInfo, RichCircle, ConfirmBillionaire } from 'config/api.js'
 
 // 公共的方法
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, userButton, DrawCard, Loan, Repayment, GiveMoney, JobRelated, Redeem, AbandonSideline },
+	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, UserButton, DrawCard, Loan, Repayment, GiveMoney, JobRelated, Redeem, AbandonSideline },
 	data() {
 		return {
 			game_key: getApp().globalData.gameKey.substring(6),
@@ -421,6 +421,19 @@ export default {
 					this.show_popup && this.showPopup(this.popup_name, this.popup_id)
 					if (!data.basic_info.is_rich_circle && (data.basic_info.passive_in > data.basic_info.basics_out)) {
 						RichCircle({
+							game_id: Number(getApp().globalData.gameId),
+							game_user_id: Number(getApp().globalData.gameUserId)
+						})
+							.then((res) => {
+								if (res[1].data.status === 200) {
+								} else {
+								}
+							})
+							.catch((err) => {
+								console.log(err)
+							})
+					} else if (meaning !== 'victory' && data.basic_info.is_rich_circle && (data.basic_info.cash_on_hand - data.basic_info.debt_bank_loan > 100000000)) {
+						ConfirmBillionaire({
 							game_id: Number(getApp().globalData.gameId),
 							game_user_id: Number(getApp().globalData.gameUserId)
 						})

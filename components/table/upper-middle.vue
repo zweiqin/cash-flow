@@ -58,6 +58,12 @@
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-center tn-flex-row-center">{{ cutApart(trust_price * 0.01) }}</view>
 				</view>
 			</view>
+			<view class="tn-border-solid-bottom tn-border-purplered tn-padding-bottom-sm">
+				<view class="tn-flex tn-border-solid-bottom tn-border-black pad-top">
+					<view class="tn-flex-2 tn-text-left">风投资金</view>
+					<view class="tn-flex-3 tn-text-right tn-flex tn-flex-col-bottom tn-flex-row-right">{{ cutApart(venture_capital) }}</view>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -91,6 +97,7 @@ export default {
 				value: 0
 			} ],
 			trust_price: 0,
+			venture_capital: 0,
 			cardList: getApp().globalData.cardList
 		}
 	},
@@ -98,11 +105,18 @@ export default {
 	methods: {
 		cutApart,
 		setAssets(obj) {
-			obj.asset1.length && (this.asset1 = obj.asset1)
-			obj.asset2.length && (this.asset2 = obj.asset2)
-			obj.asset3.length && (this.asset3 = obj.asset3)
-			obj.asset4.length && (this.asset4 = obj.asset4)
+			// 这种方法由1变成0的时候有漏洞，即不会重新赋值
+			// obj.asset1.length && (this.asset1 = obj.asset1)
+			// obj.asset2.length && (this.asset2 = obj.asset2)
+			// obj.asset3.length && (this.asset3 = obj.asset3)
+			// obj.asset4.length && (this.asset4 = obj.asset4)
+			// 改进方法，无论如何都要赋值
+			this.asset1 = obj.asset1.length ? obj.asset1 : [ { id: 1, card_name: '无', card_id: 0 } ]
+			this.asset2 = obj.asset2.length ? obj.asset2 : [ { id: 1, card_name: '无', num: 0, value: 0 } ]
+			this.asset3 = obj.asset3.length ? obj.asset3 : [ { id: 1, card_name: '无', num: 0, value: 0 } ]
+			this.asset4 = obj.asset4.length ? obj.asset4 : [ { id: 1, card_name: '无', num: 0, value: 0 } ]
 			this.trust_price = obj.trust_price
+			this.venture_capital = obj.venture_capital
 			this.cardList = getApp().globalData.cardList
 		},
 		getEquity(id) {

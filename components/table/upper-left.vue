@@ -147,16 +147,19 @@ export default {
 	methods: {
 		cutApart,
 		setIncome(obj) {
+			// console.log(obj)
 			this.in_salary = obj.in_salary
 			this.in_partner = obj.in_partner
-			obj.income1.length && (this.income1 = obj.income1)
-			obj.income2.length && (this.income2 = obj.income2)
-			obj.income3.length && (this.income3 = obj.income3)
-			obj.income4.length && (this.income4 = obj.income4)
-			// this.income1 = obj.income1.length ? obj.income1 : [ { id: 1, card_name: '无', value: 0 } ]
-			// this.income2 = obj.income2.length ? obj.income2 : [ { id: 1, card_name: '无', num: 0, value: 0 } ]
-			// this.income3 = obj.income3.length ? obj.income3 : [ { id: 1, card_name: '无', value: 0 } ]
-			// this.income4 = obj.income4.length ? obj.income4 : [ { id: 1, card_name: '无', num: 0, value: 0 } ]
+			// 这种方法由1变成0的时候有漏洞，即不会重新赋值
+			// obj.income1.length && (this.income1 = obj.income1)
+			// obj.income2.length && (this.income2 = obj.income2)
+			// obj.income3.length && (this.income3 = obj.income3)
+			// obj.income4.length && (this.income4 = obj.income4)
+			// 改进方法，无论如何都要赋值
+			this.income1 = obj.income1.length ? obj.income1 : [ { id: 1, card_name: '无', value: 0 } ]
+			this.income2 = obj.income2.length ? obj.income2 : [ { id: 1, card_name: '无', num: 0, value: 0 } ]
+			this.income3 = obj.income3.length ? obj.income3 : [ { id: 1, card_name: '无', value: 0 } ]
+			this.income4 = obj.income4.length ? obj.income4 : [ { id: 1, card_name: '无', num: 0, value: 0 } ]
 		}
 	}
 }
