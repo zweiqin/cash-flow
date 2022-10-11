@@ -36,7 +36,8 @@ module.exports = (vm) => {
 		invoke(args) {
 			// console.log(args)
 			// request 触发前拼接 url 
-			args.url = 'http://192.168.0.74:19999/v1' + args.url
+			args.url = 'http://106.55.157.177:19999/v1' + args.url
+			// args.url = 'http://192.168.0.74:19999/v1' + args.url
 			// args.url = 'http://192.168.0.13:19999/v1' + args.url
 			try {
 				args.data = args.data || {}
@@ -64,7 +65,7 @@ module.exports = (vm) => {
 			if (data.status !== 200) {
 				// 如果没有显式定义custom的toast参数为false的话，默认对报错进行toast弹出提示
 				uni.showToast({
-					title: `${data.msg}。${data.data}`,
+					title: data.data? data.data : `${data.msg}。${data.data}`,
 					icon: 'error'
 				})
 				// return Promise.resolve(data)

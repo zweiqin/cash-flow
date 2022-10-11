@@ -503,7 +503,12 @@ export default {
 			}
 		},
 		syncInfo(meaning) {
-			if (meaning === 'lookForJob') {
+			if (meaning === 'myTurn') {
+				// 下一回合时，管理员不能看到抽卡或转让卡的那个被动的模态框了
+				if (this.is_show_model_pa && (this.popup_significance_pa === 'drawCard' || this.popup_significance_pa === 'receiveAuction')) {
+					this.clickPaBtn()
+				}
+			} else if (meaning === 'lookForJob') {
 				this.handleManage('lookForJob')
 			} else if (meaning === 'litigate') {
 				this.handleManage('litigate')

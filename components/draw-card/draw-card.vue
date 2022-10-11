@@ -348,8 +348,12 @@
 				</view>
 
 			</view>
-			<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
+			<view v-else-if="role === 'user' && me.isDead==='1'" class="tn-flex tn-flex-row-around tn-padding-top">
 				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+			</view>
+			<!-- 管理员展示 -->
+			<view v-else>
+				<AdminOperation @cancel="cancel"></AdminOperation>
 			</view>
 
 		</view>
@@ -377,13 +381,14 @@
 // import Backset from '@/components/cards/backset.vue'
 // import Project from '@/components/cards/project.vue'
 import Cards from '@/components/cards/cards.vue'
+import AdminOperation from '@/components/admin-operation/admin-operation.vue'
 
 // 接口
 import { ConfirmCard, TransferCard } from 'config/api.js'
 
 export default {
 	// components: { SideHustle, Finance, RealEstate, Enterprise, Quotation, Perceive, BlindDate, Backset, Project },
-	components: { Cards },
+	components: { Cards, AdminOperation },
 	props: {
 		personal: {
 			type: Object,

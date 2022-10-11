@@ -34,6 +34,7 @@ export default {
 			// 	roleId: "8", // 关联角色表主键
 			// 	roleName: '护士'
 			//  isDead: '0'
+			//  isRichCircle: "0"
 			// },
 			// {
 			// 	id: "170",
@@ -41,6 +42,7 @@ export default {
 			// 	roleId: "7",
 			// 	roleName: '产品经理'
 			//  isDead: "0"
+			//  isRichCircle: "0"
 			// }
 		],
 		// 当前轮的game_user_id和对应索引index，数据格式[game_user_id, index]
@@ -90,7 +92,8 @@ export default {
 		// 用户加入游戏，管理员创建游戏和重新加入游戏。这三种情况
 		init(actionMsg = null) {
 			// console.log(this.ws)
-			this.wsHandle = new WebSocket('ws://192.168.0.74:19999/v1/socket/Socket')
+			this.wsHandle = new WebSocket('ws://106.55.157.177:19999/v1/socket/Socket')
+			// this.wsHandle = new WebSocket('ws://192.168.0.74:19999/v1/socket/Socket')
 			// this.wsHandle = new WebSocket('ws://192.168.0.13:19999/v1/socket/Socket')
 			this.wsHandle.onopen = this.onOpen
 			// 服务端发送回来的其他消息
@@ -246,7 +249,7 @@ export default {
 			if (data.event === 'syncInfo') {
 				_this.gameUserId = data.game_user_id
 				_this.gameId = data.game_id
-				_this.appListId = data.data.map((item) => ({ id: String(item.id), userName: item.username, roleId: String(item.role_id), roleName: item.role_name, isDead: String(item.is_dead) }))
+				_this.appListId = data.data.map((item) => ({ id: String(item.id), userName: item.username, roleId: String(item.role_id), roleName: item.role_name, isDead: String(item.is_dead), isRichCircle: String(item.is_rich_circle) }))
 				// console.log(data.data, _this.appListId, _this.appListData)
 				// 管理员开始游戏后，（在拖拽页面）广播给所有人，data.data,[当前房间里的所有用户的数据，没有管理员，{},{},{}]。
 				_this.drag && _this.drag.globalNotice('提示', '正在进入游戏', 'game', 'syncInfo')
@@ -279,7 +282,7 @@ export default {
 					}
 					// 同步信息，并且关闭用户的游戏界面 里的 被动弹出的 抽卡 的模态框
 					_this.game && _this.game.syncInfo('myTurn')
-					_this.manipulate && _this.manipulate.syncInfo()
+					_this.manipulate && _this.manipulate.syncInfo('myTurn')
 				} else {
 					_this.manipulate && _this.manipulate.syncInfo('NextUser')
 				}
@@ -553,8 +556,17 @@ export default {
 				_this.game && _this.game.syncInfo()
 			}
 
+			if (data.event === 'sick') {
+				// banker_action: true,data: null,event: "sick",game_id: "51",game_user_id: "",is_all: true
+				_this.game && _this.game.globalNotice('提示', '病毒传染结束', 'creative')
+				_this.manipulate && _this.manipulate.globalNotice('提示', '病毒传染结束', 'creative')
+				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
 			if (data.event === 'richCircle') {
 				// banker_action: false,data: "玩家牛牛进入顺流层",event: "richCircle",game_id: "14",game_user_id: "22",is_all: true
+				_this.appListId.find((item) => item.id === data.game_user_id).isRichCircle = '1'
 				if (_this.gameUserId === data.game_user_id) {
 					_this.game && _this.game.globalNotice('恭喜', data.data.replace(new RegExp('^.{' + (2 + _this.userName.length) + '}'), '您'), 'flag-fill')
 				} else {
