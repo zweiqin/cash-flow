@@ -1,5 +1,5 @@
 <template>
-	<view class="tn-flex tn-flex-row-around tn-flex-nowrap tn-text-center">
+	<view class="tn-width-full tn-flex tn-flex-row-around tn-flex-nowrap tn-text-center">
 		<view v-for="(item, index) in appListId" :key="item.id" class="tn-padding-left-xs tn-shadow-blur" @click="showPopup(item.userName, item.id)">
 			<view style="width: 2.2vh;height: 2.2vh;margin:0 auto 5px;border-radius: 50%;" :class="round[1] - 1 === index ? 'my-turn' : ''">
 				<tn-avatar icon="constellation" size="2.2vh"></tn-avatar>

@@ -5,10 +5,15 @@
 		:style="{
 			fontSize: fontSizeStyle || '50rpx',
 			fontWeight: bold ? 'bold' : 'normal',
-			color: fontColorStyle || '#080808'
+			color: fontColorStyle || '#080808',
+			maxWidth: '12vh',
+			overflow: headMsgShow ? 'visible' : 'hidden'
 		}"
+		@click="showMsg(startVal)"
 	>
-		{{ displayValue }}
+		<text v-if="headMsgShow">&</text>
+		<text v-else>{{ displayValue }}</text>
+		<view class="head-msg" :class="headMsgShow ? 'head-msg-show' : ''">{{ displayValue }}</view>
 	</view>
 </template>
 
@@ -85,7 +90,9 @@ export default {
 			// 上一次的时间戳
 			lastTime: 0,
 			rAF: null,
-			lastDisplayValue: ''
+			lastDisplayValue: '',
+
+			headMsgShow: false
 		}
 	},
 	computed: {
@@ -95,6 +102,7 @@ export default {
 	},
 	watch: {
 		startVal() {
+			this.headMsgShow = false
 			this.autoplay && this.start()
 		},
 		endVal() {
@@ -105,6 +113,13 @@ export default {
 		this.autoplay && this.start()
 	},
 	methods: {
+		showMsg(msg) {
+			// console.log(msg)
+			if (typeof msg === 'string') {
+				this.headMsgShow = !this.headMsgShow
+			}
+		},
+
 		// 开始滚动
 		start() {
 			if (typeof this.startVal === 'string') {
@@ -237,11 +252,24 @@ export default {
     /* #ifndef APP-NVUE */
     // display: inline-flex;
     /* #endif */
+		position: relative;
+
     text-align: center;
     line-height: 1;
 
-		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
   }
+	.head-msg {
+		display: none;
+	}
+	.head-msg-show {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: block;
+		background-color: #fff;
+		border: 1rpx solid black;
+		box-shadow: 0 0 4rpx 4rpx purple;
+	}
 </style>

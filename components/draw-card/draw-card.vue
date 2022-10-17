@@ -6,7 +6,7 @@
 				<view v-if="rightIcon" class="main_title__icon main_title__icon--right" :class="[`tn-icon-${rightIcon}`]"></view>
 			</view>
 		</view>
-
+		<!-- <view class="highest-container"> -->
 		<view class="container">
 
 			<!-- 卡片cards组件 -->
@@ -357,6 +357,8 @@
 			</view>
 
 		</view>
+		<!-- </view> -->
+
 	</view>
 </template>
 
@@ -733,32 +735,36 @@ export default {
 		font-size: 34rpx;
 	}
 }
-.container {
-	max-height: 65vh;
-	overflow-y: auto;
-	&::-webkit-scrollbar {
-		/*滚动条整体样式*/
-		display: block;
-		width: 10rpx !important; /*高宽分别对应横竖滚动条的尺寸*/
-		height: 0rpx !important;
-		// border: 10rpx solid red;
+// .highest-container{
+// 	max-height: 65vh;
+// 	overflow-y: hidden;
+	.container {
+		max-height: 65vh;
+		overflow-y: auto;
+		&::-webkit-scrollbar {
+			/*滚动条整体样式*/
+			display: block;
+			width: 10rpx !important; /*高宽分别对应横竖滚动条的尺寸*/
+			height: 0rpx !important;
+			// border: 10rpx solid red;
+		}
+		&::-webkit-scrollbar-track {
+			/*滚动条里面轨道*/
+			background: #ededed;
+			border-radius: 10rpx;
+		}
+		&::-webkit-scrollbar-thumb {
+			/*滚动条里面小方块*/
+			border-radius: 10rpx;
+			background-color: #666666;
+		}
+		.card-container {
+			width: 55vmin;
+			// height: 65vmin;
+			margin: 0 auto;
+		}
 	}
-	&::-webkit-scrollbar-track {
-		/*滚动条里面轨道*/
-		background: #ededed;
-		border-radius: 10rpx;
-	}
-	&::-webkit-scrollbar-thumb {
-		/*滚动条里面小方块*/
-		border-radius: 10rpx;
-		background-color: #666666;
-	}
-	.card-container {
-		width: 55vmin;
-		// height: 65vmin;
-		margin: 0 auto;
-	}
-}
+// }
 
 // .button {
 // 	margin-top: 35rpx;

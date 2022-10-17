@@ -7,7 +7,7 @@
 			</view>
 		</view>
 
-		<view>
+		<view style="max-height: 65vh;overflow-y: auto;">
 			<view class="tn-margin-top tn-margin-bottom">
 				<tn-list-view
 					:card="true"
@@ -29,17 +29,18 @@
 					</tn-radio-group>
 				</tn-list-view>
 			</view>
+
+			<view>
+				<!-- <tn-input v-model="money" type="text" placeholder="请输入金钱数量" :focus="true" :border="true" :show-right-icon="true" right-icon="reduce-circle" /> -->
+				<tn-input v-model="money" type="number" placeholder="请输入金钱数量" :focus="true" :border="true" />
+			</view>
+
+			<view class="tn-flex tn-flex-row-around button">
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">确定</tn-button>
+			</view>
 		</view>
 
-		<view>
-			<!-- <tn-input v-model="money" type="text" placeholder="请输入金钱数量" :focus="true" :border="true" :show-right-icon="true" right-icon="reduce-circle" /> -->
-			<tn-input v-model="money" type="number" placeholder="请输入金钱数量" :focus="true" :border="true" />
-		</view>
-
-		<view class="tn-flex tn-flex-row-around button">
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">确定</tn-button>
-		</view>
 	</view>
 </template>
 

@@ -50,7 +50,7 @@ export default {
 		round: ['0', '0'],
 		// 有某个人抽到的那张卡的id：[data.game_user_id字符串, data.data.id数字]
 		cardMsg: ['0', 0],
-		// 大多数时候是一个对象，当前用户展示的卡牌的数据信息。三种情况：'',一个对象,undefined（找不到这张卡的时候）
+		// 大多数时候是一个对象，当前用户展示的卡牌的数据信息。两种情况：''（初始状态，或找不到这张卡的时候）,一个对象
 		currentCard: '',
 		cardCategoryList: [
 			// {
@@ -294,6 +294,7 @@ export default {
 					_this.game && _this.game.globalNotice('好消息', `banker发现金${data.data.replace(/[^\d]/g, ' ')}元给您啦！`, 'lucky-money')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
 				}
 				_this.game && _this.game.syncInfo()
 				_this.manipulate && _this.manipulate.syncInfo()
@@ -310,6 +311,7 @@ export default {
 					}
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
 				}
 				_this.game && _this.game.syncInfo()
 				_this.manipulate && _this.manipulate.syncInfo()
@@ -321,6 +323,7 @@ export default {
 					_this.game && _this.game.globalNotice('坏消息', `banker扣了您${data.data.replace(/[^\d]/g, ' ')}元钱！`, 'reduce-circle')
 				} else {
 					_this.game && _this.game.globalNotice('提示', data.data, 'creative')
+					_this.manipulate && _this.manipulate.globalNotice('提示', data.data, 'creative')
 				}
 				_this.game && _this.game.syncInfo()
 				_this.manipulate && _this.manipulate.syncInfo()
@@ -330,7 +333,7 @@ export default {
 				// data: {id: 28}，game_user_id: "254"（统一为那个收到卡的那个人） is_all: true
 				_this.cardMsg = [data.game_user_id, data.data.id]
 				// _this.currentCard = _this.cardList.find((item) => item.id === _this.cardMsg[1])
-				_this.currentCard = _this.cardList.find((item) => item.id === data.data.id)
+				_this.currentCard = _this.cardList.find((item) => item.id === data.data.id) || ''
 				// _this.game && _this.game.handleManage('drawCard')
 				// _this.manipulate && _this.manipulate.handleManage('drawCard')
 				_this.game && _this.game.syncInfo('drawCard')
@@ -340,7 +343,7 @@ export default {
 			if (data.event === 'receiveAuction') {
 				// banker_action: false,data: {id: 21, category_id: 4, card_name: 'P02副业-办软件公司', type: 0, is_all: 0, …},event: "receiveAuction",game_id: "176",game_user_id: "311",is_all: false
 				_this.cardMsg = [data.game_user_id, data.data.id]
-				_this.currentCard = _this.cardList.find((item) => item.id === data.data.id)
+				_this.currentCard = _this.cardList.find((item) => item.id === data.data.id) || ''
 				// _this.game && _this.game.handleManage('receiveAuction')
 				// _this.manipulate && _this.manipulate.handleManage('receiveAuction')
 				_this.game && _this.game.syncInfo('receiveAuction')

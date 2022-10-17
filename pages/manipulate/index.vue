@@ -8,10 +8,12 @@
 					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-flex-1 tn-bg-white tn-text-center tn-padding-xs tn-radius">
 						<view class="tn-border-solid-bottom tn-bold-border"> <Timer @timing="changeTimer"></Timer> </view>
 						<!-- <tn-count-to :start-val="90" :end-val="0" :duration="90000" :use-easing="false"></tn-count-to> -->
-						<view class="" style="max-width: 12vh;"> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" @change="changeCountTo"></CountTo> </view>
+						<view> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" @change="changeCountTo"></CountTo> </view>
 					</view>
-					<view class="tn-flex-9"> <HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar> </view>
-					<view class="tn-flex-1 tn-bg-orangeyellow tn-flex tn-flex-direction-column tn-flex-row-center" style="align-items: center;"><text>{{ game_key }}</text></view>
+					<view class="tn-flex-9 tn-flex tn-flex-col-center"> <HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar> </view>
+					<view class="tn-flex-1">
+						<HeadHelp @clickBtn="handleHelp"></HeadHelp>
+					</view>
 				</view>
 				<!-- 顶层结束 -->
 				<!-- 中间层开始 -->
@@ -58,7 +60,21 @@
 				</tn-popup>
 			</view>
 
-			<view> <tn-toast ref="toast" :z-index="8" @closed="closeToast()"></tn-toast> </view>
+			<view> <tn-toast ref="toast" :mask="false" :z-index="8" @closed="closeToast()"></tn-toast> </view>
+
+			<!-- 压屏窗-->
+			<tn-landscape
+				:show="is_show_landscape"
+				:close-btn="true"
+				close-color="#E83A30"
+				:close-size="60"
+				close-position="bottom"
+				:close-bottom="-80"
+				@close="clickLanBtn"
+			>
+				<view v-if="lan_significance === 'showNowCard'"><Cards :card="currentCard"></Cards></view>
+				<view v-else-if="lan_significance === 'showAllCard'"><image src="https://tnuiimage.tnkjapp.com/landscape/2022-new-year.png" mode="widthFix"></image>1111 </view>
+			</tn-landscape>
 
 			<!-- 主动点击的模态框 -->
 			<tn-modal
@@ -83,8 +99,8 @@
 				<view v-else-if="popup_significance === 'wasteMoney'"> <WasteMoney @cancel="clickBtn" @submit="clickBtn"></WasteMoney> </view>
 				<view v-else-if="popup_significance === 'payOff'"> <DuplicateCom sign="payOff" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
 				<view v-else-if="popup_significance === 'deductMoney'"> <DeductMoney @cancel="clickBtn" @submit="clickBtn"></DeductMoney> </view>
-				<view v-else-if="popup_significance === 'debitCard'"> <DebitCard text="扣费抽卡" :is-free="0" @cancel="clickBtn" @submit="clickBtn"></DebitCard> </view>
-				<view v-else-if="popup_significance === 'drawCard'"> <DebitCard text="免费抽卡" :is-free="1" icon="add" @cancel="clickBtn" @submit="clickBtn"></DebitCard> </view>
+				<view v-else-if="popup_significance === 'debitCard'"> <DebitCard @cancel="clickBtn" @submit="clickBtn"></DebitCard> </view>
+				<!-- <view v-else-if="popup_significance === 'drawCard'"> <DebitCard text="免费抽卡" :is-free="1" icon="add" @cancel="clickBtn" @submit="clickBtn"></DebitCard> </view> -->
 				<view v-else-if="popup_significance === 'freeEnergy'"> <DuplicateCom sign="freeEnergy" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
 				<view v-else-if="popup_significance === 'anniversary'"> <DuplicateCom sign="anniversary" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
 				<view v-else-if="popup_significance === 'givesBirth'"> <DuplicateCom sign="givesBirth" @cancel="clickBtn" @submit="clickBtn"></DuplicateCom> </view>
@@ -133,6 +149,7 @@
 import Timer from '@/components/timer/timer.vue'
 import CountTo from '@/components/count-to/count-to.vue'
 import HeadNavigationBar from '@/components/head-navigation-bar/head-navigation-bar.vue'
+import HeadHelp from '@/components/head-help/head-help.vue'
 // import UpperLeft from '../game/user-child/upper-left.vue'
 // import LowerLeft from '../game/user-child/lower-left.vue'
 // import UpperMiddle from '../game/user-child/upper-middle.vue'
@@ -161,6 +178,9 @@ import Dreamer from './admin-child/dreamer.vue'
 import DrawCard from '@/components/draw-card/draw-card.vue'
 import ConfirmPoints from './admin-child/confirm-points.vue'
 
+// 压屏窗
+import Cards from '@/components/cards/cards.vue'
+
 // 接口
 import { GetUserInfo, NextUser } from 'config/api.js'
 
@@ -172,6 +192,7 @@ export default {
 		Timer,
 		CountTo,
 		HeadNavigationBar,
+		HeadHelp,
 		TableDataes,
 		AdminButton,
 		Bottom,
@@ -184,14 +205,19 @@ export default {
 		RiskReturn,
 		Dreamer,
 		DrawCard,
-		ConfirmPoints
+		ConfirmPoints,
+		Cards
 	},
 	data() {
 		return {
-			game_key: getApp().globalData.gameKey.substring(6),
+			currentCard: getApp().globalData.currentCard,
 			// load_role: '',
 			count_text: '等待下一轮',
 			turn_info: '',
+
+			// 压窗屏
+			lan_significance: '',
+			is_show_landscape: false,
 
 			// 主动点击的模态框
 			popup_significance: '',
@@ -280,6 +306,18 @@ export default {
 		// 	// console.log(e)
 		// },
 
+		// 压屏窗
+		handleHelp(significance) {
+			if (significance === 'showNowCard') {
+				this.lan_significance = 'showNowCard'
+				this.currentCard = getApp().globalData.currentCard
+				this.is_show_landscape = true
+			} else if (significance === 'showAllCard') {
+				this.lan_significance = 'showAllCard'
+				this.is_show_landscape = true
+			}
+		},
+
 		// 主动
 		handleProcessing(significance) {
 			if (significance === '关闭房间') {
@@ -317,12 +355,6 @@ export default {
 				this.is_show_model = true
 			} else if (significance === 'debitCard') {
 				this.popup_significance = 'debitCard'
-				this.close_btn = false
-				this.mask_closeable = false
-				this.custom = true
-				this.is_show_model = true
-			} else if (significance === 'drawCard') {
-				this.popup_significance = 'drawCard'
 				this.close_btn = false
 				this.mask_closeable = false
 				this.custom = true
@@ -475,6 +507,9 @@ export default {
 			if (temp_obj) {
 				this.count_text = `${temp_obj.userName}的回合`
 			}
+		},
+		clickLanBtn(event) {
+			this.is_show_landscape = false
 		},
 		// 关闭模态框触发
 		clickBtn(event) {

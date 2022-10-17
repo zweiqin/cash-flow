@@ -8,12 +8,12 @@
 					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-flex-1 tn-bg-white tn-text-center tn-padding-xs tn-radius">
 						<view class="tn-border-solid-bottom tn-bold-border"> <Timer @timing="changeTimer"></Timer> </view>
 						<!-- <tn-count-to :start-val="90" :end-val="0" :duration="90000" :use-easing="false"></tn-count-to> -->
-						<view class="" style="max-width: 12vh;">
-							<CountTo :font-size="2" font-unit="vh" :start-val="count_text" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo>
-						</view>
+						<view> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view>
 					</view>
-					<view class="tn-flex-10"> <HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar> </view>
-					<view class="tn-flex-1 tn-bg-orangeyellow tn-flex tn-flex-direction-column tn-flex-row-center" style="align-items: center;"><text>{{ game_key }}</text></view>
+					<view class="tn-flex-9 tn-flex tn-flex-col-center"> <HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar> </view>
+					<view class="tn-flex-1">
+						<HeadHelp @clickBtn="handleHelp"></HeadHelp>
+					</view>
 				</view>
 				<!-- 顶层结束 -->
 				<!-- 中间层开始 -->
@@ -63,7 +63,21 @@
 				</tn-popup>
 			</view>
 
-			<view> <tn-toast ref="toast" :z-index="8" @closed="closeToast()"></tn-toast> </view>
+			<view> <tn-toast ref="toast" :mask="false" :z-index="8" @closed="closeToast()"></tn-toast> </view>
+
+			<!-- 压屏窗-->
+			<tn-landscape
+				:show="is_show_landscape"
+				:close-btn="true"
+				close-color="#E83A30"
+				:close-size="60"
+				close-position="bottom"
+				:close-bottom="-80"
+				@close="clickLanBtn"
+			>
+				<view v-if="lan_significance === 'showNowCard'"><Cards :card="currentCard"></Cards></view>
+				<view v-else-if="lan_significance === 'showAllCard'"><image src="https://tnuiimage.tnkjapp.com/landscape/2022-new-year.png" mode="widthFix"></image>1111 </view>
+			</tn-landscape>
 
 			<!-- 主动点击的模态框 -->
 			<tn-modal
@@ -127,6 +141,7 @@
 import Timer from '@/components/timer/timer.vue'
 import CountTo from '@/components/count-to/count-to.vue'
 import HeadNavigationBar from '@/components/head-navigation-bar/head-navigation-bar.vue'
+import HeadHelp from '@/components/head-help/head-help.vue'
 // import UpperLeft from '@/components/table/upper-left.vue'
 // import LowerLeft from '@/components/table/lower-left.vue'
 // import UpperMiddle from '@/components/table/upper-middle.vue'
@@ -148,6 +163,9 @@ import JobRelated from './user-child/job-related.vue'
 // 封装的模态框的自定义内容的组件(被动)
 import DrawCard from '@/components/draw-card/draw-card.vue'
 
+// 压屏窗
+import Cards from '@/components/cards/cards.vue'
+
 // 接口
 import { GetUserInfo, RichCircle, ConfirmBillionaire } from 'config/api.js'
 
@@ -155,14 +173,18 @@ import { GetUserInfo, RichCircle, ConfirmBillionaire } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, TableDataes, Bottom, UserButton, DrawCard, Loan, Repayment, GiveMoney, JobRelated, Redeem, AbandonSideline },
+	components: { Timer, CountTo, HeadNavigationBar, HeadHelp, TableDataes, Bottom, UserButton, DrawCard, Loan, Repayment, GiveMoney, JobRelated, Redeem, AbandonSideline, Cards },
 	data() {
 		return {
-			game_key: getApp().globalData.gameKey.substring(6),
+			currentCard: getApp().globalData.currentCard,
 			// load_role: '',
 			count_text: '等待下一轮',
 			my_info: '',
 			tableClass: '',
+
+			// 压窗屏
+			lan_significance: '',
+			is_show_landscape: false,
 
 			// 主动点击的模态框
 			popup_significance: '',
@@ -188,6 +210,8 @@ export default {
 			// 被动收到的模态框
 			popup_significance_pa: '',
 			is_show_model_pa: false,
+			// popup_significance_pa: 'drawCard',
+			// is_show_model_pa: true,
 			title_pa: '提示',
 			content_pa: '',
 			button_pa: [
@@ -205,6 +229,7 @@ export default {
 			close_btn_pa: true,
 			mask_closeable_pa: true,
 			custom_pa: false,
+			// custom_pa: true,
 
 			toast_significance: '',
 
@@ -251,6 +276,18 @@ export default {
 		},
 		changeCountTo(e) {
 			// console.log(e)
+		},
+
+		// 压屏窗
+		handleHelp(significance) {
+			if (significance === 'showNowCard') {
+				this.lan_significance = 'showNowCard'
+				this.currentCard = getApp().globalData.currentCard
+				this.is_show_landscape = true
+			} else if (significance === 'showAllCard') {
+				this.lan_significance = 'showAllCard'
+				this.is_show_landscape = true
+			}
 		},
 
 		// 主动
@@ -383,6 +420,9 @@ export default {
 				}
 			}
 			this.$refs.RefUserButton.syncButton()
+		},
+		clickLanBtn(event) {
+			this.is_show_landscape = false
 		},
 		clickPaBtn(event) {
 			this.is_show_model_pa = false

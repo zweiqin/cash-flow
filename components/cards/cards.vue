@@ -1,36 +1,43 @@
 <template>
-	<view class="tn-flex tn-flex-direction-column tn-flex-row-between tn-text-center tn-text-bold tn-color-white container" :class="card_bg" style="border-radius: 20rpx;">
-		<view v-if="card_name_text" class="tn-bg-orangeyellow card-name-text">
-			<view class="card-text">
-				<text class="tn-color-gray">{{ card_name_text }}</text>
-			</view>
-		</view>
-		<view class="container-top tn-text-md">
-			<view>{{ card_name_top }}</view> <view>{{ card_name_bottom }}</view>
-		</view>
-		<view class="container-among">
-			<view v-if="is_quotation">
-				<view v-for="(item,index) in line" :key="index" class="tn-flex line">
-					<view class="tn-flex-1">{{ item.match(/([^ ]*) (.*)/)[1] }}</view>
-					<view class="tn-flex-2">{{ item.match(/([^ ]*) (.*)/)[2] }}</view>
+	<view class="tn-width-full tn-width-full">
+		<view v-if="card" class="tn-flex tn-flex-direction-column tn-flex-row-between tn-text-center tn-text-bold tn-color-white contain" :class="card_bg" style="border-radius: 20rpx;">
+			<view v-if="card_name_text" class="tn-bg-orangeyellow card-name-text">
+				<view class="card-text">
+					<text class="tn-color-gray">{{ card_name_text }}</text>
 				</view>
 			</view>
-			<view v-else>{{ desc }}</view>
-		</view>
-		<view class="container-middle">
-			<hr />
-			<!-- ☆○●★ -->
-			<!-- <view><text>首付：☆ {{ card.assets_num }}</text></view>
+			<view class="container-top tn-text-md">
+				<view>{{ card_name_top }}</view> <view>{{ card_name_bottom }}</view>
+			</view>
+			<view class="container-among">
+				<view v-if="is_quotation">
+					<view v-for="(item,index) in line" :key="index" class="tn-flex line">
+						<view class="tn-flex-1">{{ item.match(/([^ ]*) (.*)/)[1] }}</view>
+						<view class="tn-flex-2">{{ item.match(/([^ ]*) (.*)/)[2] }}</view>
+					</view>
+				</view>
+				<view v-else>{{ desc }}</view>
+			</view>
+			<view class="container-middle">
+				<hr />
+				<!-- ☆○●★ -->
+				<!-- <view><text>首付：☆ {{ card.assets_num }}</text></view>
 			<view><text>房产总价：☆ {{ card.assets_value }}</text></view>
 			<view><text>抵押贷款：☆ {{ card.liabilit }}</text></view>
 			<view><text>价格范围：☆ 未知</text></view>
 			<view><text>被动收入：☆ {{ card.in }}/月</text><text v-html="'&nbsp;&nbsp;'"></text><text>精力：{{ card.energy }}</text></view> -->
-			<view v-for="(item,index) in card_info" :key="index">
-				<text>{{ item }}</text>
+				<view v-for="(item,index) in card_info" :key="index">
+					<text>{{ item }}</text>
+				</view>
+				<hr />
 			</view>
-			<hr />
+			<view class="container-bottom"><text>财富想自由，多推财富流。</text></view>
 		</view>
-		<view class="container-bottom"><text>财富想自由，多推财富流。</text></view>
+		<view v-else class="tn-text-bold">
+			<tn-tag shape="circle" width="auto" margin="10rpx 10rpx">
+				<tn-load-more status="loadmore" :load-text="loadText" font-color="#8c3270"></tn-load-more>
+			</tn-tag>
+		</view>
 	</view>
 </template>
 
@@ -38,7 +45,7 @@
 export default {
 	props: {
 		card: {
-			type: Object,
+			type: [Object, String],
 			required: true
 		}
 	},
@@ -51,12 +58,19 @@ export default {
 			card_info: [],
 			desc: '',
 			is_quotation: false,
-			line: []
+			line: [],
+
+			loadText: {
+				loadmore: '『 无法获取卡片信息 』',
+				loading: '『 无法获取卡片信息 』',
+				nomore: '『 无法获取卡片信息 』'
+			}
 		}
 	},
 
 	computed: {},
 	created() {
+		if (!this.card) return
 		switch (this.card.category_id) {
 			case 4:
 				this.card_bg = 'side-hustle'
@@ -124,7 +138,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.contain {
 	position: relative;
 	width: 100%;
 	height: 100%;

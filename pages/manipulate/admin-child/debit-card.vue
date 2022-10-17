@@ -7,33 +7,36 @@
 			</view>
 		</view>
 
-		<tn-form ref="form" :model="model" :error-type="errorType" :label-position="labelPosition" :label-width="labelWidth" :label-align="labelAlign">
+		<view style="max-height: 65vh;overflow-y: auto;">
+			<tn-form ref="form" :model="model" :error-type="errorType" :label-position="labelPosition" :label-width="labelWidth" :label-align="labelAlign">
 
-			<tn-form-item label="卡种类：" prop="payType" :label-position="labelPosition" :label-align="labelAlign">
-				<view v-if="isFree">
-					<tn-radio-group v-model="model.payType" :size="25" :width="radioWidth" :wrap="radioWrap" @change="radioGroupChange">
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='行情').id)" :disabled="false" :label-size="38">行情卡</tn-radio>
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='觉察').id)" :disabled="false" :label-size="38">觉察卡</tn-radio>
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='相亲卡').id)" :disabled="false" :label-size="38">相亲卡</tn-radio>
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='逆流').id)" :disabled="false" :label-size="38">逆流卡</tn-radio>
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='项目').id)" :disabled="false" :label-size="38">项目卡</tn-radio>
-					</tn-radio-group>
-				</view>
-				<view v-else>
-					<tn-radio-group v-model="model.payType" :size="25" :width="radioWidth" :wrap="radioWrap" @change="radioGroupChange">
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='副业').id)" :disabled="false" :label-size="38">【小机会】副业</tn-radio>
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='金融').id)" :disabled="false" :label-size="38">【小机会】金融</tn-radio>
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='房地产').id)" :disabled="false" :label-size="38">【大机会】地产</tn-radio>
-						<tn-radio :name="String(radioList.find((item)=>item.category_name==='企业').id)" :disabled="false" :label-size="38">【大机会】企业</tn-radio>
-					</tn-radio-group>
-				</view>
-			</tn-form-item>
-		</tn-form>
+				<tn-form-item label="卡种类：" prop="payType" :label-position="labelPosition" :label-align="labelAlign">
+					<view>
+						<tn-radio-group v-model="model.payType" :size="58" :width="radioWidth" :wrap="true" @change="radioGroupChange">
+							<view style="width: 480rpx">
+								<tn-radio :name="JSON.stringify([String(radioList.find((item)=>item.category_name==='副业').id),0])" :disabled="false" :label-size="48">【小机会】副业</tn-radio>
+								<tn-radio :name="JSON.stringify([String(radioList.find((item)=>item.category_name==='金融').id),0])" :disabled="false" :label-size="48">【小机会】金融</tn-radio>
+								<tn-radio :name="JSON.stringify([String(radioList.find((item)=>item.category_name==='房地产').id),0])" :disabled="false" :label-size="48">【大机会】地产</tn-radio>
+								<tn-radio :name="JSON.stringify([String(radioList.find((item)=>item.category_name==='企业').id),0])" :disabled="false" :label-size="48">【大机会】企业</tn-radio>
+							</view>
+							<view style="width: 250rpx">
+								<tn-radio :name="JSON.stringify([String(radioList.find((item)=>item.category_name==='行情').id),1])" :disabled="false" :label-size="45">行情卡</tn-radio>
+								<tn-radio :name="JSON.stringify([String(radioList.find((item)=>item.category_name==='觉察').id),1])" :disabled="false" :label-size="45">觉察卡</tn-radio>
+								<tn-radio :name="JSON.stringify([String(radioList.find((item)=>item.category_name==='相亲卡').id),1])" :disabled="false" :label-size="45">相亲卡</tn-radio>
+								<tn-radio :name="JSON.stringify([String(radioList.find((item)=>item.category_name==='逆流').id),1])" :disabled="false" :label-size="45">逆流卡</tn-radio>
+								<tn-radio :name="JSON.stringify([String(radioList.find((item)=>item.category_name==='项目').id),1])" :disabled="false" :label-size="45">项目卡</tn-radio>
+							</view>
+						</tn-radio-group>
+					</view>
+				</tn-form-item>
+			</tn-form>
 
-		<view class="tn-flex tn-flex-row-around button">
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="submit()">提交</tn-button>
+			<view class="tn-flex tn-flex-row-around button">
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="submit()">提交</tn-button>
+			</view>
 		</view>
+
 	</view>
 </template>
 
@@ -42,25 +45,25 @@ import { DrawCard } from 'config/api.js'
 
 export default {
 	props: {
-		text: {
-			type: String,
-			required: true
-		},
-		isFree: {
-			type: Number,
-			required: true
-		},
-		icon: {
-			type: String,
-			default: 'reduce-square'
-		}
+		// text: {
+		// 	type: String,
+		// 	required: true
+		// },
+		// isFree: {
+		// 	type: Number,
+		// 	required: true
+		// }
+		// icon: {
+		// 	type: String,
+		// 	default: 'reduce-square'
+		// }
 	},
 	data() {
 		return {
 			// 左图标
-			leftIcon: '',
+			leftIcon: 'add',
 			// 右图标
-			rightIcon: '',
+			rightIcon: 'add',
 			model: {
 				payType: ''
 			},
@@ -70,7 +73,6 @@ export default {
 			labelWidth: 140,
 			labelAlign: 'right',
 			radioWidth: 'auto',
-			radioWrap: true,
 			radioList: getApp().globalData.cardCategoryList,
 
 			rules: {
@@ -91,13 +93,13 @@ export default {
 			const temp_id = getApp().globalData.round[0]
 			const temp_obj = getApp().globalData.appListId.find((item) => item.id === temp_id)
 			if (temp_obj) {
-				return `确定给 ${temp_obj.userName} ${this.text}吗？`
+				return `正在给 ${temp_obj.userName} 抽卡：`
 			}
 			return '获取玩家信息失败，请重试！'
 		}
 	},
 	created() {
-		this.leftIcon = this.rightIcon = this.icon
+		// this.leftIcon = this.rightIcon = this.icon
 	},
 	mounted() {
 		this.$refs.form.setRules(this.rules)
@@ -108,7 +110,7 @@ export default {
 		},
 		// 单选项值改变事件
 		radioGroupChange(event) {
-			// console.log(event)
+			// console.log(event, this.model.payType)
 			// this.model.payType = event
 		},
 		// 表单提交
@@ -138,11 +140,12 @@ export default {
 						})
 						return this.cancel()
 					}
+					const temp_arr = JSON.parse(this.model.payType)
 					DrawCard({
 						game_id: getApp().globalData.gameId,
 						game_user_id: round[0],
-						category_id: this.model.payType,
-						is_free: this.isFree // 1免费，0收费
+						category_id: temp_arr[0],
+						is_free: temp_arr[1] // 1免费，0收费
 					})
 						.then((res) => {
 							// console.log(res)

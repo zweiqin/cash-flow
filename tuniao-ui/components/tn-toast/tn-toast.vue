@@ -20,7 +20,7 @@
 			>{{ content }}</view>
 		</view>
 
-		<view class="tn-toast__mask" :class="[visible ? 'tn-toast__mask--show' : '']" :style="[maskStyle]"></view>
+		<view v-if="mask" class="tn-toast__mask" :class="[visible ? 'tn-toast__mask--show' : '']" :style="[maskStyle]"></view>
 	</view>
 </template>
 
@@ -33,6 +33,11 @@ export default {
 		zIndex: {
 			type: Number,
 			default: 0
+		},
+		// 遮罩层
+		mask: {
+			type: Boolean,
+			default: true
 		}
 	},
 	data() {

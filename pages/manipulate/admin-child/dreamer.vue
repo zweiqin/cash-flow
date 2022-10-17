@@ -7,7 +7,7 @@
 			</view>
 		</view>
 
-		<view>
+		<view style="max-height: 65vh;overflow-y: auto;">
 			<view class="tn-margin-top tn-margin-bottom">
 				<tn-list-view :card="true" title="梦想列表" background-color="#EFEFEF">
 					<tn-radio-group v-model="value">
@@ -21,11 +21,11 @@
 					</tn-radio-group>
 				</tn-list-view>
 			</view>
-		</view>
 
-		<view class="tn-flex tn-flex-row-around button">
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">确定</tn-button>
+			<view class="tn-flex tn-flex-row-around button">
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">确定</tn-button>
+			</view>
 		</view>
 	</view>
 </template>

@@ -7,49 +7,51 @@
 			</view>
 		</view>
 
-		<view>
-			<view class="tn-margin-top-sm tn-margin-bottom tn-text-lg">
-				<text>您的手头现金：<text class="tn-text-bold" v-html="cash_on_hand + '&nbsp;'"></text>元</text>
+		<view style="max-height: 65vh;overflow-y: auto;">
+			<view>
+				<view class="tn-margin-top-sm tn-margin-bottom tn-text-lg">
+					<text>您的手头现金：<text class="tn-text-bold" v-html="cash_on_hand + '&nbsp;'"></text>元</text>
+				</view>
+				<view class="tn-margin-top tn-margin-bottom">
+					<tn-list-view
+						:card="true"
+						title="其 他/她 玩家列表"
+						background-color="#EFEFEF"
+					>
+						<tn-radio-group v-model="value" @change="radioGroupChange">
+
+							<block v-if="appListId.length!==0">
+								<tn-list-cell v-for="(item,index) in appListId" :key="item.id" :arrow="false" :arrow-right="false" :unlined="false" :line-left="true" :line-right="true">
+									<view>
+										<tn-radio :name="item.id">
+											<text>用户{{ index+1 }}：</text>
+											{{ `${item.userName}(${item.roleName})` }}
+										</tn-radio>
+									</view>
+								</tn-list-cell>
+							</block>
+
+							<block v-else>
+								<tn-list-cell :arrow="false" :arrow-right="false" :unlined="false" :line-left="true" :line-right="true">
+									<view>
+										<text>无</text>
+									</view>
+								</tn-list-cell>
+							</block>
+
+						</tn-radio-group>
+					</tn-list-view>
+				</view>
 			</view>
-			<view class="tn-margin-top tn-margin-bottom">
-				<tn-list-view
-					:card="true"
-					title="其 他/她 玩家列表"
-					background-color="#EFEFEF"
-				>
-					<tn-radio-group v-model="value" @change="radioGroupChange">
 
-						<block v-if="appListId.length!==0">
-							<tn-list-cell v-for="(item,index) in appListId" :key="item.id" :arrow="false" :arrow-right="false" :unlined="false" :line-left="true" :line-right="true">
-								<view>
-									<tn-radio :name="item.id">
-										<text>用户{{ index+1 }}：</text>
-										{{ `${item.userName}(${item.roleName})` }}
-									</tn-radio>
-								</view>
-							</tn-list-cell>
-						</block>
-
-						<block v-else>
-							<tn-list-cell :arrow="false" :arrow-right="false" :unlined="false" :line-left="true" :line-right="true">
-								<view>
-									<text>无</text>
-								</view>
-							</tn-list-cell>
-						</block>
-
-					</tn-radio-group>
-				</tn-list-view>
+			<view>
+				<tn-input v-model="money" type="number" placeholder="请输入金钱数量" :focus="true" :border="true" />
 			</view>
-		</view>
 
-		<view>
-			<tn-input v-model="money" type="number" placeholder="请输入金钱数量" :focus="true" :border="true" />
-		</view>
-
-		<view class="tn-flex tn-flex-row-around button">
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">确定</tn-button>
+			<view class="tn-flex tn-flex-row-around button">
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">确定</tn-button>
+			</view>
 		</view>
 	</view>
 </template>

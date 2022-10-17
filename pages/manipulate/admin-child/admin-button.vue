@@ -64,12 +64,8 @@ export default {
 					meaning: 'deductMoney'
 				},
 				{
-					name: '扣费抽卡',
+					name: '抽卡',
 					meaning: 'debitCard'
-				},
-				{
-					name: '免费抽卡',
-					meaning: 'drawCard'
 				},
 				{
 					name: '玩家休息精力补充',
