@@ -508,6 +508,9 @@ export default {
 				this.count_text = `${temp_obj.userName}的回合`
 			}
 		},
+		syncExecute() {
+			this.$refs.RefDrawCard && this.$refs.RefDrawCard.syncExecute()
+		},
 		clickLanBtn(event) {
 			this.is_show_landscape = false
 		},
@@ -548,6 +551,7 @@ export default {
 			} else if (meaning === 'litigate') {
 				this.handleManage('litigate')
 			} else if (meaning === 'NextUser') {
+				console.log('管理员游戏界面触发：', getApp().globalData.gameId)
 				return NextUser({
 					game_id: Number(getApp().globalData.gameId),
 					game_user_id: Number(getApp().globalData.round[0])

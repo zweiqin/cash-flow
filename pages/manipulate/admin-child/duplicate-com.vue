@@ -115,6 +115,7 @@ export default {
 					return this.cancel()
 				}
 			} else {
+				console.log('弹框触发：', round[0])
 				uni.showLoading({
 					title: '请稍等...',
 					mask: true

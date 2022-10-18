@@ -52,6 +52,13 @@ export default {
 		cardMsg: ['0', 0],
 		// 大多数时候是一个对象，当前用户展示的卡牌的数据信息。两种情况：''（初始状态，或找不到这张卡的时候）,一个对象
 		currentCard: '',
+		// 抽到卡（或转让卡）时的抽卡组件，点击cancel按钮，调用接口后返回的notFinish事件，进行赋值，executed为未取消的玩家名称列表，cardId为最近抽到（或转让）的一张卡
+		currentExecute: {
+			executed: [],
+			cardId: 0
+			// executed: ["玩家一号","玩家三号"],
+			// cardId: 20
+		},
 		cardCategoryList: [
 			// {
 			// 	'id': 4,
@@ -94,7 +101,7 @@ export default {
 			// console.log(this.ws)
 			this.wsHandle = new WebSocket('ws://106.55.157.177:19999/v1/socket/Socket')
 			// this.wsHandle = new WebSocket('ws://192.168.0.74:19999/v1/socket/Socket')
-			// this.wsHandle = new WebSocket('ws://192.168.0.13:19999/v1/socket/Socket')
+			// this.wsHandle = new WebSocket('ws://192.168.0.8:19999/v1/socket/Socket')
 			this.wsHandle.onopen = this.onOpen
 			// 服务端发送回来的其他消息
 			this.wsHandle.onmessage = this.onMessage
@@ -138,6 +145,7 @@ export default {
 		onMessage(evt) {
 			const _this = getApp().globalData
 			// console.log('收到消息', evt)
+			// console.log(getApp().globalData)
 			console.log(JSON.parse(evt.data))
 			const data = JSON.parse(evt.data)
 
@@ -272,7 +280,7 @@ export default {
 				if (_this.appListId.find((item) => item.id === _this.round[0]).isDead === '0') {
 					// 针对banker触发的NextUser下一位
 					uni.hideLoading()
-					// 同步头像样式 并且 同步倒计时信息 并且 同步按钮按钮信息
+					// 同步头像样式 并且 同步倒计时信息 并且 同步按钮按钮信息 并且 同步猝死和是否进入顺流层
 					_this.game && _this.game.syncAvatarStyle()
 					_this.manipulate && _this.manipulate.syncAvatarStyle()
 					if (_this.round[0] === getApp().globalData.gameUserId) {
@@ -363,6 +371,17 @@ export default {
 				_this.manipulate && _this.manipulate.syncInfo()
 			}
 
+			if (data.event === 'notFinish') {
+				// 先是drawCard，然后再notFinish
+				// banker_action: false,data: {card_id: 119, not_finish_list: Array(0)},event: "notFinish",game_id: "51",game_user_id: "",is_all: true
+				// data: {not_finish_list:["玩家一号","玩家三号"],card_id:20}
+				_this.currentExecute = { executed: data.data.not_finish_list, cardId: data.data.card_id }
+				// 同步管理员显示的抽卡组件的为点击cancel的显示
+				_this.manipulate && _this.manipulate.syncExecute()
+				_this.game && _this.game.syncInfo()
+				_this.manipulate && _this.manipulate.syncInfo()
+			}
+
 			if (data.event === 'energize') {
 				// banker_action: false，data: "玩家牛免费补充2点精力"，event: "energize"，game_id: "153"，game_user_id: ""，is_all: true
 				// banker_action: false，data: "玩家牛补充2点精力，扣除一个月的总支出"，event: "energize"，game_id: "153"，game_user_id: "
@@ -416,6 +435,12 @@ export default {
 			if (data.event === 'bankrupt') {
 				// banker_action: false,data: "玩家牛破产,下一轮重新开始沙盘推演",event: "bankrupt",game_id: "244",game_user_id: "433",is_all: true
 				// banker_action: false,data: "玩家你你你破产,下一轮重新开始沙盘推演",event: "bankrupt",game_id: "42",game_user_id: "56",is_all: true
+				if (_this.appListId.find((item) => item.id === data.game_user_id).isRichCircle === '1') {
+					_this.appListId.find((item) => item.id === data.game_user_id).isRichCircle = '0'
+					// 同步头像样式 并且 同步倒计时信息 并且 同步按钮按钮信息 并且 同步猝死和是否进入顺流层
+					_this.game && _this.game.syncAvatarStyle()
+					_this.manipulate && _this.manipulate.syncAvatarStyle()
+				}
 				if (_this.gameUserId === data.game_user_id) {
 					_this.game && _this.game.globalNotice('坏消息', data.data.replace(new RegExp('^.{' + (2 + _this.userName.length) + '}'), '您'), 'empty-permission')
 				} else {
@@ -442,7 +467,7 @@ export default {
 			if (data.event === 'deadUser') {
 				// banker_action: false,data: "玩家牛牛猝死了",event: "deadUser",game_id: "4",game_user_id: "4",is_all: true
 				_this.appListId.find((item) => item.id === data.game_user_id).isDead = '1'
-				// 同步头像样式 并且 同步倒计时信息 并且 同步按钮按钮信息
+				// 同步头像样式 并且 同步倒计时信息 并且 同步按钮按钮信息 并且 同步猝死和是否进入顺流层
 				_this.game && _this.game.syncAvatarStyle()
 				_this.manipulate && _this.manipulate.syncAvatarStyle()
 				if (_this.gameUserId === data.game_user_id) {

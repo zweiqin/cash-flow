@@ -41,10 +41,10 @@
 							</view>
 						</view>
 						<view>
-							<view v-if="is_transfer === '0'">
+							<view v-if="is_transfer === '0' && is_drew">
 								<view v-if="currentCard.card_name.startsWith('C01') || currentCard.card_name.startsWith('C02') || currentCard.card_name.startsWith('C03') || currentCard.card_name.startsWith('C06')" class="tn-flex tn-flex-row-center tn-padding-top">
 									<tn-number-box
-										v-model="quantity" :step="1" :min="0" :max="3"
+										v-model="quantity" :step="1" :min="1" :max="3"
 										:input-width="140" :input-height="60" :font-size="40" :disabled-input="true"
 										:disabled="false" :long-press="false" background-color="#dddddd" font-color="#00aaaa"
 									></tn-number-box>
@@ -55,7 +55,7 @@
 							<view v-if="currentCard.card_name.startsWith('P14')">
 								<!-- 判断是否有购车贷款，有就 有可以购买的按钮 -->
 								<view v-if="personal.basic_info.out_car_loan > 0" class="tn-flex tn-flex-row-around tn-padding-top">
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel('currentExecute')">放弃</tn-button>
 									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{
 										is_transfer === '1' ? '确定' : currentCard.category_id === 6 ? '购买' : '投资'
 									}}</tn-button>
@@ -163,7 +163,7 @@
 							</view>
 							<view>
 								<view class="tn-flex tn-flex-row-around tn-padding-top">
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel('currentExecute')">放弃</tn-button>
 									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{ is_transfer === '1' ? '确定' : is_sell === 1 ? '卖出' : '购买' }}</tn-button>
 								</view>
 							</view>
@@ -211,7 +211,7 @@
 							</view>
 							<view>
 								<view class="tn-flex tn-flex-row-around tn-padding-top">
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel('currentExecute')">放弃</tn-button>
 									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">卖出</tn-button>
 								</view>
 							</view>
@@ -353,7 +353,7 @@
 			</view>
 			<!-- 管理员展示 -->
 			<view v-else>
-				<AdminOperation @cancel="cancel"></AdminOperation>
+				<AdminOperation :current-execute="currentExecute" @cancel="cancel"></AdminOperation>
 			</view>
 
 		</view>
@@ -386,7 +386,7 @@ import Cards from '@/components/cards/cards.vue'
 import AdminOperation from '@/components/admin-operation/admin-operation.vue'
 
 // 接口
-import { ConfirmCard, TransferCard } from 'config/api.js'
+import { AbandonCard, ConfirmCard, TransferCard } from 'config/api.js'
 
 export default {
 	// components: { SideHustle, Finance, RealEstate, Enterprise, Quotation, Perceive, BlindDate, Backset, Project },
@@ -427,7 +427,8 @@ export default {
 			cardMsg: getApp().globalData.cardMsg,
 			currentCard: getApp().globalData.currentCard,
 			appListId: getApp().globalData.appListId.filter((item) => item.id !== getApp().globalData.gameUserId),
-			me: getApp().globalData.appListId.find((item) => item.id === getApp().globalData.gameUserId) || {}
+			me: getApp().globalData.appListId.find((item) => item.id === getApp().globalData.gameUserId) || {},
+			currentExecute: getApp().globalData.currentExecute
 		}
 	},
 
@@ -467,7 +468,7 @@ export default {
 		// console.log(this.cardMsg[0], getApp().globalData.gameUserId, this.is_drew)
 		this.is_drew = this.cardMsg[0] === getApp().globalData.gameUserId
 		if (this.currentCard.card_name.startsWith('C01') || this.currentCard.card_name.startsWith('C02') || this.currentCard.card_name.startsWith('C03') || this.currentCard.card_name.startsWith('C06')) {
-			this.quantity = 0
+			this.quantity = 1
 		}
 		// console.log(this.currentCard)
 	},
@@ -484,12 +485,37 @@ export default {
 			// console.log(e)
 			this.is_sell = e.index
 		},
-		cancel() {
-			this.$emit('cancel')
+		cancel(meaning) {
+			if (meaning === 'currentExecute') {
+				AbandonCard({
+					game_id: getApp().globalData.gameId,
+					game_user_id: getApp().globalData.gameUserId,
+					card_id: String(this.cardMsg[1])
+				})
+					.then((res) => {
+						if (res[1].data.status === 200) {
+							this.$emit('cancel')
+						} else {
+							uni.showToast({
+								title: '操作失败！',
+								icon: 'success'
+								// duration: 450
+							})
+						}
+					})
+					.catch((err) => {
+						console.log(err)
+					})
+			} else {
+				this.$emit('cancel')
+			}
 		},
 		syncAvatarStyle() {
 			this.me = getApp().globalData.appListId.find((item) => item.id === getApp().globalData.gameUserId) || {}
 			this.appListId = getApp().globalData.appListId.filter((item) => item.id !== getApp().globalData.gameUserId)
+		},
+		syncExecute() {
+			this.currentExecute = getApp().globalData.currentExecute
 		},
 		confirm() {
 			// console.log(this.money)
@@ -590,14 +616,17 @@ export default {
 					temp_buy_number = temp_sell_number = temp_sell_id = temp_category_id = temp_receiver_id = ''
 				} else if (this.currentCard.category_id === 8) {
 					if (this.currentCard.card_name.startsWith('C01') || this.currentCard.card_name.startsWith('C02') || this.currentCard.card_name.startsWith('C03') || this.currentCard.card_name.startsWith('C06')) {
-						if (!this.quantity || Number(this.quantity) === 0) {
+						// if (!this.quantity || Number(this.quantity) === 0) {
+						if (!this.quantity) {
 							return uni.showToast({
 								title: '请选择正确的台数！',
 								icon: 'error'
 							})
 						}
+						temp_buy_number = this.quantity
+					} else {
+						temp_buy_number = 1
 					}
-					temp_buy_number = this.quantity
 					temp_sell_number = temp_sell_id = temp_category_id = temp_receiver_id = ''
 				} else if (this.currentCard.category_id === 11) {
 					if (this.product_list === null) {

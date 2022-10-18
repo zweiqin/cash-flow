@@ -249,6 +249,16 @@ export const ConfirmCard = (data) => uni.request({
 	}
 })
 
+// user被抽到卡后，放弃卡牌
+export const AbandonCard = (data) => uni.request({
+	url: '/card/AbandonCard', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
 // user向银行家贷款
 export const BankerLoan = (data) => uni.request({
 	url: '/game_user/BankerLoan', // 仅为示例，并非真实接口地址。

@@ -6,7 +6,7 @@
 			fontSize: fontSizeStyle || '50rpx',
 			fontWeight: bold ? 'bold' : 'normal',
 			color: fontColorStyle || '#080808',
-			maxWidth: '12vh',
+			maxWidth: '7vh',
 			overflow: headMsgShow ? 'visible' : 'hidden'
 		}"
 		@click="showMsg(startVal)"
