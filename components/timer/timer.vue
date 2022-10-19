@@ -139,20 +139,24 @@ export default {
 .count_down{
 	display: flex;
 	align-items: center;
-	margin-bottom: 4rpx;
+	// margin-bottom: 4rpx;
+	margin-bottom: 0.5vh;
 	justify-content: center;
 	// justify-content: flex-start;
 	text{
 		display: block;
 		color:black;
-		margin-right: 6rpx;
-		font-size: 1.4vw;
+		// margin-right: 6rpx;
+		// font-size: 1.4vw;
+		width: 1vh;
+		margin-right: 0.2vh;
+		font-size: 1vh;
 		font-weight: bold;
 	}
-	.maohao{
-		padding: 0 10rpx;
-		font-size: 30rpx;
-		font-weight: bold;
-	}
+	// .maohao{
+	// 	padding: 0 10rpx;
+	// 	font-size: 30rpx;
+	// 	font-weight: bold;
+	// }
 }
 </style>

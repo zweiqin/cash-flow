@@ -4,6 +4,9 @@
 			<view class="main_title">
 				<view v-if="leftIcon" class="main_title__icon main_title__icon--left" :class="[`tn-icon-${leftIcon}`]"></view> <view class="main_title__content">{{ userName }}</view>
 				<view v-if="rightIcon" class="main_title__icon main_title__icon--right" :class="[`tn-icon-${rightIcon}`]"></view>
+				<view v-if="role === 'admin'">
+					<tn-button background-color="tn-bg-teal" font-color="tn-color-white" margin="0 0 0 100rpx" @click="cancel('stow')">收起</tn-button>
+				</view>
 			</view>
 		</view>
 		<!-- <view class="highest-container"> -->
@@ -506,6 +509,8 @@ export default {
 					.catch((err) => {
 						console.log(err)
 					})
+			} else if (meaning === 'stow') {
+				this.$emit('cancel', 'stow')
 			} else {
 				this.$emit('cancel')
 			}

@@ -3,15 +3,16 @@
 		<view class="tn-flex layer-1">
 			<view class="tn-flex-1 outermost-1">
 				<!-- 顶层开始 -->
-				<view class="tn-flex tn-padding-sm tn-margin-xs tn-radius bg-flex-shadow top">
-					<!-- <tn-count-down :timestamp="900" :font-size="60" :separator-size="60"></tn-count-down> -->
-					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-flex-1 tn-bg-white tn-text-center tn-padding-xs tn-radius">
+				<view class="tn-flex tn-margin-xs tn-radius bg-flex-shadow top" style="padding: 1vh;">
+					<!-- <view class="tn-bg-blue">1111111111111</view>
+					<view class="tn-flex-1 tn-bg-red" style="width: 0;">000000000000000000000000009</view>
+					<view class="tn-bg-blue">9222222222222</view> -->
+					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-bg-white tn-text-center tn-radius" style="width: 10.6vh;padding: 0.5vh;">
 						<view class="tn-border-solid-bottom tn-bold-border"> <Timer @timing="changeTimer"></Timer> </view>
-						<!-- <tn-count-to :start-val="90" :end-val="0" :duration="90000" :use-easing="false"></tn-count-to> -->
 						<view> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view>
 					</view>
-					<view class="tn-flex-9 tn-flex tn-flex-col-center"> <HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar> </view>
-					<view class="tn-flex-1">
+					<view class="tn-flex-1" style="background-color: #e8ccff;position: relative;z-index: 6;width: 0vw;margin: 0 1vh;"> <HeadNavigationBar ref="RefHeadNav" @clickHead="showPopup"></HeadNavigationBar> </view>
+					<view>
 						<HeadHelp @clickBtn="handleHelp"></HeadHelp>
 					</view>
 				</view>
@@ -47,7 +48,7 @@
 					length="50%"
 					mode="bottom"
 					background-color="#ffb3ff"
-					height="90%"
+					height="85%"
 					:border-radius="23"
 					:close-btn="true"
 					close-btn-icon="close"
@@ -63,76 +64,83 @@
 				</tn-popup>
 			</view>
 
-			<view> <tn-toast ref="toast" :mask="false" :z-index="8" @closed="closeToast()"></tn-toast> </view>
+			<view> <tn-toast ref="toast" :is-clickable="true" :mask="false" :z-index="9" @closed="closeToast()"></tn-toast> </view>
 
-			<!-- 压屏窗-->
-			<tn-landscape
-				:show="is_show_landscape"
-				:close-btn="true"
-				close-color="#E83A30"
-				:close-size="60"
-				close-position="bottom"
-				:close-bottom="-80"
-				@close="clickLanBtn"
-			>
-				<view v-if="lan_significance === 'showNowCard'"><Cards :card="currentCard"></Cards></view>
-				<view v-else-if="lan_significance === 'showAllCard'"><image src="https://tnuiimage.tnkjapp.com/landscape/2022-new-year.png" mode="widthFix"></image>1111 </view>
-			</tn-landscape>
+			<view>
+				<!-- 压屏窗-->
+				<tn-landscape
+					:show="is_show_landscape"
+					:close-btn="true"
+					close-color="#E83A30"
+					:close-size="60"
+					:close-position="close_position"
+					:close-bottom="-80"
+					:z-index="7"
+					@close="clickLanBtn"
+				>
+					<view v-if="lan_significance === 'showNowCard'"><Cards :card="currentCard"></Cards></view>
+					<view v-else-if="lan_significance === 'showAllCard'"><image src="https://tnuiimage.tnkjapp.com/landscape/2022-new-year.png" mode="widthFix"></image>1111 </view>
+				</tn-landscape>
+			</view>
 
-			<!-- 主动点击的模态框 -->
-			<tn-modal
-				v-model="is_show_model"
-				background-color="#E4E9EC"
-				width="60%"
-				padding="30rpx 26rpx"
-				:radius="12"
-				font-color="#BA7027"
-				:font-size="35"
-				:title="title"
-				:content="content"
-				:button="button"
-				:show-close-btn="close_btn"
-				:mask-closeable="mask_closeable"
-				:zoom="true"
-				:custom="custom"
-				:z-index="6"
-				@click="clickBtn"
-			>
-				<view v-if="popup_significance === 'loan'"> <Loan :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></Loan> </view>
-				<view v-else-if="popup_significance === 'repayment'"> <Repayment :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></Repayment> </view>
-				<view v-else-if="popup_significance === 'giveMoney'"> <GiveMoney :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></GiveMoney> </view>
-				<view v-else-if="popup_significance === 'redeem'"> <Redeem :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></Redeem> </view>
-				<view v-else-if="popup_significance === 'abandonSideline'"> <AbandonSideline :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></AbandonSideline> </view>
-				<view v-else-if="popup_significance === 'litigate'"> <JobRelated :personal="my_info" sign="litigate" @cancel="clickBtn" @submit="clickBtn"></JobRelated> </view>
-				<view v-else-if="popup_significance === 'hunting'"> <JobRelated :personal="my_info" sign="hunting" @cancel="clickBtn" @submit="clickBtn"></JobRelated> </view>
-			</tn-modal>
+			<view>
+				<!-- 主动点击的模态框 -->
+				<tn-modal
+					v-model="is_show_model"
+					background-color="#E4E9EC"
+					width="60%"
+					padding="30rpx 26rpx"
+					:radius="12"
+					font-color="#BA7027"
+					:font-size="35"
+					:title="title"
+					:content="content"
+					:button="button"
+					:show-close-btn="close_btn"
+					:mask-closeable="mask_closeable"
+					:zoom="true"
+					:custom="custom"
+					:z-index="4"
+					@click="clickBtn"
+				>
+					<view v-if="popup_significance === 'loan'"> <Loan :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></Loan> </view>
+					<view v-else-if="popup_significance === 'repayment'"> <Repayment :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></Repayment> </view>
+					<view v-else-if="popup_significance === 'giveMoney'"> <GiveMoney :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></GiveMoney> </view>
+					<view v-else-if="popup_significance === 'redeem'"> <Redeem :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></Redeem> </view>
+					<view v-else-if="popup_significance === 'abandonSideline'"> <AbandonSideline :personal="my_info" @cancel="clickBtn" @submit="clickBtn"></AbandonSideline> </view>
+					<view v-else-if="popup_significance === 'litigate'"> <JobRelated :personal="my_info" sign="litigate" @cancel="clickBtn" @submit="clickBtn"></JobRelated> </view>
+					<view v-else-if="popup_significance === 'hunting'"> <JobRelated :personal="my_info" sign="hunting" @cancel="clickBtn" @submit="clickBtn"></JobRelated> </view>
+				</tn-modal>
+			</view>
 
-			<!-- 被动收到的模态框 -->
-			<tn-modal
-				v-model="is_show_model_pa"
-				background-color="#E4E9EC"
-				width="64%"
-				padding="30rpx 26rpx"
-				:radius="12"
-				font-color="#BA7027"
-				:font-size="35"
-				:title="title_pa"
-				:content="content_pa"
-				:button="button_pa"
-				:show-close-btn="close_btn_pa"
-				:mask-closeable="mask_closeable_pa"
-				:zoom="true"
-				:custom="custom_pa"
-				:z-index="2"
-				@click="clickPaBtn"
-			>
-				<view v-if="popup_significance_pa === 'drawCard'">
-					<DrawCard ref="RefDrawCard" :personal="my_info" classification="drawCard" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
-				</view>
-				<view v-else-if="popup_significance_pa === 'receiveAuction'">
-					<DrawCard ref="RefDrawCard" :personal="my_info" classification="receiveAuction" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
-				</view>
-			</tn-modal>
+			<view>
+				<!-- 被动收到的模态框 -->
+				<tn-modal
+					v-model="is_show_model_pa"
+					background-color="#E4E9EC"
+					width="64%"
+					padding="30rpx 26rpx"
+					:radius="12"
+					font-color="#BA7027"
+					:font-size="35"
+					:title="title_pa"
+					:content="content_pa"
+					:button="button_pa"
+					:show-close-btn="close_btn_pa"
+					:mask-closeable="mask_closeable_pa"
+					:zoom="true"
+					:custom="custom_pa"
+					:z-index="2"
+					@click="clickPaBtn"
+				>
+					<view v-if="popup_significance_pa === 'drawCard'">
+						<DrawCard ref="RefDrawCard" :personal="my_info" classification="drawCard" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+					</view>
+					<view v-else-if="popup_significance_pa === 'receiveAuction'">
+						<DrawCard ref="RefDrawCard" :personal="my_info" classification="receiveAuction" @cancel="clickPaBtn" @submit="clickPaBtn"></DrawCard>
+					</view>
+				</tn-modal>
+			</view>
 		</view>
 	</view>
 </template>
@@ -185,6 +193,7 @@ export default {
 			// 压窗屏
 			lan_significance: '',
 			is_show_landscape: false,
+			close_position: '',
 
 			// 主动点击的模态框
 			popup_significance: '',
@@ -282,10 +291,12 @@ export default {
 		handleHelp(significance) {
 			if (significance === 'showNowCard') {
 				this.lan_significance = 'showNowCard'
+				this.close_position = 'bottom'
 				this.currentCard = getApp().globalData.currentCard
 				this.is_show_landscape = true
 			} else if (significance === 'showAllCard') {
 				this.lan_significance = 'showAllCard'
+				this.close_position = 'bottom'
 				this.is_show_landscape = true
 			}
 		},
@@ -302,6 +313,7 @@ export default {
 			// 	this.custom = false
 			// 	this.is_show_model = true
 			// } else
+			// this.globalNotice('提示', 'xxxxxh啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦', 'creative') // 用于测试消息框
 			if (significance === 'loan') {
 				this.popup_significance = 'loan'
 				this.close_btn = false
@@ -368,22 +380,76 @@ export default {
 			}
 		},
 
-		showPopup(name, id) {
-			if (String(id) === getApp().globalData.gameUserId) {
-				if (this.is_show_model_pa) {
-					this.show_popup = true
-					this.popup_name = name
-					this.popup_id = id
-					this.$nextTick(() => {
-						setRecord(this.my_info, 'Eject', this)
-					})
+		showPopup(name, id, status) {
+			if (status === 0) {
+				if (String(id) === getApp().globalData.gameUserId) {
+					setRecord(this.my_info, 'Eject', this)
+				} else {
+					GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
+						.then((res) => {
+							const data = res[1].data.data
+							setRecord(data, 'Eject', this)
+						})
+						.catch((err) => {
+							console.log(err)
+						})
+				}
+			} else if (String(id) === getApp().globalData.gameUserId) {
+				// 点的是自己
+				if (this.is_show_model_pa || this.is_show_model) {
+					if (this.show_popup) {
+						this.show_popup = false
+						this.popup_name = ''
+						this.popup_id = ''
+					} else {
+						this.show_popup = true
+						this.popup_name = name
+						this.popup_id = id
+						this.$nextTick(() => {
+							setRecord(this.my_info, 'Eject', this)
+						})
+					}
+				} else if (this.show_popup) {
+					// 应该没这种情况
+					this.show_popup = false
+					this.popup_name = ''
+					this.popup_id = ''
+					this.tableClass = 'table-ani'
+					setTimeout(() => {
+						this.tableClass = ''
+					}, 2000)
 				} else {
 					this.tableClass = 'table-ani'
 					setTimeout(() => {
 						this.tableClass = ''
 					}, 2000)
 				}
+			} else if (this.show_popup) {
+				// 点的是别人，并且 有被或主 和 无被主 的情况一样
+				// 如果是开着
+				this.show_popup = false
+				this.popup_name = ''
+				this.popup_id = ''
+				setTimeout(() => {
+					this.$nextTick(() => {
+						this.show_popup = true
+						this.popup_name = name
+						this.popup_id = id
+						GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
+							.then((res) => {
+								const data = res[1].data.data
+								setRecord(data, 'Eject', this)
+							})
+							.catch((err) => {
+								console.log(err)
+							})
+					})
+				}, 300)
 			} else {
+				// 如果是关着
+				this.show_popup = true
+				this.popup_name = name
+				this.popup_id = id
 				GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
 					.then((res) => {
 						const data = res[1].data.data
@@ -392,11 +458,36 @@ export default {
 					.catch((err) => {
 						console.log(err)
 					})
-				this.show_popup = true
-				this.popup_name = name
-				this.popup_id = id
 			}
+			// if (String(id) === getApp().globalData.gameUserId) {
+			// 	if (this.is_show_model_pa) {
+			// 		this.show_popup = true
+			// 		this.popup_name = name
+			// 		this.popup_id = id
+			// 		this.$nextTick(() => {
+			// 			setRecord(this.my_info, 'Eject', this)
+			// 		})
+			// 	} else {
+			// 		this.tableClass = 'table-ani'
+			// 		setTimeout(() => {
+			// 			this.tableClass = ''
+			// 		}, 2000)
+			// 	}
+			// } else {
+			// 	GetUserInfo({ game_user_id: id, game_id: getApp().globalData.gameId })
+			// 		.then((res) => {
+			// 			const data = res[1].data.data
+			// 			setRecord(data, 'Eject', this)
+			// 		})
+			// 		.catch((err) => {
+			// 			console.log(err)
+			// 		})
+			// 	this.show_popup = true
+			// 	this.popup_name = name
+			// 	this.popup_id = id
+			// }
 		},
+
 		globalNotice(title, content, icon, significance) {
 			this.$refs.toast.show({
 				title,
@@ -458,7 +549,7 @@ export default {
 					const data = res[1].data.data
 					setRecord(data, 'Main', this)
 					this.my_info = data
-					this.show_popup && this.showPopup(this.popup_name, this.popup_id)
+					this.show_popup && this.showPopup(this.popup_name, this.popup_id, 0)
 					if (!data.basic_info.is_rich_circle && (data.basic_info.passive_in > data.basic_info.basics_out)) {
 						RichCircle({
 							game_id: Number(getApp().globalData.gameId),
@@ -542,9 +633,10 @@ export default {
 			width: 100vw;
 			height: 100vh;
 			.top {
-				flex: 1;
+				// flex: 1;
 				// height: 20vh;
-				overflow: auto;
+				overflow-x: hidden;
+				overflow-y: auto;
 				// white-space: nowrap;
 			}
 			.middle {

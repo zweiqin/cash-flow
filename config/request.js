@@ -46,10 +46,12 @@ module.exports = (vm) => {
 					// args.header.token = vm.$store.state.userInfo.token
 					const token = uni.getStorageSync('token');
 					args.header.Authorization = token
+					// args.header.Authorization = 'YzMzYjBiYWZhYjY5N2E3OGV5SlFhRzl1WlNJNklqRTNOekEzTlRBd056WTVJaXdpUVhCd2FXUWlPaUpIUVUxRklpd2lUV1Z5U1dRaU9pSTVPVGs1SWl3aVZIbHdaU0k2SWpBaWZRPT1jMTFhMjllOTEyNGUyMjFi'
 				} else if (args?.custom?.auth_py) {
 					//添加给python接口用的，token键值为token
 					const token = uni.getStorageSync('token');
 					args.header.token = token
+					// args.header.token = 'YzMzYjBiYWZhYjY5N2E3OGV5SlFhRzl1WlNJNklqRTNOekEzTlRBd056WTVJaXdpUVhCd2FXUWlPaUpIUVUxRklpd2lUV1Z5U1dRaU9pSTVPVGs1SWl3aVZIbHdaU0k2SWpBaWZRPT1jMTFhMjllOTEyNGUyMjFi'
 				}
 			} catch (e) {
 				//TODO handle the exception

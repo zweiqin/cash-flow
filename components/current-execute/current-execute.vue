@@ -2,7 +2,7 @@
 	<view>
 		<view v-if="currentExecute.executed.length===0" class="tn-flex tn-flex-row-center tn-padding-sm"><text>所有玩家已点击放弃按钮</text></view>
 		<view v-else>
-			<view class="tn-flex tn-flex-row-center tn-padding-sm"><text>以下玩家还未点击放弃按钮：</text></view>
+			<view class="tn-flex tn-flex-row-center tn-padding-top"><text>以下玩家还未点击放弃按钮：</text></view>
 			<view>
 				<tn-scroll-list>
 					<view class="tn-flex">

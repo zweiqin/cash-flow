@@ -4,6 +4,7 @@
 			class="tn-toast-class tn-toast"
 			:class="[toastClass]"
 			:style="[toastStyle]"
+			@click="close"
 		>
 			<image v-if="image" :src="image" class="tn-toast__img" :class="{'tn-margin-bottom-sm': title || content}"></image>
 			<view v-if="icon" class="tn-toast__icon">
@@ -38,6 +39,11 @@ export default {
 		mask: {
 			type: Boolean,
 			default: true
+		},
+		// 遮罩层
+		isClickable: {
+			type: Boolean,
+			default: false
 		}
 	},
 	data() {
@@ -97,6 +103,9 @@ export default {
 		}
 	},
 	methods: {
+		close() {
+			if (this.isClickable) this.visible = false
+		},
 		// 显示弹框
 		show(options = {}) {
 			const {
@@ -149,7 +158,7 @@ export default {
   .tn-toast {
     height: auto;
     // background-color: rgba(0, 0, 0, 0.4);
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(0, 0, 0, 0.75);
     border-radius: 10rpx;
     opacity: 0;
     position: fixed;

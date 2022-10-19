@@ -6,7 +6,7 @@
 			fontSize: fontSizeStyle || '50rpx',
 			fontWeight: bold ? 'bold' : 'normal',
 			color: fontColorStyle || '#080808',
-			maxWidth: '7vh',
+			maxWidth: '9.6vh',
 			overflow: headMsgShow ? 'visible' : 'hidden'
 		}"
 		@click="showMsg(startVal)"
@@ -267,6 +267,7 @@ export default {
 		position: absolute;
 		top: 0;
 		left: 0;
+		z-index: 99;
 		display: block;
 		background-color: #fff;
 		border: 1rpx solid black;

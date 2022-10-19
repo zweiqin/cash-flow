@@ -232,7 +232,7 @@ export default {
     width: 64rpx;
     height: 64rpx;
     // z-index: 1;
-    z-index: 3;
+    z-index: 6;
 
     &--sm {
       width: 48rpx;

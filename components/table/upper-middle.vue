@@ -53,7 +53,7 @@
 					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black">信托投资</view>
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm">信托被动收入</view>
 				</view>
-				<view v-for="item in asset1" :key="item.id" class="tn-flex pad-top">
+				<view class="tn-flex pad-top">
 					<view class="tn-flex-2 tn-border-solid-bottom tn-border-black tn-flex tn-flex-col-center tn-flex-row-center">{{ trust_price }}</view>
 					<view class="tn-flex-3 tn-border-solid-bottom tn-border-black tn-margin-left-sm tn-flex tn-flex-col-center tn-flex-row-center">{{ cutApart(trust_price * 0.01) }}</view>
 				</view>

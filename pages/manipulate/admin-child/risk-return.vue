@@ -29,8 +29,8 @@
 		</view>
 
 		<view class="tn-flex tn-flex-row-around button">
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">取消</tn-button>
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">确定</tn-button>
+			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="5vh" @click="cancel()">取消</tn-button>
+			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="5vh" @click="confirm()">确定</tn-button>
 		</view>
 	</view>
 </template>
