@@ -8,8 +8,8 @@
 		</view>
 
 		<view class="tn-flex tn-flex-row-around button">
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="5vh" @click="cancel()">取消</tn-button>
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="5vh" @click="submit()">提交</tn-button>
+			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel()">取消</tn-button>
+			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="submit()">提交</tn-button>
 		</view>
 
 	</view>

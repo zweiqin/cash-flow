@@ -84,8 +84,8 @@ export default {
       transform: translate(-50%, -50%);
 
       &--icon {
-        width: 100rpx;
-        height: 100rpx;
+        width: 150rpx;
+        height: 150rpx;
         font-size: 60rpx;
         border-radius: 50%;
         margin-bottom: 18rpx;

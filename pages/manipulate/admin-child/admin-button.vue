@@ -1,6 +1,6 @@
 <template>
 	<!-- 弹出被动收到的模态框时，动态改变align-content，关闭房间按钮的height，其它按钮的width -->
-	<view class="tn-flex tn-flex-direction-column tn-flex-nowrap tn-padding-xs tn-radius bg-flex-shadow middle-r1">
+	<view class="tn-flex tn-flex-direction-column tn-flex-nowrap tn-padding-xs tn-radius middle-r1">
 		<!-- 按钮s -->
 		<!-- <view :style="{ height: close_btn_height }">
 			<tn-button
@@ -35,7 +35,7 @@
 		<view class="tn-width-full tn-text-center tn-border-dashed-top" style="padding: 1vh 1vh; box-shadow: 0 0 0 0 #220088, -9rpx 0 10rpx 0 #220088 inset, 9rpx 0 10rpx 0 #220088 inset, 0 0 0 0 #220088;border-color:#220088">
 			<!-- 阴影位置：上左右下 -->
 			<tn-scroll-list :indicator="false" style="padding-bottom: 0;">
-				<view class="tn-flex">
+				<view class="tn-flex" style="margin: 0 auto;">
 					<view style="z-index: 2;">
 						<tn-button
 							:shadow="true"
@@ -112,41 +112,79 @@
 		<view class="tn-width-full tn-text-center tn-border-dashed-top" style="margin-top: 1vh; padding: 1vh 1vh; box-shadow: 0 0 0 0 #4400cc, -9rpx 0 10rpx 0 #4400cc inset, 9rpx 0 10rpx 0 #4400cc inset, 0 0 0 0 #4400cc;border-color:#4400cc">
 			<!-- 阴影位置：上左右下 -->
 			<tn-scroll-list :indicator="false" style="padding-bottom: 0;">
-				<view class="tn-flex">
-					<view style="z-index: 2;">
-						<tn-button
-							:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
-							:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
-							style="min-width: 88px;" @click="handleProcessing('debitCard0副业')"
-						><text>【小机会】副业</text></tn-button>
+				<view>
+					<view class="tn-flex">
+						<view style="z-index: 2;">
+							<tn-button
+								:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
+								:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
+								style="min-width: 88px;" @click="handleProcessing('debitCard0副业')"
+							><text>【小机会】副业</text></tn-button>
+						</view>
+						<view style="z-index: 2;">
+							<tn-button
+								:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
+								:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
+								style="min-width: 88px;" @click="handleProcessing('debitCard0金融')"
+							><text>【小机会】金融</text></tn-button>
+						</view>
+						<view style="z-index: 2;">
+							<tn-button
+								:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
+								:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
+								style="min-width: 88px;" @click="handleProcessing('debitCard0房地产')"
+							><text>【大机会】房地产</text></tn-button>
+						</view>
+						<view style="z-index: 2;">
+							<tn-button
+								:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
+								:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
+								style="min-width: 88px;" @click="handleProcessing('debitCard0企业')"
+							><text>【大机会】企业</text></tn-button>
+						</view>
 					</view>
-					<view style="z-index: 2;">
-						<tn-button
-							:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
-							:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
-							style="min-width: 88px;" @click="handleProcessing('debitCard0金融')"
-						><text>【小机会】金融</text></tn-button>
-					</view>
-					<view style="z-index: 2;">
-						<tn-button
-							:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
-							:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
-							style="min-width: 88px;" @click="handleProcessing('debitCard0房地产')"
-						><text>【大机会】房地产</text></tn-button>
-					</view>
-					<view style="z-index: 2;">
-						<tn-button
-							:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
-							:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
-							style="min-width: 88px;" @click="handleProcessing('debitCard0企业')"
-						><text>【大机会】企业</text></tn-button>
+					<view class="tn-flex" style="margin-top: 2vh;">
+						<view style="z-index: 2;">
+							<tn-button
+								:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
+								:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
+								@click="handleProcessing('debitCard1行情')"
+							><text>行情卡</text></tn-button>
+						</view>
+						<view style="z-index: 2;">
+							<tn-button
+								:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
+								:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
+								@click="handleProcessing('debitCard1觉察')"
+							><text>觉察卡</text></tn-button>
+						</view>
+						<view style="z-index: 2;">
+							<tn-button
+								:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
+								:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
+								@click="handleProcessing('debitCard1相亲卡')"
+							><text>相亲卡</text></tn-button>
+						</view>
+						<view style="z-index: 2;">
+							<tn-button
+								:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
+								:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
+								@click="handleProcessing('debitCard1逆流')"
+							><text>逆流卡</text></tn-button>
+						</view>
+						<view style="z-index: 2;">
+							<tn-button
+								:shadow="true" width="25vw" height="auto" background-color="tn-cool-bg-color-2"
+								:font-size="2" font-unit="vh" padding="2vh 1vw" margin="0 2vh"
+								@click="handleProcessing('debitCard1项目')"
+							><text>项目卡</text></tn-button>
+						</view>
 					</view>
 				</view>
 			</tn-scroll-list>
 		</view>
 
-		<view class="tn-width-full tn-text-center tn-border-dashed-top" style="margin-top: 1vh; padding: 1vh 1vh; box-shadow: 0 0 0 0 #4400cc, -9rpx 0 10rpx 0 #4400cc inset, 9rpx 0 10rpx 0 #4400cc inset, 0 0 0 0 #4400cc;border-color:#4400cc">
-			<!-- 阴影位置：上左右下 -->
+		<!-- <view class="tn-width-full tn-text-center tn-border-dashed-top" style="margin-top: 1vh; padding: 1vh 1vh; box-shadow: 0 0 0 0 #4400cc, -9rpx 0 10rpx 0 #4400cc inset, 9rpx 0 10rpx 0 #4400cc inset, 0 0 0 0 #4400cc;border-color:#4400cc">
 			<tn-scroll-list :indicator="false" style="padding-bottom: 0;">
 
 				<view class="tn-flex">
@@ -187,7 +225,7 @@
 					</view>
 				</view>
 			</tn-scroll-list>
-		</view>
+		</view> -->
 
 		<view class="tn-width-full tn-text-center tn-border-dashed-top" style="margin-top: 1vh; padding: 1vh 1vh; box-shadow: 0 0 0 0 #5500ff, -9rpx 0 10rpx 0 #5500ff inset, 9rpx 0 10rpx 0 #5500ff inset, 0 0 0 0 #5500ff;border-color:#5500ff">
 			<!-- 阴影位置：上左右下 -->
@@ -331,7 +369,7 @@
 							style="min-width: 50px;"
 							@click="handleProcessing('charity')"
 						>
-							<text>逆流慈善</text>
+							<text>顺流慈善</text>
 						</tn-button>
 					</view>
 				</view>

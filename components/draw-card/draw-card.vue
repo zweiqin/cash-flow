@@ -5,7 +5,7 @@
 				<view v-if="leftIcon" class="main_title__icon main_title__icon--left" :class="[`tn-icon-${leftIcon}`]"></view> <view class="main_title__content">{{ userName }}</view>
 				<view v-if="rightIcon" class="main_title__icon main_title__icon--right" :class="[`tn-icon-${rightIcon}`]"></view>
 				<view v-if="role === 'admin'">
-					<tn-button background-color="tn-bg-teal" font-color="tn-color-white" margin="0 0 0 100rpx" @click="cancel('stow')">收起</tn-button>
+					<tn-button background-color="tn-bg-teal" font-color="tn-color-white" height="5vmax" margin="0 0 0 100rpx" @click="cancel('stow')">收起</tn-button>
 				</view>
 			</view>
 		</view>
@@ -58,27 +58,27 @@
 							<view v-if="currentCard.card_name.startsWith('P14')">
 								<!-- 判断是否有购车贷款，有就 有可以购买的按钮 -->
 								<view v-if="personal.basic_info.out_car_loan > 0" class="tn-flex tn-flex-row-around tn-padding-top">
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel('currentExecute')">放弃</tn-button>
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel('currentExecute')">放弃</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm('currentExecute')">{{
 										is_transfer === '1' ? '确定' : currentCard.category_id === 6 ? '购买' : '投资'
 									}}</tn-button>
 								</view>
 								<view v-else class="tn-padding-top">
 									<view><text>抱歉，您没有购车贷款，不能投资该副业！</text></view>
 									<view class="tn-flex tn-flex-row-around tn-padding-top">
-										<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+										<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel('currentExecute')">关闭</tn-button>
 									</view>
 								</view>
 							</view>
 							<view v-else>
 								<view v-if="is_drew" class="tn-flex tn-flex-row-around tn-padding-top">
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel('currentExecute')">放弃</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm('currentExecute')">{{
 										is_transfer === '1' ? '确定' : currentCard.category_id === 6 ? '购买' : '投资'
 									}}</tn-button>
 								</view>
 								<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
 								</view>
 							</view>
 						</view>
@@ -106,11 +106,11 @@
 							</view>
 							<view>
 								<view v-if="is_drew" class="tn-flex tn-flex-row-around tn-padding-top">
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{ is_transfer === '1' ? '确定' : '购买' }}</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel('currentExecute')">放弃</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm('currentExecute')">{{ is_transfer === '1' ? '确定' : '购买' }}</tn-button>
 								</view>
 								<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
 								</view>
 							</view>
 						</view>
@@ -158,7 +158,7 @@
 									</view>
 								</view>
 								<view v-else-if="currentCard.card_name.startsWith('银行') || currentCard.card_name.startsWith('基金交易') || currentCard.card_name.startsWith('互联网')">
-									<tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" />
+									<tn-input v-model="quantity" type="number" placeholder="在此输入购买份数" :focus="true" :border="true" />
 								</view>
 								<view v-else-if="currentCard.card_name.startsWith('投资黄金')">
 									<tn-input v-model="quantity" type="number" placeholder="在此输入购买克数" :focus="true" :border="true" />
@@ -166,8 +166,8 @@
 							</view>
 							<view>
 								<view class="tn-flex tn-flex-row-around tn-padding-top">
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel('currentExecute')">放弃</tn-button>
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">{{ is_transfer === '1' ? '确定' : is_sell === 1 ? '卖出' : '购买' }}</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel('currentExecute')">放弃</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm('currentExecute')">{{ is_transfer === '1' ? '确定' : is_sell === 1 ? '卖出' : '购买' }}</tn-button>
 								</view>
 							</view>
 						</view>
@@ -179,7 +179,7 @@
 								<text>注意：该行情卡已影响到您的财富报表！</text>
 							</view>
 							<view class="tn-flex tn-flex-row-around tn-padding-top">
-								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
 							</view>
 						</view>
 						<view v-else>
@@ -214,8 +214,8 @@
 							</view>
 							<view>
 								<view class="tn-flex tn-flex-row-around tn-padding-top">
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel('currentExecute')">放弃</tn-button>
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">卖出</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel('currentExecute')">放弃</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm('currentExecute')">卖出</tn-button>
 								</view>
 							</view>
 						</view>
@@ -224,8 +224,8 @@
 					<view v-else-if="currentCard.category_id === 12">
 						<view v-if="currentCard.card_name.startsWith('团体觉察')">
 							<view class="tn-flex tn-flex-row-around tn-padding-top">
-								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
-								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">使用</tn-button>
+								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel('currentExecute')">放弃</tn-button>
+								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm('currentExecute')">使用</tn-button>
 							</view>
 						</view>
 						<view v-else>
@@ -285,18 +285,18 @@
 									<view v-if="currentCard.describe.includes('已婚的玩家执行此卡') && personal.basic_info.is_married === 0">
 										<view><text>抱歉，您还未结婚，不能使用该卡！</text></view>
 										<view class="tn-flex tn-flex-row-around tn-padding-top">
-											<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+											<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel('currentExecute')">关闭</tn-button>
 										</view>
 									</view>
 									<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
-										<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
-										<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">使用</tn-button>
+										<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel('currentExecute')">放弃</tn-button>
+										<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm('currentExecute')">使用</tn-button>
 									</view>
 								</view>
 							</view>
 							<view v-else>
 								<view class="tn-flex tn-flex-row-around tn-padding-top">
-									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+									<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
 								</view>
 							</view>
 						</view>
@@ -318,14 +318,14 @@
 								</view>
 							</view>
 							<view class="tn-flex tn-flex-row-around tn-padding-top">
-								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
 							</view>
 						</view>
 					</view>
 
 					<!-- 针对项目卡 -->
 					<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
-						<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+						<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
 					</view>
 
 				</view>
@@ -335,24 +335,24 @@
 					<view v-if="currentCard.category_id === 10">
 						<view>
 							<view v-if="is_drew" class="tn-flex tn-flex-row-around tn-padding-top">
-								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">放弃</tn-button>
-								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm()">投资</tn-button>
+								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel('currentExecute')">放弃</tn-button>
+								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm('currentExecute')">投资</tn-button>
 							</view>
 							<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
-								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+								<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
 							</view>
 						</view>
 					</view>
 					<!-- 针对除项目卡的其它卡 -->
 					<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
-						<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+						<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
 					</view>
 
 				</view>
 
 			</view>
 			<view v-else-if="role === 'user' && me.isDead==='1'" class="tn-flex tn-flex-row-around tn-padding-top">
-				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
 			</view>
 			<!-- 管理员展示 -->
 			<view v-else>
@@ -522,7 +522,28 @@ export default {
 		syncExecute() {
 			this.currentExecute = getApp().globalData.currentExecute
 		},
-		confirm() {
+		confirm(meaning) {
+			if (meaning === 'currentExecute') {
+				AbandonCard({
+					game_id: getApp().globalData.gameId,
+					game_user_id: getApp().globalData.gameUserId,
+					card_id: String(this.cardMsg[1])
+				})
+					.then((res) => {
+						if (res[1].data.status === 200) {
+							// this.$emit('cancel')
+						} else {
+							uni.showToast({
+								title: '操作失败！',
+								icon: 'success'
+								// duration: 450
+							})
+						}
+					})
+					.catch((err) => {
+						console.log(err)
+					})
+			}
 			// console.log(this.money)
 			// // 多一份保险，判断抽到的这张卡有没有放到storage里面
 			// if (!this.currentCard) {
@@ -615,7 +636,8 @@ export default {
 						}
 						temp_category_id = temp_receiver_id = ''
 					} else {
-						temp_buy_number = temp_sell_number = temp_sell_id = temp_category_id = temp_receiver_id = ''
+						temp_buy_number = 1
+						temp_sell_number = temp_sell_id = temp_category_id = temp_receiver_id = ''
 					}
 				} else if (this.currentCard.category_id === 6) {
 					temp_buy_number = temp_sell_number = temp_sell_id = temp_category_id = temp_receiver_id = ''
@@ -756,8 +778,8 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin-top: 35rpx;
-	margin-bottom: 50rpx;
+	margin-top: 28rpx;
+	margin-bottom: 25rpx;
 	font-size: 36rpx;
 
 	&__content {
@@ -773,7 +795,7 @@ export default {
 // 	max-height: 65vh;
 // 	overflow-y: hidden;
 	.container {
-		max-height: 65vh;
+		max-height: 58vh;
 		overflow-y: auto;
 		&::-webkit-scrollbar {
 			/*滚动条整体样式*/

@@ -5,7 +5,7 @@
 				<!-- 顶层开始 -->
 				<view class="tn-flex tn-margin-xs tn-radius bg-flex-shadow top" style="padding: 1vh;">
 					<!-- <tn-count-down :timestamp="900" :font-size="60" :separator-size="60"></tn-count-down> -->
-					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-bg-white tn-text-center tn-radius" style="width: 10.6vh;padding: 0.5vh;">
+					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-text-center tn-radius" style="width: 10.6vh;padding: 0.5vh;">
 						<view class="tn-border-solid-bottom tn-bold-border"> <Timer @timing="changeTimer"></Timer> </view>
 						<!-- <tn-count-to :start-val="90" :end-val="0" :duration="90000" :use-easing="false"></tn-count-to> -->
 						<view> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" @change="changeCountTo"></CountTo> </view>
@@ -67,7 +67,7 @@
 				<!-- 压屏窗-->
 				<tn-landscape
 					:show="is_show_landscape"
-					:close-btn="true"
+					:close-btn="close_btn_lan"
 					close-color="#E83A30"
 					:close-size="60"
 					:close-position="close_position"
@@ -77,6 +77,9 @@
 				>
 					<view v-if="lan_significance === 'showNowCard'"><Cards :card="currentCard"></Cards></view>
 					<view v-else-if="lan_significance === 'showAllCard'"><image src="https://tnuiimage.tnkjapp.com/landscape/2022-new-year.png" mode="widthFix"></image>1111 </view>
+					<view v-else-if="lan_significance === 'showJournal'">
+						<Journal></Journal>
+					</view>
 				</tn-landscape>
 			</view>
 
@@ -86,11 +89,10 @@
 					v-model="is_show_model"
 					background-color="#E4E9EC"
 					width="50%"
-					height="100%"
 					padding="30rpx 26rpx"
 					:radius="12"
 					font-color="#BA7027"
-					:font-size="35"
+					:font-size="65"
 					:title="title"
 					:content="content"
 					:button="button"
@@ -153,7 +155,7 @@
 
 			<view v-if="is_stow && popup_significance_pa === 'drawCard' && is_show_model_pa">
 				<!-- 重新显示抽卡组件的悬浮按钮-->
-				<nav-index-button :right="150" @click="is_stow=false"></nav-index-button>
+				<nav-index-button :right="180" @click="is_stow=false"></nav-index-button>
 			</view>
 
 		</view>
@@ -195,6 +197,7 @@ import ConfirmPoints from './admin-child/confirm-points.vue'
 
 // 压屏窗
 import Cards from '@/components/cards/cards.vue'
+import Journal from '@/components/journal/journal.vue'
 
 // 重新显示抽卡组件的悬浮按钮
 import NavIndexButton from '@/libs/components/nav-index-button.vue'
@@ -225,6 +228,7 @@ export default {
 		DrawCard,
 		ConfirmPoints,
 		Cards,
+		Journal,
 		NavIndexButton
 	},
 	data() {
@@ -238,6 +242,7 @@ export default {
 			lan_significance: '',
 			is_show_landscape: false,
 			close_position: '',
+			close_btn_lan: true,
 
 			// 主动点击的模态框
 			popup_significance: '',
@@ -334,12 +339,19 @@ export default {
 		handleHelp(significance) {
 			if (significance === 'showNowCard') {
 				this.lan_significance = 'showNowCard'
+				this.close_btn_lan = true
 				this.close_position = 'bottom'
 				this.currentCard = getApp().globalData.currentCard
 				this.is_show_landscape = true
 			} else if (significance === 'showAllCard') {
 				this.lan_significance = 'showAllCard'
-				this.close_position = 'bottom'
+				this.close_btn_lan = false
+				// this.close_position = 'rightTop'
+				this.is_show_landscape = true
+			} else if (significance === 'showJournal') {
+				this.lan_significance = 'showJournal'
+				this.close_btn_lan = false
+				// this.close_position = 'rightTop'
 				this.is_show_landscape = true
 			}
 		},
@@ -654,11 +666,14 @@ export default {
 					this.clickPaBtn()
 				}
 			} else if (meaning === 'lookForJob') {
+				this.is_stow = false
 				this.handleManage('lookForJob')
 			} else if (meaning === 'litigate') {
+				this.is_stow = false
 				this.handleManage('litigate')
 			} else if (meaning === 'NextUser') {
 				console.log('管理员游戏界面触发：', getApp().globalData.gameId)
+				console.trace()
 				return NextUser({
 					game_id: Number(getApp().globalData.gameId),
 					game_user_id: Number(getApp().globalData.round[0])
@@ -753,7 +768,6 @@ export default {
 						// flex-direction: column;
 						height: 100%;
 						overflow-y: auto;
-						background-color: #ffb3ff;
 						&::-webkit-scrollbar {
 							/*滚动条整体样式*/
 							display: block;
@@ -829,7 +843,10 @@ export default {
 // 	background-color: beige;
 // 	// background-color: #ffb3ff;
 // }
-.innermost-3 > .bg-flex-shadow {
+// .innermost-3 > .bg-flex-shadow {
+// 	background-color: #ffb3ff;
+// }
+.innermost-3 {
 	background-color: #ffb3ff;
 }
 /* 内容容器 end */

@@ -7,7 +7,7 @@
 					<!-- <view class="tn-bg-blue">1111111111111</view>
 					<view class="tn-flex-1 tn-bg-red" style="width: 0;">000000000000000000000000009</view>
 					<view class="tn-bg-blue">9222222222222</view> -->
-					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-bg-white tn-text-center tn-radius" style="width: 10.6vh;padding: 0.5vh;">
+					<view class="tn-flex tn-flex-center tn-flex-direction-column tn-text-center tn-radius" style="width: 10.6vh;padding: 0.5vh;">
 						<view class="tn-border-solid-bottom tn-bold-border"> <Timer @timing="changeTimer"></Timer> </view>
 						<view> <CountTo :font-size="2" font-unit="vh" :start-val="count_text" :end-val="0" :duration="90000" :use-easing="false" @change="changeCountTo"></CountTo> </view>
 					</view>
@@ -70,7 +70,7 @@
 				<!-- 压屏窗-->
 				<tn-landscape
 					:show="is_show_landscape"
-					:close-btn="true"
+					:close-btn="close_btn_lan"
 					close-color="#E83A30"
 					:close-size="60"
 					:close-position="close_position"
@@ -80,6 +80,9 @@
 				>
 					<view v-if="lan_significance === 'showNowCard'"><Cards :card="currentCard"></Cards></view>
 					<view v-else-if="lan_significance === 'showAllCard'"><image src="https://tnuiimage.tnkjapp.com/landscape/2022-new-year.png" mode="widthFix"></image>1111 </view>
+					<view v-else-if="lan_significance === 'showJournal'">
+						<Journal></Journal>
+					</view>
 				</tn-landscape>
 			</view>
 
@@ -173,6 +176,7 @@ import DrawCard from '@/components/draw-card/draw-card.vue'
 
 // 压屏窗
 import Cards from '@/components/cards/cards.vue'
+import Journal from '@/components/journal/journal.vue'
 
 // 接口
 import { GetUserInfo, RichCircle, ConfirmBillionaire } from 'config/api.js'
@@ -181,7 +185,7 @@ import { GetUserInfo, RichCircle, ConfirmBillionaire } from 'config/api.js'
 import setRecord from 'utils/render-table/render-table.js'
 
 export default {
-	components: { Timer, CountTo, HeadNavigationBar, HeadHelp, TableDataes, Bottom, UserButton, DrawCard, Loan, Repayment, GiveMoney, JobRelated, Redeem, AbandonSideline, Cards },
+	components: { Timer, CountTo, HeadNavigationBar, HeadHelp, TableDataes, Bottom, UserButton, DrawCard, Loan, Repayment, GiveMoney, JobRelated, Redeem, AbandonSideline, Cards, Journal },
 	data() {
 		return {
 			currentCard: getApp().globalData.currentCard,
@@ -194,6 +198,7 @@ export default {
 			lan_significance: '',
 			is_show_landscape: false,
 			close_position: '',
+			close_btn_lan: true,
 
 			// 主动点击的模态框
 			popup_significance: '',
@@ -291,12 +296,19 @@ export default {
 		handleHelp(significance) {
 			if (significance === 'showNowCard') {
 				this.lan_significance = 'showNowCard'
+				this.close_btn_lan = true
 				this.close_position = 'bottom'
 				this.currentCard = getApp().globalData.currentCard
 				this.is_show_landscape = true
 			} else if (significance === 'showAllCard') {
 				this.lan_significance = 'showAllCard'
-				this.close_position = 'bottom'
+				this.close_btn_lan = false
+				// this.close_position = 'rightTop'
+				this.is_show_landscape = true
+			} else if (significance === 'showJournal') {
+				this.lan_significance = 'showJournal'
+				this.close_btn_lan = false
+				// this.close_position = 'rightTop'
 				this.is_show_landscape = true
 			}
 		},

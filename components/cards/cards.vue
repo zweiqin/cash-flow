@@ -1,5 +1,5 @@
 <template>
-	<view class="tn-width-full tn-width-full">
+	<view class="tn-width-full">
 		<view v-if="card" class="tn-flex tn-flex-direction-column tn-flex-row-between tn-text-center tn-text-bold tn-color-white contain" :class="card_bg" style="border-radius: 20rpx;">
 			<view v-if="card_name_text" class="tn-bg-orangeyellow card-name-text">
 				<view class="card-text">

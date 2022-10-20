@@ -102,7 +102,7 @@ export default {
 			// this.wsHandle = new WebSocket('ws://106.55.157.177:19999/v1/socket/Socket', [, 'YzMzYjBiYWZhYjY5N2E3OGV5SlFhRzl1WlNJNklqRTNOekEzTlRBd056WTVJaXdpUVhCd2FXUWlPaUpIUVUxRklpd2lUV1Z5U1dRaU9pSTVPVGs1SWl3aVZIbHdaU0k2SWpBaWZRPT1jMTFhMjllOTEyNGUyMjFi'])
 			this.wsHandle = new WebSocket('ws://106.55.157.177:19999/v1/socket/Socket')
 			// this.wsHandle = new WebSocket('ws://192.168.0.74:19999/v1/socket/Socket')
-			// this.wsHandle = new WebSocket('ws://192.168.0.8:19999/v1/socket/Socket')
+			// this.wsHandle = new WebSocket('ws://192.168.0.19:19999/v1/socket/Socket')
 			this.wsHandle.onopen = this.onOpen
 			// 服务端发送回来的其他消息
 			this.wsHandle.onmessage = this.onMessage
@@ -373,7 +373,7 @@ export default {
 			}
 
 			if (data.event === 'notFinish') {
-				// 先是drawCard，然后再notFinish
+				// 先是notFinish，然后再drawCard
 				// banker_action: false,data: {card_id: 119, not_finish_list: Array(0)},event: "notFinish",game_id: "51",game_user_id: "",is_all: true
 				// data: {not_finish_list:["玩家一号","玩家三号"],card_id:20}
 				_this.currentExecute = { executed: data.data.not_finish_list, cardId: data.data.card_id }
@@ -645,7 +645,7 @@ export default {
 			if (data.event === 'victory') {
 				// banker_action: false，data: "玩家你你你胜利！"，event: "victory"，game_id: "44"，game_user_id: "58"，is_all: true
 				if (_this.gameUserId === data.game_user_id) {
-					_this.game && _this.game.globalNotice('祝贺您', data.data.replace(new RegExp('^.{' + (2 + _this.userName.length) + '}'), '您'), 'praise-fill')
+					_this.game && _this.game.globalNotice('祝贺您', data.data.replace(new RegExp('^.{' + (2 + _this.userName.length) + '}'), '您'), 'trophy-fill')
 				} else {
 					_this.game && _this.game.globalNotice('游戏结束', data.data, 'creative')
 					_this.manipulate && _this.manipulate.globalNotice('游戏结束', data.data, 'creative')

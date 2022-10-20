@@ -10,8 +10,8 @@
 		</view>
 
 		<view class="tn-flex tn-flex-row-around">
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm(0)">否</tn-button>
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm(1)">是</tn-button>
+			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm(0)">否</tn-button>
+			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm(1)">是</tn-button>
 		</view>
 
 	</view>

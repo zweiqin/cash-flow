@@ -28,6 +28,26 @@ export const GetDreamList = (data) => uni.request({
 	}
 })
 
+// 获取日志列表，以轮数传递
+export const GetLogList = (data) => uni.request({
+	url: '/log/GetLogList', // 仅为示例，并非真实接口地址。
+	method: 'GET',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// 获取游戏时间
+export const GetGameDuration = (data) => uni.request({
+	url: '/socket/GetGameDuration', // 仅为示例，并非真实接口地址。
+	method: 'GET',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
 // 获取具体某人的游戏资料信息
 export const GetUserInfo = (data) => uni.request({
 	url: '/game_user/GetUserInfo', // 仅为示例，并非真实接口地址。
@@ -249,7 +269,7 @@ export const ConfirmCard = (data) => uni.request({
 	}
 })
 
-// user被抽到卡后，放弃卡牌
+// user被抽到卡后，如果卡牌是单人操作的，则对卡牌进行操作，如果卡牌是多人操作的，则所有人都对卡牌进行操作。
 export const AbandonCard = (data) => uni.request({
 	url: '/card/AbandonCard', // 仅为示例，并非真实接口地址。
 	method: 'POST',

@@ -1,6 +1,93 @@
 <template>
 	<view>
-		<view v-if="currentCard.category_id === 7">
+
+		<view v-if="currentCard.category_id === 4">
+			<view v-if="currentCard.card_name.startsWith('P14')">
+				<view><CurrentExecute :current-execute="execute"></CurrentExecute></view>
+				<view class="tn-flex tn-flex-row-around tn-padding-top">
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+				</view>
+			</view>
+			<view v-else>
+				<view><CurrentExecute :single="true" :current-execute="execute"></CurrentExecute></view>
+				<view class="tn-flex tn-flex-row-around tn-padding-top">
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+				</view>
+			</view>
+		</view>
+		<view v-else-if="currentCard.category_id === 6">
+			<view>
+				<view><CurrentExecute :single="true" :current-execute="execute"></CurrentExecute></view>
+				<view class="tn-flex tn-flex-row-around tn-padding-top">
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+				</view>
+			</view>
+		</view>
+		<view v-else-if="currentCard.category_id === 8">
+			<view>
+				<view><CurrentExecute :single="true" :current-execute="execute"></CurrentExecute></view>
+				<view class="tn-flex tn-flex-row-around tn-padding-top">
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+				</view>
+			</view>
+		</view>
+
+		<view v-else-if="currentCard.category_id === 5">
+			<view v-if="!currentCard.card_name.includes('新股上市')">
+				<view><CurrentExecute :current-execute="execute"></CurrentExecute></view>
+				<view class="tn-flex tn-flex-row-around tn-padding-top">
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+				</view>
+			</view>
+			<view v-else>
+				<view><CurrentExecute :single="true" :current-execute="execute"></CurrentExecute></view>
+				<view class="tn-flex tn-flex-row-around tn-padding-top">
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+				</view>
+			</view>
+		</view>
+
+		<view v-else-if="currentCard.category_id === 11">
+			<view
+				v-if="
+					currentCard.card_name.startsWith('房产行情') ||
+						currentCard.card_name.startsWith('股票行情') ||
+						currentCard.card_name.startsWith('黄金上涨') ||
+						currentCard.card_name.startsWith('牛市来袭')
+				"
+			>
+				<view><CurrentExecute :current-execute="execute"></CurrentExecute></view>
+				<view class="tn-flex tn-flex-row-around tn-padding-top">
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+				</view>
+			</view>
+			<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+			</view>
+		</view>
+
+		<view v-else-if="currentCard.category_id === 12">
+			<view v-if="currentCard.card_name.startsWith('团体觉察')">
+				<view><CurrentExecute :current-execute="execute"></CurrentExecute></view>
+				<view class="tn-flex tn-flex-row-around tn-padding-top">
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+				</view>
+			</view>
+			<view v-else>
+				<view><CurrentExecute :single="true" :current-execute="execute"></CurrentExecute></view>
+				<view class="tn-flex tn-flex-row-around tn-padding-top">
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+				</view>
+			</view>
+		</view>
+
+		<view v-else-if="currentCard.category_id === 9">
+			<view class="tn-flex tn-flex-row-around tn-padding-top">
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+			</view>
+		</view>
+
+		<view v-else-if="currentCard.category_id === 7">
 			<view v-if="currentCard.card_name.startsWith('团体') && currentCard.card_name.includes('病毒传染')">
 				<view class="tn-padding-top">
 					<tn-list-view :card="true" title="请选择掷骰子点数小于或等于3的玩家(可多选)：" background-color="#EFEFEF">
@@ -16,8 +103,8 @@
 					</tn-list-view>
 				</view>
 				<view class="tn-flex tn-flex-row-around tn-padding-top">
-					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">关闭</tn-button>
-					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm('sick')">确定</tn-button>
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel()">关闭</tn-button>
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm('sick')">确定</tn-button>
 				</view>
 			</view>
 			<view v-if="currentCard.card_name.startsWith('团体') && currentCard.card_name.includes('公司裁员')">
@@ -36,61 +123,26 @@
 					</tn-list-view>
 				</view>
 				<view class="tn-flex tn-flex-row-around tn-padding-top">
-					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="cancel()">关闭</tn-button>
-					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" @click="confirm('unemployment')">确定</tn-button>
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel()">关闭</tn-button>
+					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm('unemployment')">确定</tn-button>
 				</view>
 			</view>
 			<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
-				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
 			</view>
 		</view>
 
-		<view v-else-if="currentCard.category_id === 4">
-			<view v-if="currentCard.card_name.startsWith('P14')">
-				<view><CurrentExecute :current-execute="execute"></CurrentExecute></view>
-				<view class="tn-flex tn-flex-row-around tn-padding-top">
-					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
-				</view>
-			</view>
-			<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
-				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
+		<!-- 针对项目卡 -->
+		<view v-else>
+			<view><CurrentExecute :single="true" :current-execute="execute"></CurrentExecute></view>
+			<view class="tn-flex tn-flex-row-around tn-padding-top">
+				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
 			</view>
 		</view>
 
-		<view v-else-if="currentCard.category_id === 5">
-			<view v-if="!currentCard.card_name.includes('新股上市')">
-				<view><CurrentExecute :current-execute="execute"></CurrentExecute></view>
-				<view class="tn-flex tn-flex-row-around tn-padding-top">
-					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
-				</view>
-			</view>
-			<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
-				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
-			</view>
-		</view>
-
-		<view v-else-if="currentCard.category_id === 11">
-			<view
-				v-if="
-					currentCard.card_name.startsWith('房产行情') ||
-						currentCard.card_name.startsWith('股票行情') ||
-						currentCard.card_name.startsWith('黄金上涨') ||
-						currentCard.card_name.startsWith('牛市来袭')
-				"
-			>
-				<view><CurrentExecute :current-execute="execute"></CurrentExecute></view>
-				<view class="tn-flex tn-flex-row-around tn-padding-top">
-					<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
-				</view>
-			</view>
-			<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
-				<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
-			</view>
-		</view>
-
-		<view v-else class="tn-flex tn-flex-row-around tn-padding-top">
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" @click="cancel()">关闭</tn-button>
-		</view>
+		<!-- <view v-else class="tn-flex tn-flex-row-around tn-padding-top">
+			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="50%" height="8vmax" @click="cancel()">关闭</tn-button>
+		</view> -->
 	</view>
 </template>
 

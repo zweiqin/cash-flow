@@ -10,8 +10,8 @@
 		</view>
 
 		<view class="tn-flex tn-flex-row-around">
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="5vh" @click="cancel()">取消</tn-button>
-			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="5vh" @click="confirm()">确定</tn-button>
+			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="cancel()">取消</tn-button>
+			<tn-button background-color="#01BEFF" font-color="#FFFFFF" width="30%" height="8vmax" @click="confirm()">确定</tn-button>
 		</view>
 
 	</view>
@@ -116,6 +116,7 @@ export default {
 				}
 			} else {
 				console.log('弹框触发：', round[0])
+				console.trace()
 				uni.showLoading({
 					title: '请稍等...',
 					mask: true

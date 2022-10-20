@@ -12,6 +12,9 @@
 </template>
 
 <script>
+// 接口
+import { GetGameDuration } from 'config/api.js'
+
 export default {
 	name: 'Timer',
 	props: {
@@ -41,11 +44,28 @@ export default {
 		}
 	},
 	created() {
-		if (this.auto) {
-			this.interval = setInterval(() => {
-				this.Number++
-			}, 1000)
-		}
+		GetGameDuration({
+			game_id: Number(getApp().globalData.gameId)
+		})
+			.then((res) => {
+				if (res[1].data.status === 200) {
+					this.Number = Number(res[1].data.data.substring(0, 2)) * 3600 + Number(res[1].data.data.substring(3, 5)) * 60 + Number(res[1].data.data.substring(6, 8))
+					if (this.auto) {
+						this.interval = setInterval(() => {
+							this.Number++
+						}, 1000)
+					}
+				} else {
+					uni.showToast({
+						title: '同步游戏时间失败',
+						icon: 'error'
+						// duration: 450
+					})
+				}
+			})
+			.catch((err) => {
+				console.log(err)
+			})
 	},
 	methods: {
 		reset() {
@@ -148,9 +168,9 @@ export default {
 		color:black;
 		// margin-right: 6rpx;
 		// font-size: 1.4vw;
-		width: 1vh;
+		// width: 2vh;
 		margin-right: 0.2vh;
-		font-size: 1vh;
+		font-size: 2vh;
 		font-weight: bold;
 	}
 	// .maohao{
