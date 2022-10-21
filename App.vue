@@ -4,6 +4,7 @@ import { GetCardList, GetCardCategoryList, GetDreamList } from 'config/api.js'
 
 export default {
 	globalData: {
+		phone: '',
 		isReconnect: false,
 		cardList: [],
 		appListData: [
@@ -100,7 +101,8 @@ export default {
 		init(actionMsg = null) {
 			// console.log(this.ws)
 			// this.wsHandle = new WebSocket('ws://106.55.157.177:19999/v1/socket/Socket', [, 'YzMzYjBiYWZhYjY5N2E3OGV5SlFhRzl1WlNJNklqRTNOekEzTlRBd056WTVJaXdpUVhCd2FXUWlPaUpIUVUxRklpd2lUV1Z5U1dRaU9pSTVPVGs1SWl3aVZIbHdaU0k2SWpBaWZRPT1jMTFhMjllOTEyNGUyMjFi'])
-			this.wsHandle = new WebSocket('ws://106.55.157.177:19999/v1/socket/Socket')
+			// this.wsHandle = new WebSocket('ws://106.55.157.177:19999/v1/socket/Socket')
+			this.wsHandle = new WebSocket('ws://106.55.157.177:19000/v1/socket/Socket')
 			// this.wsHandle = new WebSocket('ws://192.168.0.74:19999/v1/socket/Socket')
 			// this.wsHandle = new WebSocket('ws://192.168.0.19:19999/v1/socket/Socket')
 			this.wsHandle.onopen = this.onOpen
@@ -702,13 +704,14 @@ export default {
 				// console.log(res)
 				// res[1]为类似axios封装改造好的数据，里面的data才是服务器真正的返回
 				if (res[1].data.status === 200) {
-					uni.setStorage({
-						key: 'cards',
-						data: res[1].data.data.items,
-						success() {
-							// console.log('success')
-						}
-					})
+					// uni.setStorage({
+					// 	key: 'cards',
+					// 	data: res[1].data.data.items,
+					// 	success() {
+					// 		// console.log('success')
+					// 	}
+					// })
+					uni.setStorageSync('cards', res[1].data.data.items)
 					uni.getStorage({
 						key: 'cards',
 						success: (res) => {

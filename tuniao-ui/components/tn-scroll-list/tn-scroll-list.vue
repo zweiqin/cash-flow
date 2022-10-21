@@ -9,7 +9,9 @@
 			@scrolltoupper="scrollToUpperHandler"
 			@scrolltolower="scrollToLowerHandler"
 		>
-			<view class="tn-scroll-list__scroll-view__content">
+			<!-- scroll-left="120"
+			show-scrollbar -->
+			<view class="tn-scroll-list__scroll-view__content" :class="'scroll-line'">
 				<slot></slot>
 			</view>
 		</scroll-view>
@@ -148,10 +150,37 @@ export default {
       display: flex;
       flex-direction: row;
 
+			// white-space: nowrap;
+
       &__content {
         display: flex;
+
+				// display: inline-block;
+
         flex-direction: row;
       }
+
+			.scroll-line {
+				overflow-y: auto;
+				&::-webkit-scrollbar {
+					/*滚动条整体样式*/
+					display: block;
+					width: 0rpx !important; /*高宽分别对应横竖滚动条的尺寸*/
+					height: 10rpx !important;
+					// border: 10rpx solid red;
+				}
+				&::-webkit-scrollbar-track {
+					/*滚动条里面轨道*/
+					background: #de98ee;
+					border-radius: 10rpx;
+				}
+				&::-webkit-scrollbar-thumb {
+					/*滚动条里面小方块*/
+					border-radius: 10rpx;
+					background-color: #ef5baf;
+				}
+			}
+
     }
 
     &__indicator {

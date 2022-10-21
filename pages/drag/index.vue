@@ -255,7 +255,10 @@ export default {
 				if (this.button_order === 0) {
 					getApp().globalData.send({
 						method: 'startGame',
-						data: getApp().globalData.gameKey
+						data: {
+							phone: getApp().globalData.phone,
+							gameKey: getApp().globalData.gameKey
+						}
 					})
 				} else if (this.button_order === 1) {
 					getApp().globalData.send({

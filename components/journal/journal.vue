@@ -1,22 +1,31 @@
 <template>
-	<view class="tn-bg-white tn-flex tn-flex-direction-column tn-flex-row-between" style="position: relative;overflow-y: auto;width: 60vw;height: 65vh;padding: 1vh;">
-		<view v-for="(item,index) in log_list" :key="index">
-			<tn-list-view :card="true" :title="`第${item[0].batch}轮`" background-color="#EFEFEF">
-				<block>
-					<tn-list-cell
-						v-for="(part,i) in item" :key="i" :arrow="false"
-						:arrow-right="false" :unlined="false" :line-left="true" :line-right="true"
-					>
-						<view>
-							<text :class="part.log_info.startsWith('轮到玩家')&&part.log_info.endsWith('回合')?'tn-color-blue':''">{{ part.log_info }}</text>
-						</view>
-					</tn-list-cell>
-				</block>
-			</tn-list-view>
+	<view class="tn-bg-white tn-flex tn-flex-direction-column tn-flex-row-between" style="overflow-y: auto;width: 60vw;height: 65vh;padding: 1vh;">
+		<view>
+			<tn-tabs :list="scrollList" :current="current" background-color="#FFFFFF" @change="tabChange"></tn-tabs>
 		</view>
-		<view class="tn-flex tn-flex-row-around tn-bg-white" style="position: sticky;bottom: 0;">
-			<tn-button background-color="tn-main-gradient-indigo--light" margin="10rpx 10rpx" @click="changePage('up')">上一页</tn-button>
-			<tn-button background-color="tn-main-gradient-indigo--single" font-color="rgba(255, 255, 255, 0.8)" margin="10rpx 10rpx" @click="changePage('down')">下一页</tn-button>
+		<view>
+			<view v-for="(item,index) in log_list" :key="index">
+				<tn-list-view :card="true" :title="`第${item[0].batch}轮`" background-color="#EFEFEF">
+					<block>
+						<tn-list-cell
+							v-for="(part,i) in item" :key="i" :arrow="false"
+							:arrow-right="false" :unlined="false" :line-left="true" :line-right="true"
+						>
+							<view>
+								<text :class="part.log_info.startsWith('轮到玩家')&&part.log_info.endsWith('回合')?'tn-color-blue':''">{{ part.log_info }}</text>
+							</view>
+						</tn-list-cell>
+					</block>
+				</tn-list-view>
+			</view>
+		</view>
+
+		<view class="tn-flex tn-flex-row-around tn-flex-col-center tn-bg-white" style="position: sticky;bottom: 0;">
+			<view><tn-button background-color="tn-main-gradient-indigo--light" margin="10rpx 10rpx" @click="changePage('up')">上一页</tn-button></view>
+			<view>
+				{{ `第${page}页 / 共${Math.ceil(total/5)}页` }}
+			</view>
+			<view><tn-button background-color="tn-main-gradient-indigo--single" font-color="rgba(255, 255, 255, 0.8)" margin="10rpx 10rpx" @click="changePage('down')">下一页</tn-button></view>
 		</view>
 	</view>
 </template>
@@ -30,7 +39,7 @@ export default {
 	data() {
 		return {
 			page: 1,
-			limit: 5,
+			// limit: 5,
 			log_list: [
 				// [
 				// 	{
@@ -60,7 +69,11 @@ export default {
 				// 		'batch': 76
 				// 	}
 				// ]
-			]
+			],
+			total: 1,
+			current: 0,
+			scrollList: [ { name: '全部' } ].concat(getApp().globalData.appListId.map((item) => ({ name: item.userName }))),
+			appListId: getApp().globalData.appListId
 		}
 	},
 
@@ -71,22 +84,26 @@ export default {
 	},
 
 	created() {
-		console.log(this.log_list)
+		// console.log(this.log_list)
 		this.changePage()
 	},
 
 	onReady() {},
 	methods: {
+		// tab选项卡切换
+		tabChange(index) {
+			this.current = index
+			// console.log(this.current)
+			this.changePage()
+		},
 		changePage(meaning) {
-			if (meaning === 'up') this.page--
-			if (meaning === 'down') this.page++
+			if (meaning === 'up') this.page - 1 === 0 ? this.$t.message.toast('已经是第一页~') : this.page--
+			if (meaning === 'down') this.page === Math.ceil(this.total / 5) ? this.$t.message.toast('已经是最后一页~') : this.page++
 			GetLogList({
-				// game_id: Number(getApp().globalData.gameId),
-				game_id: 117,
-				// game_user_id: Number(round[0]),
-				game_user_id: '',
+				game_id: Number(getApp().globalData.gameId),
+				// game_id: 117,
+				game_user_id: this.current === 0 ? '' : this.appListId[this.current - 1].id,
 				page: String(this.page),
-				// limit: String(this.money)
 				limit: '5'
 			})
 				.then((res) => {
@@ -97,9 +114,10 @@ export default {
 						// 	title: '操作成功',
 						// 	icon: 'success'
 						// })
-						console.log(res)
-						this.log_list = res[1].data.data.items
-						console.log(this.log_list)
+						// console.log(res)
+						this.log_list = res[1].data.data.items || []
+						this.total = res[1].data.data.total || 1
+						// console.log(this.log_list)
 					} else {
 					}
 				})

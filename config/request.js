@@ -36,27 +36,30 @@ module.exports = (vm) => {
 		invoke(args) {
 			// console.log(args)
 			// request 触发前拼接 url 
-			args.url = 'http://106.55.157.177:19999/v1' + args.url
+			// args.url = 'http://106.55.157.177:19999/v1' + args.url
+			args.url = 'http://106.55.157.177:19000/v1' + args.url
 			// args.url = 'http://192.168.0.74:19999/v1' + args.url
 			// args.url = 'http://192.168.0.19:19999/v1' + args.url
-			try {
-				args.data = args.data || {}
-				if (args?.custom?.auth) {
-					// 可以在此通过vm引用vuex中的变量，具体值在vm.$store.state中
-					// args.header.token = vm.$store.state.userInfo.token
-					const token = uni.getStorageSync('token');
-					args.header.Authorization = token
-					// args.header.Authorization = 'YzMzYjBiYWZhYjY5N2E3OGV5SlFhRzl1WlNJNklqRTNOekEzTlRBd056WTVJaXdpUVhCd2FXUWlPaUpIUVUxRklpd2lUV1Z5U1dRaU9pSTVPVGs1SWl3aVZIbHdaU0k2SWpBaWZRPT1jMTFhMjllOTEyNGUyMjFi'
-				} else if (args?.custom?.auth_py) {
-					//添加给python接口用的，token键值为token
-					const token = uni.getStorageSync('token');
-					args.header.token = token
-					// args.header.token = 'YzMzYjBiYWZhYjY5N2E3OGV5SlFhRzl1WlNJNklqRTNOekEzTlRBd056WTVJaXdpUVhCd2FXUWlPaUpIUVUxRklpd2lUV1Z5U1dRaU9pSTVPVGs1SWl3aVZIbHdaU0k2SWpBaWZRPT1jMTFhMjllOTEyNGUyMjFi'
+			// try {
+			console.log(args)
+			args.data = args.data || {}
+			if (args?.custom?.auth) {
+				// 可以在此通过vm引用vuex中的变量，具体值在vm.$store.state中
+				// args.header.token = vm.$store.state.userInfo.token
+				const token = uni.getStorageSync('token').token;
+				console.log(token)
+				// args.header.Authorization = token
+				// args.header.Authorization = 'YzMzYjBiYWZhYjY5N2E3OGV5SlFhRzl1WlNJNklqRTNOekEzTlRBd056WTVJaXdpUVhCd2FXUWlPaUpIUVUxRklpd2lUV1Z5U1dRaU9pSTVPVGs1SWl3aVZIbHdaU0k2SWpBaWZRPT1jMTFhMjllOTEyNGUyMjFi'
+				args.header = {
+					...args.header,
+					token: token
 				}
-			} catch (e) {
-				//TODO handle the exception
-				return Promise.reject(args)
 			}
+			return args
+			// } catch (e) {
+			// 	//TODO handle the exception
+			// 	return Promise.reject(args)
+			// }
 		},
 		success(args) {
 			// 请求成功后，修改code值为1
@@ -67,7 +70,7 @@ module.exports = (vm) => {
 			if (data.status !== 200) {
 				// 如果没有显式定义custom的toast参数为false的话，默认对报错进行toast弹出提示
 				uni.showToast({
-					title: data.data? data.data : `${data.msg}。${data.data}`,
+					title: data.data ? data.data : `${data.msg}。${data.data}`,
 					icon: 'error'
 				})
 				// return Promise.resolve(data)
@@ -86,10 +89,10 @@ module.exports = (vm) => {
 		},
 		fail(err) {
 			// console.log('interceptor-fail',err)
-				uni.showToast({
-					title: '网络错误！',
-					icon: 'error'
-				})
+			uni.showToast({
+				title: '网络错误！',
+				icon: 'error'
+			})
 			return Promise.reject(err)
 		},
 		complete(res) {

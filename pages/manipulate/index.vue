@@ -136,7 +136,7 @@
 					:font-size="35"
 					:title="title_pa"
 					:content="content_pa"
-					:button="button_pa"
+					:button="popup_significance_pa==='end'?[]:button_pa"
 					:show-close-btn="close_btn_pa"
 					:mask-closeable="mask_closeable_pa"
 					:zoom="true"
@@ -288,7 +288,7 @@ export default {
 			close_btn_pa: true,
 			mask_closeable_pa: true,
 			custom_pa: false,
-			is_stow: true,
+			is_stow: false,
 
 			toast_significance: '',
 
@@ -330,6 +330,7 @@ export default {
 		// cutApart,
 		changeTimer(e) {
 			// console.log(e)
+			if (e === 7200) this.handleManage('end')
 		},
 		// changeCountTo(e) {
 		// 	// console.log(e)
@@ -501,6 +502,14 @@ export default {
 						this.close_btn_pa = false
 						this.mask_closeable_pa = false
 						this.custom_pa = true
+						this.is_show_model_pa = true
+					} else if (significance === 'end') {
+						this.popup_significance_pa = 'end'
+						this.title_pa = '提示'
+						this.content_pa = '游戏时间已过两小时，手头现金数量最大者获胜！'
+						this.close_btn_pa = true
+						this.mask_closeable_pa = true
+						this.custom_pa = false
 						this.is_show_model_pa = true
 					}
 				})

@@ -128,7 +128,7 @@
 					:font-size="35"
 					:title="title_pa"
 					:content="content_pa"
-					:button="button_pa"
+					:button="popup_significance_pa==='end'?[]:button_pa"
 					:show-close-btn="close_btn_pa"
 					:mask-closeable="mask_closeable_pa"
 					:zoom="true"
@@ -144,6 +144,16 @@
 					</view>
 				</tn-modal>
 			</view>
+
+			<!-- 键盘 -->
+			<!-- <view>
+				<tn-keyboard
+					v-model="is_show_keyboard" mode="number" :dot-enabled="false" :random-enabled="false"
+					:z-index="10" :tooltip="false" :mask="false"
+					@change="onChangeKeyboard" @backspace="onBackspace"
+				></tn-keyboard>
+			</view> -->
+
 		</view>
 	</view>
 </template>
@@ -249,7 +259,10 @@ export default {
 
 			popup_name: '',
 			popup_id: '',
-			show_popup: false
+			show_popup: false,
+
+			// 键盘
+			is_show_keyboard: false
 		}
 	},
 
@@ -284,9 +297,20 @@ export default {
 	},
 
 	methods: {
+		// 弹出键盘
+		// showKeyboard(parameter) {
+		// 	this.is_show_keyboard = true
+		// },
+		// onChangeKeyboard(e) {
+		// 	this.$refs.RefDrawCard && this.$refs.RefDrawCard.onChangeKeyboard(e)
+		// },
+		// onBackspace() {
+		// 	this.$refs.RefDrawCard && this.$refs.RefDrawCard.onBackspace()
+		// },
 		// cutApart,
 		changeTimer(e) {
 			// console.log(e)
+			if (e === 7200) this.handleManage('end')
 		},
 		changeCountTo(e) {
 			// console.log(e)
@@ -386,6 +410,14 @@ export default {
 						this.close_btn_pa = false
 						this.mask_closeable_pa = false
 						this.custom_pa = true
+						this.is_show_model_pa = true
+					} else if (significance === 'end') {
+						this.popup_significance_pa = 'end'
+						this.title_pa = '提示'
+						this.content_pa = '游戏时间已过两小时，手头现金数量最大者获胜！'
+						this.close_btn_pa = true
+						this.mask_closeable_pa = true
+						this.custom_pa = false
 						this.is_show_model_pa = true
 					}
 				})

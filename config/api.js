@@ -1,3 +1,43 @@
+// 注册
+export const CreateBanker = (data) => uni.request({
+	url: '/banker/CreateBanker', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// 发送验证码
+export const SendSms = (data) => uni.request({
+	url: '/banker/SendSms', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// 登录
+export const LoginSms = (data) => uni.request({
+	url: '/banker/LoginSms', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
+// 获取剩余游戏次数
+export const GetGameCount = (data) => uni.request({
+	url: '/banker/GetGameCount', // 仅为示例，并非真实接口地址。
+	method: 'POST',
+	data,
+	custom: {
+		auth: false
+	}
+})
+
 // 获取获取全部卡列表的所有信息
 export const GetCardList = (data) => uni.request({
 	url: '/card/GetCardList', // 仅为示例，并非真实接口地址。
@@ -75,7 +115,7 @@ export const NextUser = (data) => uni.request({
 	method: 'GET',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -85,7 +125,7 @@ export const SendMoney = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -95,7 +135,7 @@ export const Payroll = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -105,7 +145,7 @@ export const DeductMoney = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -115,7 +155,7 @@ export const DrawCard = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -125,7 +165,7 @@ export const EnergizeRest = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -135,7 +175,7 @@ export const EnergizeNormal = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -145,7 +185,7 @@ export const HaveBaby = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -155,7 +195,7 @@ export const HeartBreak = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -165,7 +205,7 @@ export const Unemployment = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -175,7 +215,7 @@ export const Bankrupt = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -185,7 +225,7 @@ export const DoCharity = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -195,7 +235,7 @@ export const RichCircleCharity = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -205,7 +245,7 @@ export const BuyTrustPrice = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -215,7 +255,7 @@ export const BuyVentureCapital = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -225,7 +265,7 @@ export const ConfirmVentureCapital = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 
@@ -235,7 +275,7 @@ export const BuyDream = (data) => uni.request({
 	method: 'POST',
 	data,
 	custom: {
-		auth: false
+		auth: true
 	}
 })
 

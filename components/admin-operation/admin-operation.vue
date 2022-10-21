@@ -202,7 +202,8 @@ export default {
 						if (res[1].data.status === 200) {
 							uni.showToast({
 								title: '操作成功',
-								icon: 'success'
+								icon: 'success',
+								duration: 800
 							})
 							this.cancel()
 						} else {
@@ -228,7 +229,8 @@ export default {
 							this.dismissal = ''
 							uni.showToast({
 								title: '操作成功',
-								icon: 'success'
+								icon: 'success',
+								duration: 800
 							})
 						} else {
 						}

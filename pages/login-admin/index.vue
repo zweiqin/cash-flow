@@ -29,6 +29,12 @@
 
 				<!-- 输入框内容-->
 				<view class="login__info tn-flex tn-flex-direction-column tn-flex-col-center tn-flex-row-center">
+					<view class="tn-width-full tn-flex tn-flex-row-between tn-flex-col-center tn-text-bold">
+						<view>剩余可玩次数：{{ count }}</view>
+						<view>
+							<tn-button :plain="false" background-color="#01BEFF" margin="10rpx 10rpx" @click="logout">退出登录</tn-button>
+						</view>
+					</view>
 					<!-- 创建房间 -->
 					<block v-if="currentModeIndex === 0">
 						<view class="login__info__item__input tn-flex tn-flex-direction-row tn-flex-nowrap tn-flex-col-center tn-flex-row-left">
@@ -130,7 +136,7 @@
 // import template_page_mixin from '@/libs/mixin/template_page_mixin.js'
 
 // 接口
-import { GetCurrentUser } from 'config/api.js'
+import { GetCurrentUser, GetGameCount } from 'config/api.js'
 
 const Point = class {
 	constructor(x, y) {
@@ -201,12 +207,42 @@ export default {
 			// tips: '获取验证码'
 			new_num: '',
 			old_num: '',
-			today: ''
+			today: '',
 			// intRandomValue: ''
+			count: ''
 		}
 	},
 	onLoad(options) {
+		// 鉴权
+		uni.getStorage({
+			key: 'token',
+			success: (res) => {
+				console.log(res)
+				if (!res.data || !res.data.token) uni.redirectTo({ url: '/pages/register/index' })
+			},
+			fail(res) {
+				console.log(res)
+				uni.redirectTo({ url: '/pages/register/index' })
+			}
+		})
+
+		if (!getApp().globalData.phone) return uni.redirectTo({ url: '/pages/register/index' })
+		GetGameCount({
+			phone: getApp().globalData.phone
+		})
+			.then((res) => {
+				if (res[1].data.status === 200) {
+					this.count = res[1].data.data.items[0].game_count
+				} else {
+					this.$t.message.toast('获取可玩次数失败')
+				}
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+
 		getApp().globalData.admin = this
+
 		this.from = options.from || ''
 
 		for (let i = 0; i < 80; i++) {
@@ -241,6 +277,16 @@ export default {
 		}
 	},
 	methods: {
+		logout() {
+			uni.removeStorage({
+				key: 'token',
+				success(res) {
+					console.log('移除token成功')
+				}
+			})
+			uni.redirectTo({ url: '/pages/register/index' })
+		},
+
 		/** 粒子进行*/
 
 		gameloop() {
@@ -299,6 +345,8 @@ export default {
 		createGame() {
 			// console.log(getApp().globalData.wsHandle)
 			if (this.currentModeIndex === 0) {
+				if (!this.count) return this.$t.message.toast('可玩次数为0，无法创建房间')
+
 				if (this.new_num.length !== 4) return this.globalNotice('提示', '请输入房间号后四位', 'tip-fill')
 				getApp().globalData.init({
 					method: 'createGame',

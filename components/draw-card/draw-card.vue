@@ -94,7 +94,7 @@
 										<tn-radio :name="'1'" :label-size="38">转让</tn-radio>
 									</tn-radio-group>
 								</view>
-								<view v-if="is_transfer === '0'"> <tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" /> </view>
+								<view v-if="is_transfer === '0'"> <tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" @click="showKeyboard('quantity')" /> </view>
 								<view v-else>
 									<text>转让给：</text>
 									<tn-radio-group v-model="person_transfer" :size="36" width="auto" :wrap="true">
@@ -149,19 +149,19 @@
 												</tn-list-view>
 											</view>
 											<view v-if="marketable_shares.length!==0">
-												<tn-input v-model="sell_number" type="number" placeholder="在此输入卖出股数" :focus="true" :border="true" />
+												<tn-input v-model="sell_number" type="number" placeholder="在此输入卖出股数" :focus="true" :border="true" @click="showKeyboard('sell_number')" />
 											</view>
 										</view>
 										<view v-else>
-											<tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" />
+											<tn-input v-model="quantity" type="number" placeholder="在此输入购买股数" :focus="true" :border="true" @click="showKeyboard('quantity')" />
 										</view>
 									</view>
 								</view>
 								<view v-else-if="currentCard.card_name.startsWith('银行') || currentCard.card_name.startsWith('基金交易') || currentCard.card_name.startsWith('互联网')">
-									<tn-input v-model="quantity" type="number" placeholder="在此输入购买份数" :focus="true" :border="true" />
+									<tn-input v-model="quantity" type="number" placeholder="在此输入购买份数" :focus="true" :border="true" @click="showKeyboard('quantity')" />
 								</view>
 								<view v-else-if="currentCard.card_name.startsWith('投资黄金')">
-									<tn-input v-model="quantity" type="number" placeholder="在此输入购买克数" :focus="true" :border="true" />
+									<tn-input v-model="quantity" type="number" placeholder="在此输入购买克数" :focus="true" :border="true" @click="showKeyboard('quantity')" />
 								</view>
 							</view>
 							<view>
@@ -210,7 +210,7 @@
 								</tn-list-view>
 							</view>
 							<view v-if="!currentCard.card_name.startsWith('房产行情') && product_list.length!==0">
-								<tn-input v-model="sell_number" type="number" placeholder="在此输入卖出数量" :focus="true" :border="true" />
+								<tn-input v-model="sell_number" type="number" placeholder="在此输入卖出数量" :focus="true" :border="true" @click="showKeyboard('sell_number')" />
 							</view>
 							<view>
 								<view class="tn-flex tn-flex-row-around tn-padding-top">
@@ -432,6 +432,8 @@ export default {
 			appListId: getApp().globalData.appListId.filter((item) => item.id !== getApp().globalData.gameUserId),
 			me: getApp().globalData.appListId.find((item) => item.id === getApp().globalData.gameUserId) || {},
 			currentExecute: getApp().globalData.currentExecute
+
+			// keyboard_data: ''
 		}
 	},
 
@@ -484,6 +486,20 @@ export default {
 	onReady() {},
 
 	methods: {
+		// 弹出键盘
+		showKeyboard(parameter) {
+			// uni.hideKeyboard()
+			// getApp().globalData.game && getApp().globalData.game.showKeyboard()
+			// // getApp().globalData.manipulate && getApp().globalData.manipulate.showKeyboard()
+			// this.keyboard_data = parameter
+		},
+		// onChangeKeyboard(e) {
+		// 	this[this.keyboard_data] += e
+		// },
+		// onBackspace() {
+		// 	if (!this[this.keyboard_data]) return
+		// 	this[this.keyboard_data] = this[this.keyboard_data].substring(0, this[this.keyboard_data].length - 1)
+		// },
 		handleBusiness(e) {
 			// console.log(e)
 			this.is_sell = e.index
