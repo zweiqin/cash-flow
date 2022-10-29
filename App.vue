@@ -116,7 +116,7 @@ export default {
 			// 判断是 管理员 还是用户 还是其它情况
 			if (actionMsg && (actionMsg.method === 'createGame' || actionMsg.method === 'rejoinGame')) {
 				this.role = 'admin'
-				this.gameKey = actionMsg.data
+				this.gameKey = actionMsg.data.gameKey
 			} else if (actionMsg && actionMsg.method === 'joinGame') {
 				// 用户的登录的 actionMsg的data是一个对象，包含 用户名 和 房间号
 				this.role = 'user'

@@ -76,7 +76,11 @@
 					@close="clickLanBtn"
 				>
 					<view v-if="lan_significance === 'showNowCard'"><Cards :card="currentCard"></Cards></view>
-					<view v-else-if="lan_significance === 'showAllCard'"><image src="https://tnuiimage.tnkjapp.com/landscape/2022-new-year.png" mode="widthFix"></image>1111 </view>
+					<view v-else-if="lan_significance === 'showAllCard'">
+						<view class="tn-bg-white" style="overflow-y: auto;width: 90vw;height: 95vh;padding: 1vh;">
+							<image src="../../static/pic/rule/caifuliu.jpg" mode="widthFix" style="width: 100%;"></image>
+						</view>
+					</view>
 					<view v-else-if="lan_significance === 'showJournal'">
 						<Journal></Journal>
 					</view>

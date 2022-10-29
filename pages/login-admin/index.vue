@@ -350,13 +350,19 @@ export default {
 				if (this.new_num.length !== 4) return this.globalNotice('提示', '请输入房间号后四位', 'tip-fill')
 				getApp().globalData.init({
 					method: 'createGame',
-					data: this.today + this.new_num // 房间秘钥
+					data: {
+						phone: getApp().globalData.phone,
+						gameKey: this.today + this.new_num // 房间秘钥
+					}
 				})
 			} else if (this.currentModeIndex === 1) {
 				if (this.old_num.length !== 4) return this.globalNotice('提示', '请输入房间号后四位', 'tip-fill')
 				getApp().globalData.init({
 					method: 'rejoinGame',
-					data: this.today + this.old_num // 房间秘钥
+					data: {
+						phone: getApp().globalData.phone,
+						gameKey: this.today + this.old_num // 房间秘钥
+					}
 				})
 			}
 			// console.log(getApp().globalData.wsHandle)
