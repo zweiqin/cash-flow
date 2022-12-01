@@ -102,7 +102,8 @@ export default {
 			// console.log(this.ws)
 			// this.wsHandle = new WebSocket('ws://106.55.157.177:19999/v1/socket/Socket', [, 'YzMzYjBiYWZhYjY5N2E3OGV5SlFhRzl1WlNJNklqRTNOekEzTlRBd056WTVJaXdpUVhCd2FXUWlPaUpIUVUxRklpd2lUV1Z5U1dRaU9pSTVPVGs1SWl3aVZIbHdaU0k2SWpBaWZRPT1jMTFhMjllOTEyNGUyMjFi'])
 			// this.wsHandle = new WebSocket('ws://106.55.157.177:19999/v1/socket/Socket')
-			this.wsHandle = new WebSocket('ws://106.55.157.177:19000/v1/socket/Socket')
+			// this.wsHandle = new WebSocket('ws://106.55.157.177:19000/v1/socket/Socket')
+			this.wsHandle = new WebSocket('wss://wealthygo.agait.cn/v1/socket/Socket')
 			// this.wsHandle = new WebSocket('ws://192.168.0.74:19999/v1/socket/Socket')
 			// this.wsHandle = new WebSocket('ws://192.168.0.19:19999/v1/socket/Socket')
 			this.wsHandle.onopen = this.onOpen
